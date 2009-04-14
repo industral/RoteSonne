@@ -1,0 +1,39 @@
+<!DOCTYPE RCC><RCC version="1.0">
+   <qresource>
+      <file>img/designer.png</file>
+      <file>img/audio-input-microphone.png</file>
+      <file>img/media-optical-audio.png</file>
+      <file>img/audio-headset.png</file>
+      <file>img/speaker.png</file>
+      <file>img/account_offline_overlay.png</file>
+      <file>img/media-podcast.png</file>
+      <file>img/camera-web.png</file>
+      <file>img/media-record.png</file>
+      <file>img/audio-input-line.png</file>
+      <file>img/account_offline_overlay.png</file>
+      <file>img/slider.png</file>
+      <file>img/Slider.png</file>
+      <file>img/Slider-red.png</file>
+      <file>img/on/record.png</file>
+      <file>img/off/record.png</file>
+      <file>img/check.png</file>
+      <file>img/qssmix.png</file>
+      <file>img/mute.png</file>
+      <file>img/xfce4_xicon.png</file>
+      <file>img/xfce4_xicon.png</file>
+      <file>img/rec.png</file>
+      <file>img/audio-card.png</file>
+      <file>img/oss.png</file>
+      <file>img/qt.png</file>
+      
+      <file>img/player/rebuild.png</file>
+      <file>img/player/edit.png</file>
+      <file>img/player/nocover.png</file>
+      
+      <file>img/player/player_fwd.png</file>
+      <file>img/player/player_pause.png</file>
+      <file>img/player/player_play.png</file>
+      <file>img/player/player_rew.png</file>
+      <file>img/player/player_stop.png</file>
+   </qresource>
+ </RCC>
