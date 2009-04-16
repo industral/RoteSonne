@@ -30,13 +30,17 @@
 #include <QUiLoader>
 #include <QFile>
 
+#include "LoadUI.hpp"
+
 namespace RoteSonne {
   class MainWindow {
     public:
       MainWindow();
       ~MainWindow();
 
-      QWidget * init();
+      QWidget * getUI();
+    private:
+      QWidget * widget;
   };
 }
 

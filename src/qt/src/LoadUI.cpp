@@ -23,21 +23,22 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#include "MainWindow.hpp"
+#include "LoadUI.hpp"
 
 namespace RoteSonne {
-  MainWindow::MainWindow() {
-    this -> widget = LoadUI::loadUI(":/forms/ui/mainWindow.ui");
+  LoadUI::LoadUI() {
   }
 
-  MainWindow::~MainWindow() {
+  LoadUI::~LoadUI() {
   }
 
-  QWidget * MainWindow::getUI() {
-    return this -> widget;
+  QWidget * LoadUI::loadUI(const string& uiPath) {
+    QUiLoader loader;
+    QFile file(uiPath.c_str());
+    file.open(QFile::ReadOnly);
+    QWidget * widget = loader.load(&file, 0);
+    file.close();
+    return widget;
   }
 
-//  void MainWindow::addHandlers() {
-//
-//  }
 }

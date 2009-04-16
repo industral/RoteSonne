@@ -23,21 +23,24 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#include "MainWindow.hpp"
+#ifndef _ROTESONNE_LOADUI_HPP_
+#define _ROTESONNE_LOADUI_HPP_
+
+// include require Qt headers
+#include <QUiLoader>
+#include <QFile>
+
+using namespace std;
 
 namespace RoteSonne {
-  MainWindow::MainWindow() {
-    this -> widget = LoadUI::loadUI(":/forms/ui/mainWindow.ui");
-  }
+  class LoadUI {
+    public:
+      LoadUI();
+      ~LoadUI();
 
-  MainWindow::~MainWindow() {
-  }
-
-  QWidget * MainWindow::getUI() {
-    return this -> widget;
-  }
-
-//  void MainWindow::addHandlers() {
-//
-//  }
+      static QWidget * loadUI(const string& uiPath);
+    private:
+  };
 }
+
+#endif

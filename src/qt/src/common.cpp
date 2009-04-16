@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
   QApplication app(argc, argv);
 
   RoteSonne::MainWindow * mainWindow = new RoteSonne::MainWindow();
-  QWidget *widget = mainWindow -> init();
+  QWidget *widget = mainWindow -> getUI();
 
   if (!widget)
     return 2;
