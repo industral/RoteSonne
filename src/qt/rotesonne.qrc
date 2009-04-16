@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="/forms" >
+    <file>ui/mainWindow.ui</file>
+    <file>ui/aboutRoteSonne.ui</file>
+  </qresource>
+  <qresource prefix="images" >
+    <file>images/media-podcast.png</file>
+    <file>images/player_play.png</file>
+    <file>images/player_pause.png</file>
+  </qresource>
+</RCC>
