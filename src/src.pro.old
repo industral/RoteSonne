@@ -1,13 +1,11 @@
 QMAKE_CXXFLAGS += -ggdb
 QMAKE_CFLAGS += -ggdb
 
-# $$system(Magick++-config --cppflags | cut -b3-)
-
 TEMPLATE = app
 TARGET = ssngmc
 DEPENDPATH += .
 INCLUDEPATH += . /usr/include/libsml /usr/include/ImageMagick
-LIBS += -lsml -lvorbisfile -lFLAC++ -lwavpack -lsqlite3 -lfreetype -lz -lMagick++ -lMagickWand -lMagickCore -lasound -llua
+LIBS += -lsml -lvorbisfile
 QT += sql
 
 # Input
