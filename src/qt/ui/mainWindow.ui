@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>950</width>
-    <height>621</height>
+    <width>1258</width>
+    <height>695</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -308,7 +308,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>950</width>
+     <width>1258</width>
      <height>25</height>
     </rect>
    </property>
@@ -322,6 +322,7 @@
     <property name="title">
      <string>Settings</string>
     </property>
+    <addaction name="actionCollection"/>
     <addaction name="actionPreferences"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -363,9 +364,31 @@
     <string>About Qt</string>
    </property>
   </action>
+  <action name="actionCollection">
+   <property name="text">
+    <string>Collection</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../rotesonne.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>actionQuit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>18</x>
+     <y>12</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>628</x>
+     <y>347</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

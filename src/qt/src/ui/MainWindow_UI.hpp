@@ -23,50 +23,41 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#include "MainWindow.hpp"
+#ifndef _ROTESONNE_MAINWINDOW_HPP_
+#define _ROTESONNE_MAINWINDOW_HPP_
+
+// include require Qt headers
+#include <QUiLoader>
+#include <QFile>
+#include <QWidget>
+#include <QMainWindow>
+#include <QAction>
+#include <QApplication>
+
+#include "../LoadUI.hpp"
+#include "Collection_UI.hpp"
 
 namespace RoteSonne {
+  namespace UI {
+    class MainWindow_UI: public QMainWindow {
+        Q_OBJECT
+        public:
+        MainWindow_UI();
+        ~MainWindow_UI();
 
-  // --------------------------------------------------------------------
-  // Public methods
-  // --------------------------------------------------------------------
+        QWidget * getUI();
 
-  MainWindow::MainWindow() {
-    this -> widget = LoadUI::loadUI(":/forms/ui/mainWindow.ui");
-    this -> addHandlers();
-  }
+        private slots:
+        void aboutQt();
+        void about();
+        void collectionPreferences();
 
-  MainWindow::~MainWindow() {
-  }
+      private:
+        QWidget * widget;
 
-  QWidget * MainWindow::getUI() {
-    return this -> widget;
-  }
-
-  // --------------------------------------------------------------------
-  // Private methods
-  // --------------------------------------------------------------------
-
-  void MainWindow::addHandlers() {
-    // add about Qt handler
-    connect(this -> widget -> findChild < QAction * > ("actionAbout_Qt"),
-        SIGNAL(triggered()), this, SLOT(aboutQt()));
-
-    // add about handler
-    connect(this -> widget -> findChild < QAction * > ("actionAbout"), SIGNAL(
-        triggered()), this, SLOT(about()));
-  }
-
-  // --------------------------------------------------------------------
-  // Slots
-  // --------------------------------------------------------------------
-
-  void MainWindow::aboutQt() {
-    QApplication::aboutQt();
-  }
-
-  void MainWindow::about() {
-    QWidget *widget = LoadUI::loadUI(":/forms/ui/aboutRoteSonne.ui");
-    widget -> show();
+        void addHandlers();
+    };
   }
 }
+
+#endif

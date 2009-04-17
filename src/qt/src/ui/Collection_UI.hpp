@@ -23,8 +23,11 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_MAINWINDOW_HPP_
-#define _ROTESONNE_MAINWINDOW_HPP_
+#ifndef _ROTESONNE_UI_COLLECTION_HPP_
+#define _ROTESONNE_UI_COLLECTION_HPP_
+
+// main include
+#include <iostream>
 
 // include require Qt headers
 #include <QUiLoader>
@@ -32,27 +35,34 @@
 #include <QWidget>
 #include <QAction>
 #include <QApplication>
+#include <QPushButton>
 
-#include "LoadUI.hpp"
+#include "../LoadUI.hpp"
+
+using namespace std;
 
 namespace RoteSonne {
-  class MainWindow: public QWidget {
-      Q_OBJECT
-      public:
-      MainWindow();
-      ~MainWindow();
+  namespace UI {
+    class Collection_UI: public QWidget {
+        Q_OBJECT
+        public:
+        Collection_UI();
+        ~Collection_UI();
 
-      QWidget * getUI();
+        void show();
+        //      QWidget * getUI();
 
-    private slots:
-    void aboutQt();
-    void about();
+        private slots:
+        void openDialog();
+        void scanCollection();
+        //    void about();
+        //    void collectionPreferences();
 
-    private:
-      QWidget * widget;
-
-      void addHandlers();
-  };
+      private:
+        QWidget * widget;
+        void addHandlers();
+    };
+  }
 }
 
 #endif

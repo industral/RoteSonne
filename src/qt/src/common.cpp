@@ -3,12 +3,13 @@
 #include <QLayout>
 #include <QGridLayout>
 
-#include "MainWindow.hpp"
+#include "ui/MainWindow_UI.hpp"
 
 int main(int argc, char **argv) {
   QApplication app(argc, argv);
 
-  RoteSonne::MainWindow * mainWindow = new RoteSonne::MainWindow();
+  RoteSonne::UI::MainWindow_UI * mainWindow =
+      new RoteSonne::UI::MainWindow_UI();
   QWidget *widget = mainWindow -> getUI();
 
   if (!widget)

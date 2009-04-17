@@ -2,6 +2,7 @@
   <qresource prefix="/forms" >
     <file>ui/mainWindow.ui</file>
     <file>ui/aboutRoteSonne.ui</file>
+    <file>ui/Collection.ui</file>
   </qresource>
   <qresource prefix="images" >
     <file>images/nocover.png</file>
