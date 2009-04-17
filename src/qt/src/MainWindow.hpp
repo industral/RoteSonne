@@ -29,18 +29,29 @@
 // include require Qt headers
 #include <QUiLoader>
 #include <QFile>
+#include <QWidget>
+#include <QAction>
+#include <QApplication>
 
 #include "LoadUI.hpp"
 
 namespace RoteSonne {
-  class MainWindow {
-    public:
+  class MainWindow: public QWidget {
+      Q_OBJECT
+      public:
       MainWindow();
       ~MainWindow();
 
       QWidget * getUI();
+
+    private slots:
+    void aboutQt();
+    void about();
+
     private:
       QWidget * widget;
+
+      void addHandlers();
   };
 }
 

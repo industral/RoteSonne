@@ -26,8 +26,14 @@
 #include "MainWindow.hpp"
 
 namespace RoteSonne {
+
+  // --------------------------------------------------------------------
+  // Public methods
+  // --------------------------------------------------------------------
+
   MainWindow::MainWindow() {
     this -> widget = LoadUI::loadUI(":/forms/ui/mainWindow.ui");
+    this -> addHandlers();
   }
 
   MainWindow::~MainWindow() {
@@ -37,7 +43,30 @@ namespace RoteSonne {
     return this -> widget;
   }
 
-//  void MainWindow::addHandlers() {
-//
-//  }
+  // --------------------------------------------------------------------
+  // Private methods
+  // --------------------------------------------------------------------
+
+  void MainWindow::addHandlers() {
+    // add about Qt handler
+    connect(this -> widget -> findChild < QAction * > ("actionAbout_Qt"),
+        SIGNAL(triggered()), this, SLOT(aboutQt()));
+
+    // add about handler
+    connect(this -> widget -> findChild < QAction * > ("actionAbout"), SIGNAL(
+        triggered()), this, SLOT(about()));
+  }
+
+  // --------------------------------------------------------------------
+  // Slots
+  // --------------------------------------------------------------------
+
+  void MainWindow::aboutQt() {
+    QApplication::aboutQt();
+  }
+
+  void MainWindow::about() {
+    QWidget *widget = LoadUI::loadUI(":/forms/ui/aboutRoteSonne.ui");
+    widget -> show();
+  }
 }
