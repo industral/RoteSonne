@@ -34,8 +34,17 @@ namespace RoteSonne {
       // --------------------------------------------------------------------
 
       MainWindow_UI::MainWindow_UI() {
+        this -> player = new Player();
+        this -> player -> setAudioDriver("alsa");
+
         // load UI resource file.
         this -> widget = LoadUI::loadUI(":/forms/ui/mainWindow.ui");
+
+        // get all components from widget
+        this -> findChilds();
+
+        // set playList
+        this -> setPlayList();
 
         // attach handles.
         this -> addHandlers();
@@ -52,6 +61,11 @@ namespace RoteSonne {
       // Private methods
       // --------------------------------------------------------------------
 
+      void MainWindow_UI::findChilds() {
+        this -> playList = this -> widget -> findChild < QTableView * > (
+            "playList");
+      }
+
       void MainWindow_UI::addHandlers() {
         // add "About Qt" handler
         connect(this -> widget -> findChild < QAction * > ("actionAbout_Qt"),
@@ -66,23 +80,65 @@ namespace RoteSonne {
             SIGNAL(triggered()), this, SLOT(collectionPreferences()));
       }
 
-      // --------------------------------------------------------------------
-      // Slots
-      // --------------------------------------------------------------------
+      //TODO: As SilentMedia is not finished yet, this section is also not finished.
+      void MainWindow_UI::setPlayList() {
+        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+        db.setDatabaseName("collection.db");
+        bool ok = db.open();
 
-      void MainWindow_UI::aboutQt() {
-        QApplication::aboutQt();
-      }
+        QSqlTableModel * model = new QSqlTableModel;
+        model -> setTable("collection");
+        model -> setEditStrategy(QSqlTableModel::OnManualSubmit);
+        model -> select();
+        model -> setHeaderData(2, Qt::Horizontal, tr("Name"));
+        model -> setHeaderData(3, Qt::Horizontal, tr("Artist"));
+        model -> setHeaderData(4, Qt::Horizontal, tr("Album"));
 
-      void MainWindow_UI::about() {
-        QWidget *widget = LoadUI::loadUI(":/forms/ui/aboutRoteSonne.ui");
-        widget -> show();
-      }
+        this -> playList -> setModel(model);
 
-      void MainWindow_UI::collectionPreferences() {
-        Collection_UI *collection = new Collection_UI(collection);
-        collection -> show();
-      }
+        // select row at all
+        this -> playList -> setSelectionBehavior(QAbstractItemView::SelectRows);
+
+        // deny change row in doubler click
+        this -> playList -> setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+        // set size
+        this -> playList -> setColumnWidth(1, 440);
+        //        this -> playList -> setColumnWidth(3, 220);
+        //        this -> playList -> setColumnWidth(4, 220);
+
+        this -> playList -> hideColumn(0);
+        //        this -> playList  -> hideColumn ( 1 );
+        this -> playList -> hideColumn(5);
+
+connect      (this -> playList, SIGNAL (doubleClicked (const QModelIndex & )), this,
+          SLOT (play(const QModelIndex & )));
+
+    }
+
+    // --------------------------------------------------------------------
+    // Slots
+    // --------------------------------------------------------------------
+
+    void MainWindow_UI::aboutQt() {
+      QApplication::aboutQt();
+    }
+
+    void MainWindow_UI::about() {
+      QWidget *widget = LoadUI::loadUI(":/forms/ui/aboutRoteSonne.ui");
+      widget -> show();
+    }
+
+    void MainWindow_UI::collectionPreferences() {
+      Collection_UI *collection = new Collection_UI(collection);
+      collection -> show();
+    }
+
+    void MainWindow_UI::play(const QModelIndex & index) {
+      string fileName = index.sibling ( index.row(), 1 ).data().toString().toStdString();
+      this -> player -> openFile(fileName, fileName);
+      this -> player -> playFile(fileName);
     }
   }
+}
 }

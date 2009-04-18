@@ -23,45 +23,31 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_COLLECTOPN_HPP_
-#define _ROTESONNE_COLLECTOPN_HPP_
+#ifndef _ROTESONNE_PLAYER_HPP_
+#define _ROTESONNE_PLAYER_HPP_
 
-#include <iostream>
-#include <string>
-#include <map>
-
-#include <unistd.h> // chdir(2), stat(2)
-#include <sys/types.h> // stat(2)
-#include <sys/stat.h> // stat(2)
-#include <cstdlib>
-
-#include <dirent.h>
-#include <sqlite3.h>
-
-using namespace std;
+#include <libsml/all.hpp>
+#include <libsml/Audio/Audio.hpp>
 
 namespace RoteSonne {
-  class Collection {
+  class Player {
     public:
-      Collection();
-      ~Collection();
+      /**
+       * Default constructor.
+       */
+      Player();
 
-      void open();
-      void flush();
-      void close();
-      void scan(const string& path);
+      /**
+       * Default destructor.
+       */
+      ~Player();
 
-      int scanFiles(string path, int level = 0);
-      string replace(string str) const;
+      void setAudioDriver(string driver);
+      bool openFile(string fileName, string fileId);
+      void playFile(string fileId);
     private:
-      sqlite3 * db;
-      //    SQLite * sql;
-
-      //    SilentMedia::Audio * audio;
-      //    SilentMedia::DecodedData * ddata;
-      //       libssoss::DSP * dsp;
-      //       libssoss::DSP * thdsp;
-      map < string, string > vorbisComm;
+      // SilentMedia audio object
+      SilentMedia::Audio::Audio * audio;
   };
 }
 

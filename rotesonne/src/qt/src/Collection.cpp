@@ -54,12 +54,16 @@ namespace RoteSonne {
     if (sqlite3_open("collection.db", &this -> db)) {
       cerr << "Can't open database: " << sqlite3_errmsg(db) << endl;
       this -> close();
-      //    exit(1);
     }
   }
 
   void Collection::close() {
     sqlite3_close(this -> db);
+  }
+
+  void Collection::scan(const string& path) {
+    this -> flush();
+    this -> scanFiles(path);
   }
 
   void Collection::flush() {
@@ -70,7 +74,7 @@ namespace RoteSonne {
           "album VARCHAR (255), tracknum INTEGER )", NULL, NULL, NULL);
   }
 
-  int Collection::scan(string path, int level) {
+  int Collection::scanFiles(string path, int level) {
     if (!path.empty()) {
 
       if (chdir(path.c_str()) == -1) {
@@ -104,7 +108,7 @@ namespace RoteSonne {
           }
 
           if (statBuf.st_mode & S_IFDIR) { // if dir
-            scan(namelist[cnt] -> d_name, level + 1);
+            scanFiles(namelist[cnt] -> d_name, level + 1);
           }
 
           if (statBuf.st_mode & S_IFREG) { // if file

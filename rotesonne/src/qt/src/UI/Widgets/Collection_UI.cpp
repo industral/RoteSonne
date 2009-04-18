@@ -39,9 +39,23 @@ namespace RoteSonne {
         // load UI widget
         this -> widget = LoadUI::loadUI(":/forms/ui/Collection.ui");
 
+        // find all components in widget
+        this -> findChilds();
+
         // attach handlers
         this -> addHandlers();
       }
+
+      //      Collection_UI::Collection_UI() {
+      //        // load UI widget
+      //        this -> widget = LoadUI::loadUI(":/forms/ui/Collection.ui");
+      //
+      //        // find all components in widget
+      //        this -> findChilds();
+      //
+      //        // attach handlers
+      //        this -> addHandlers();
+      //      }
 
       Collection_UI::~Collection_UI() {
       }
@@ -54,24 +68,37 @@ namespace RoteSonne {
       // Private methods
       // --------------------------------------------------------------------
 
+      void Collection_UI::findChilds() {
+        this -> closeButton
+            = this -> widget -> findChild < QDialogButtonBox * > ("closeButton");
+
+        this -> browseButton = this -> widget -> findChild < QPushButton * > (
+            "browseButton");
+
+        this -> scanButton = this -> widget -> findChild < QPushButton * > (
+            "scanButton");
+
+        this -> collectionPathLineEdit = this -> widget -> findChild <
+            QLineEdit * > ("collectionPathLineEdit");
+      }
+
       void Collection_UI::addHandlers() {
-        connect(this -> widget -> findChild < QDialogButtonBox * > ("closeButton"),
+        // add "Close" handle
+        // close widget
+        connect(this -> closeButton,
             SIGNAL(clicked(QAbstractButton*)), widget, SLOT(close()));
 
-        connect(this -> widget -> findChild < QDialogButtonBox * > ("closeButton"),
+        // free resource on close
+        connect(this -> closeButton,
             SIGNAL(clicked(QAbstractButton*)), this, SLOT(close()));
 
         // add "Browse" handler
-        connect(this -> widget -> findChild < QPushButton * > ("browseButton"),
-            SIGNAL(clicked()), this, SLOT(openDialog()));
+        connect(this -> browseButton, SIGNAL(clicked()), this, SLOT(
+            openDialog()));
 
         // add "Scan" handler
-        connect(this -> widget -> findChild < QPushButton * > ("scanButton"),
-            SIGNAL(clicked()), this, SLOT(scanCollection()));
-
-        // add "Collection" handler
-        //    connect(this -> widget -> findChild < QAction * > ("actionCollection"),
-        //        SIGNAL(triggered()), this, SLOT(collectionPreferences()));
+        connect(this -> scanButton, SIGNAL(clicked()), this, SLOT(
+            scanCollection()));
       }
 
       void Collection_UI::callDestructor() {
@@ -84,14 +111,24 @@ namespace RoteSonne {
       // --------------------------------------------------------------------
 
       void Collection_UI::openDialog() {
-        cout << "asd" << endl;
-        QApplication::aboutQt();
+        QFileDialog fileDialog;
+
+        string collectionFolder = ((fileDialog.getExistingDirectory(this, tr(
+            "Select collection folder"), QDir::homePath(),
+            QFileDialog::ShowDirsOnly)).toStdString());
+
+        this -> collectionPathLineEdit -> setText((collectionFolder).c_str());
       }
 
       void Collection_UI::scanCollection() {
-        cout << "scan" << endl;
-        //      QWidget *widget = LoadUI::loadUI(":/forms/ui/aboutRoteSonne.ui");
-        //      widget -> show();
+        string collectionPath =
+            this -> collectionPathLineEdit -> text().toStdString();
+
+        Collection *collectionDb = new Collection();
+
+        collectionDb -> open();
+        collectionDb -> scan(collectionPath);
+        collectionDb -> close();
       }
 
       void Collection_UI::close() {

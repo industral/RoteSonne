@@ -32,13 +32,19 @@
 // include require Qt headers
 #include <QUiLoader>
 #include <QFile>
+#include <QFileDialog>
 #include <QWidget>
 #include <QApplication>
+
 #include <QPushButton>
 #include <QDialogButtonBox>
+#include <QLineEdit>
 
 // include UI loader
 #include "../LoadUI.hpp"
+
+// include Collection
+#include "../../Collection.hpp"
 
 using namespace std;
 
@@ -68,6 +74,14 @@ namespace RoteSonne {
            */
           Collection_UI(Collection_UI *p);
 
+          //          /**
+          //           * Default constructor used when user not allocate memory.
+          //           * @code
+          //           * Collection_UI collection;
+          //           * @endcode
+          //           */
+          //          Collection_UI();
+
           /**
            * Standart destructor.
            */
@@ -88,17 +102,18 @@ namespace RoteSonne {
           //    void collectionPreferences();
 
         private:
-          /* hide default constructor. We should use
-           Collection_UI(Collection_UI *p)
-           */
-          Collection_UI();
-
           // self pointer. Need to delete myself.
           Collection_UI *self;
 
           // Collection widget
           QWidget * widget;
 
+          QDialogButtonBox * closeButton;
+          QPushButton * browseButton;
+          QPushButton * scanButton;
+          QLineEdit * collectionPathLineEdit;
+
+          void findChilds();
           void addHandlers();
           void callDestructor();
       };

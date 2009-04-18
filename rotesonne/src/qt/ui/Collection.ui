@@ -34,7 +34,7 @@
    <item row="1" column="0" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QLineEdit" name="collectionPathLineEdit"/>
      </item>
      <item>
       <widget class="QPushButton" name="browseButton">

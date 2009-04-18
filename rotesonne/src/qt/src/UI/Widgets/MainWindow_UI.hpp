@@ -33,12 +33,19 @@
 #include <QMainWindow>
 #include <QAction>
 #include <QApplication>
+#include <QTableView>
 
 // include UI loader
 #include "../LoadUI.hpp"
 
+// include Player class
+#include "../../Player.hpp"
+
 // include Collection widget
 #include "Collection_UI.hpp"
+
+// include DB
+#include <QtSql>
 
 namespace RoteSonne {
   namespace UI {
@@ -69,11 +76,17 @@ namespace RoteSonne {
           void aboutQt();
           void about();
           void collectionPreferences();
+          void play(const QModelIndex & index);
 
         private:
           QWidget * widget;
+          Player * player;
 
+          QTableView * playList;
+
+          void findChilds();
           void addHandlers();
+          void setPlayList();
       };
     }
   }

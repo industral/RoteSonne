@@ -216,9 +216,9 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,2">
+         <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,2">
           <item>
-           <widget class="QListWidget" name="listWidget_2">
+           <widget class="QListWidget" name="alboumList">
             <item>
              <property name="text">
               <string>New Item</string>
@@ -237,57 +237,13 @@
            </widget>
           </item>
           <item>
-           <widget class="QTreeWidget" name="treeWidget">
-            <column>
-             <property name="text">
-              <string>1</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>New Column</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>New Column</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>New Column</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>New Column</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>New Column</string>
-             </property>
-            </column>
-            <item>
-             <property name="text">
-              <string>New Item</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>New Item</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>New Item</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>New Item</string>
-             </property>
-            </item>
+           <widget class="QTableView" name="playList">
+            <attribute name="horizontalHeaderCascadingSectionResizes">
+             <bool>false</bool>
+            </attribute>
+            <attribute name="horizontalHeaderCascadingSectionResizes">
+             <bool>false</bool>
+            </attribute>
            </widget>
           </item>
          </layout>
@@ -381,8 +337,8 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>18</x>
-     <y>12</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>628</x>
