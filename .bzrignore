@@ -5,3 +5,6 @@
 rotesonne
 Makefile
 moc_*
+qrc_*
+
+rotesonne/doc/api/*
