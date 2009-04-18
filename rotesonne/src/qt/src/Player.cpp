@@ -27,7 +27,7 @@
 
 namespace RoteSonne {
   Player::Player() {
-    this -> audio = new SilentMedia::Audio::Audio();
+    this -> audio = SilentMedia::Audio::Audio::Instance();
   }
 
   Player::~Player() {
