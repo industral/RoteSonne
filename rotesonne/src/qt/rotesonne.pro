@@ -12,4 +12,4 @@ SOURCES     = src/UI/LoadUI.cpp \
               src/common.cpp \
               src/Collection.cpp
               
-LIBS += -lsml -lvorbisfile -lao -lsqlite3
+LIBS += -lsml -lvorbisfile -lao -lsqlite3 -lboost_thread-mt

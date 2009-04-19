@@ -43,8 +43,13 @@ namespace RoteSonne {
       ~Player();
 
       void setAudioDriver(string driver);
-      bool openFile(string fileName, string fileId);
-      void playFile(string fileId);
+      bool open(string fileName, string fileId);
+      void close(const string& fileId);
+      void play(string fileId);
+      void stop(string fileId);
+
+      // Info
+      double getFileSize(const string& fileId);
     private:
       // SilentMedia audio object
       SilentMedia::Audio::Audio * audio;

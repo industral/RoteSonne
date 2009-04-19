@@ -39,11 +39,24 @@ namespace RoteSonne {
     audio -> init(driver);
   }
 
-  bool Player::openFile(string fileName, string fileId) {
+  bool Player::open(string fileName, string fileId) {
     return (audio -> open(fileName, fileId));
   }
 
-  void Player::playFile(string fileId) {
+  void Player::close(const string& fileId) {
+    audio -> close(fileId);
+  }
+
+  void Player::play(string fileId) {
     audio -> play(fileId);
+  }
+
+  void Player::stop(string fileId) {
+    audio -> stop(fileId);
+  }
+
+  // Info
+  double Player::getFileSize(const string& fileId) {
+    return ((audio -> getFileSize(fileId)) / 1024 / 1024.00);
   }
 }

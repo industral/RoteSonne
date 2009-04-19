@@ -34,6 +34,7 @@
 #include <QAction>
 #include <QApplication>
 #include <QTableView>
+#include <QLabel>
 
 // include UI loader
 #include "../LoadUI.hpp"
@@ -46,6 +47,9 @@
 
 // include DB
 #include <QtSql>
+
+// include main
+#include <sstream>
 
 namespace RoteSonne {
   namespace UI {
@@ -77,12 +81,24 @@ namespace RoteSonne {
           void about();
           void collectionPreferences();
           void play(const QModelIndex & index);
+          void showInfo(const QModelIndex & index);
+
+          /**
+           * Toggle status SLOT.
+           */
+          void play();
 
         private:
           QWidget * widget;
           Player * player;
 
           QTableView * playList;
+          QPushButton * playPauseButton;
+          QPushButton * prevButton;
+          QPushButton * nextButton;
+
+          // indicate play status or pause
+          bool playStatus;
 
           void findChilds();
           void addHandlers();

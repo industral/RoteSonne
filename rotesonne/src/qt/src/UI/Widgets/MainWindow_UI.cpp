@@ -34,6 +34,8 @@ namespace RoteSonne {
       // --------------------------------------------------------------------
 
       MainWindow_UI::MainWindow_UI() {
+        this -> playStatus = false;
+
         this -> player = new Player();
         this -> player -> setAudioDriver("alsa");
 
@@ -51,6 +53,8 @@ namespace RoteSonne {
       }
 
       MainWindow_UI::~MainWindow_UI() {
+        delete this -> player;
+        this -> player = NULL;
       }
 
       QWidget * MainWindow_UI::getUI() const {
@@ -62,8 +66,21 @@ namespace RoteSonne {
       // --------------------------------------------------------------------
 
       void MainWindow_UI::findChilds() {
+        // play list
         this -> playList = this -> widget -> findChild < QTableView * > (
             "playList");
+
+        // play/pause button
+        this -> playPauseButton
+            = this -> widget -> findChild < QPushButton * > ("playPauseButton");
+
+        // previous track button
+        this -> prevButton = this -> widget -> findChild < QPushButton * > (
+            "prevButton");
+
+        // next track button
+        this -> nextButton = this -> widget -> findChild < QPushButton * > (
+            "nextButton");
       }
 
       void MainWindow_UI::addHandlers() {
@@ -78,6 +95,9 @@ namespace RoteSonne {
         // add "Collection" handler
         connect(this -> widget -> findChild < QAction * > ("actionCollection"),
             SIGNAL(triggered()), this, SLOT(collectionPreferences()));
+
+        // add "Play/Pause" handler
+        connect(this -> playPauseButton, SIGNAL(clicked()), this, SLOT(play()));
       }
 
       //TODO: As SilentMedia is not finished yet, this section is also not finished.
@@ -113,6 +133,7 @@ namespace RoteSonne {
 
 connect      (this -> playList, SIGNAL (doubleClicked (const QModelIndex & )), this,
           SLOT (play(const QModelIndex & )));
+      connect ( this -> playList, SIGNAL (pressed(const QModelIndex &)), this, SLOT (showInfo(const QModelIndex &)));
 
     }
 
@@ -135,10 +156,35 @@ connect      (this -> playList, SIGNAL (doubleClicked (const QModelIndex & )), t
     }
 
     void MainWindow_UI::play(const QModelIndex & index) {
-      string fileName = index.sibling ( index.row(), 1 ).data().toString().toStdString();
-      this -> player -> openFile(fileName, fileName);
-      this -> player -> playFile(fileName);
+      string fileName = index.sibling (index.row(), 1).data().toString().toStdString();
+      this -> player -> open(fileName, fileName);
+      this -> player -> play(fileName);
+    }
+
+    void MainWindow_UI::play() {
+      // toggle status play/pause button
+      if (this -> playStatus) {
+        this -> playPauseButton -> setIcon (QIcon(":/images/player_pause.png"));
+      } else {
+        this -> playPauseButton -> setIcon (QIcon(":/images/player_play.png"));
+      }
+      // change play status
+      this -> playStatus = !this -> playStatus;
+    }
+
+    void MainWindow_UI::showInfo(const QModelIndex & index) {
+      string fileName = index.sibling (index.row(), 1).data().toString().toStdString();
+      this -> player -> open(fileName, fileName);
+
+      std::ostringstream out;
+      out.precision(2);
+      out << player -> getFileSize(fileName) << "Mb";
+
+      this -> widget -> findChild < QLabel * > ("fileSizeInfoLabel")
+      -> setText(out.str().c_str());
+      this -> player -> close(fileName);
     }
   }
 }
 }
+
