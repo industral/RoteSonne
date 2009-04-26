@@ -35,6 +35,8 @@
 #include <QApplication>
 #include <QTableView>
 #include <QLabel>
+#include <QTimer>
+#include <QSlider>
 
 // include UI loader
 #include "../LoadUI.hpp"
@@ -48,8 +50,7 @@
 // include DB
 #include <QtSql>
 
-// include main
-#include <sstream>
+#include <time.h>
 
 namespace RoteSonne {
   namespace UI {
@@ -80,13 +81,32 @@ namespace RoteSonne {
           void aboutQt();
           void about();
           void collectionPreferences();
-          void play(const QModelIndex & index);
-          void showInfo(const QModelIndex & index);
+          void play(const QModelIndex &index);
+          void pause(const QModelIndex &index);
+          void showInfo(const QModelIndex &index);
+          void initLocation(const QModelIndex &index);
+          void acivatePlayPauseButton(const QModelIndex &index);
+
+          /**
+           * Timer function , update slider position.
+           */
+          void updateSliderPosition();
+          void setSeek();
+
+          void writeSliderPosition(int position);
+
+          void beginUpdateSlider();
+          void stopUpdateSlider();
+
+          /**
+           * Set slider in position from sliderPosition variable.
+           */
+          void setSliderPosition();
 
           /**
            * Toggle status SLOT.
            */
-          void play();
+          void playPauseToggle();
 
         private:
           QWidget * widget;
@@ -97,12 +117,25 @@ namespace RoteSonne {
           QPushButton * prevButton;
           QPushButton * nextButton;
 
-          // indicate play status or pause
-          bool playStatus;
+          QModelIndex index;
+
+          QSlider * playerSlider;
+          QTimer * timer;
+
+          // selected fileId
+          string fileId;
+
+          // playing current fileId
+          string playingFileId;
+
+          // slider current position
+          int sliderPosition;
 
           void findChilds();
           void addHandlers();
           void setPlayList();
+
+          string getRandomID(const string& fileName);
       };
     }
   }

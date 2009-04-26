@@ -32,6 +32,11 @@
 namespace RoteSonne {
   class Player {
     public:
+
+      enum PlayerStatus {
+        Stop, Play, Pause
+      };
+
       /**
        * Default constructor.
        */
@@ -42,17 +47,33 @@ namespace RoteSonne {
        */
       ~Player();
 
-      void setAudioDriver(string driver);
-      bool open(string fileName, string fileId);
-      void close(const string& fileId);
-      void play(string fileId);
-      void stop(string fileId);
+      void setAudioDriver(const string &driver);
+      void setAudioDriver();
+      bool open(const string &fileName, const string &fileId);
+      void close(const string &fileId);
+      void play(const string &fileId, bool resume = false);
+      void pause(const string &fileId);
+      void stop(const string &fileId);
+
+      // seek
+      void setSeek(const string &fileId, const float &seek);
+      float getSeek(const string &fileId);
+
+      PlayerStatus getPlayerStatus();
+      void setPlayerStatus(PlayerStatus status);
 
       // Info
-      double getFileSize(const string& fileId);
+      string getFileSizeString(const string &fileId);
+      int getChannelInfo(const string &fileId);
+      int getBitsPerSample(const string &fileId);
+      string getSampleRateInfoString(const string &fileId);
+      string getBitRateString(const string &fileId);
+      string getTotalTime(const string &fileId);
     private:
       // SilentMedia audio object
       SilentMedia::Audio::Audio * audio;
+
+      PlayerStatus playerStatus;
   };
 }
 
