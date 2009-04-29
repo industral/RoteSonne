@@ -28,40 +28,17 @@
 namespace RoteSonne {
   Player::Player() {
     this -> playerStatus = Stop;
-    this -> audio = SilentMedia::Audio::Audio::Instance();
   }
 
   Player::~Player() {
-    delete this -> audio;
-    this -> audio = NULL;
   }
 
   void Player::setAudioDriver(const string &driver) {
-    audio -> init(driver);
+    init(driver);
   }
 
   void Player::setAudioDriver() {
-    audio -> init();
-  }
-
-  bool Player::open(const string &fileName, const string &fileId) {
-    return (audio -> open(fileName, fileId));
-  }
-
-  void Player::close(const string &fileId) {
-    audio -> close(fileId);
-  }
-
-  void Player::play(const string &fileId, bool resume) {
-    audio -> play(fileId, resume);
-  }
-
-  void Player::pause(const string &fileId) {
-    audio -> pause(fileId);
-  }
-
-  void Player::stop(const string &fileId) {
-    audio -> stop(fileId);
+    init();
   }
 
   // Player status
@@ -73,51 +50,38 @@ namespace RoteSonne {
     this -> playerStatus = status;
   }
 
-  // Seek
-  float Player::getSeek(const string &fileId) {
-    return (this -> audio -> getSeek(fileId));
-  }
-
-  void Player::setSeek(const string &fileId, const float &seek) {
-    this -> audio -> setSeek(fileId, seek);
-  }
-
   // Info
   string Player::getFileSizeString(const string &fileId) {
-    double fileSize = ((audio -> getFileSize(fileId)) / 1024 / 1024.00);
+    double fileSize = ((getFileSize(fileId)) / 1024 / 1024.00);
     ostringstream out;
     out.precision(3);
     out << fileSize << "Mb";
     return out.str();
   }
 
-  int Player::getChannelInfo(const string &fileId) {
-    return (audio -> getChannels(fileId));
-  }
-
   string Player::getSampleRateInfoString(const string &fileId) {
     ostringstream out;
-    out << audio -> getSampleRate(fileId);
+    out << getSampleRate(fileId);
     out << "Hz";
     return out.str();
   }
 
-  int Player::getBitsPerSample(const string &fileId) {
-    return (audio -> getBitsPerSample(fileId));
-  }
-
   string Player::getBitRateString(const string &fileId) {
     ostringstream out;
-    out << audio -> getBitRate(fileId) / 1000;
+    out << getBitRate(fileId) / 1000;
     out << "kbps";
     return out.str();
   }
 
   string Player::getTotalTime(const string &fileId) {
     ostringstream out;
-    out << (static_cast < int > (audio -> getTotalTime(fileId)) / 60); // min
+    out
+        << (static_cast < int > (SilentMedia::Audio::Audio::getTotalTime(fileId))
+            / 60); // min
     out << ":";
-    out << (static_cast < int > (audio -> getTotalTime(fileId)) % 60); //sec
+    out
+        << (static_cast < int > (SilentMedia::Audio::Audio::getTotalTime(fileId))
+            % 60); //sec
     return out.str();
   }
 

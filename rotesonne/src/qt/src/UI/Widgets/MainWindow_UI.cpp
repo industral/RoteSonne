@@ -269,7 +269,7 @@ connect      (this -> playList, SIGNAL (doubleClicked (const QModelIndex & )), t
 
         // Set channel info
         this -> widget -> findChild < QLabel * > ("channelsInfoLabel")
-        -> setNum(this -> player -> getChannelInfo(this -> fileId));
+        -> setNum(this -> player -> getChannels(this -> fileId));
 
         // Set bps info
         this -> widget -> findChild < QLabel * > ("bpsInfoLabel")

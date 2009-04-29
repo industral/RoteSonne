@@ -30,7 +30,7 @@
 #include <libsml/Audio/Audio.hpp>
 
 namespace RoteSonne {
-  class Player {
+  class Player: public SilentMedia::Audio::Audio {
     public:
 
       enum PlayerStatus {
@@ -49,30 +49,16 @@ namespace RoteSonne {
 
       void setAudioDriver(const string &driver);
       void setAudioDriver();
-      bool open(const string &fileName, const string &fileId);
-      void close(const string &fileId);
-      void play(const string &fileId, bool resume = false);
-      void pause(const string &fileId);
-      void stop(const string &fileId);
-
-      // seek
-      void setSeek(const string &fileId, const float &seek);
-      float getSeek(const string &fileId);
 
       PlayerStatus getPlayerStatus();
       void setPlayerStatus(PlayerStatus status);
 
       // Info
       string getFileSizeString(const string &fileId);
-      int getChannelInfo(const string &fileId);
-      int getBitsPerSample(const string &fileId);
       string getSampleRateInfoString(const string &fileId);
       string getBitRateString(const string &fileId);
       string getTotalTime(const string &fileId);
     private:
-      // SilentMedia audio object
-      SilentMedia::Audio::Audio * audio;
-
       PlayerStatus playerStatus;
   };
 }
