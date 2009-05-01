@@ -46,6 +46,10 @@ namespace RoteSonne {
         // load UI resource file.
         this -> widget = LoadUI::loadUI(":/forms/ui/mainWindow.ui");
 
+        // load widgets
+        this -> trackinfo = new TrackInfo_UI(this -> widget);
+        this -> playlist = new PlayList_UI(this -> widget);
+
         // get all components from widget
         this -> findChilds();
 
@@ -59,6 +63,12 @@ namespace RoteSonne {
       MainWindow_UI::~MainWindow_UI() {
         delete this -> player;
         this -> player = NULL;
+
+        delete this -> trackinfo;
+        this -> trackinfo = NULL;
+
+        delete this -> playlist;
+        this -> playlist = NULL;
       }
 
       QWidget * MainWindow_UI::getUI() const {
@@ -138,36 +148,9 @@ namespace RoteSonne {
             beginUpdateSlider()));
       }
 
-      //TODO: As SilentMedia is not finished yet, this section is also not finished.
       void MainWindow_UI::setPlayList() {
-        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-        db.setDatabaseName("collection.db");
-        bool ok = db.open();
-
-        QSqlTableModel * model = new QSqlTableModel;
-        model -> setTable("collection");
-        model -> setEditStrategy(QSqlTableModel::OnManualSubmit);
-        model -> select();
-        model -> setHeaderData(2, Qt::Horizontal, tr("Name"));
-        model -> setHeaderData(3, Qt::Horizontal, tr("Artist"));
-        model -> setHeaderData(4, Qt::Horizontal, tr("Album"));
-
-        this -> playList -> setModel(model);
-
-        // select row at all
-        this -> playList -> setSelectionBehavior(QAbstractItemView::SelectRows);
-
-        // deny change row in doubler click
-        this -> playList -> setEditTriggers(QAbstractItemView::NoEditTriggers);
-
-        // set size
-        this -> playList -> setColumnWidth(1, 440);
-        //        this -> playList -> setColumnWidth(3, 220);
-        //        this -> playList -> setColumnWidth(4, 220);
-
-        this -> playList -> hideColumn(0);
-        //        this -> playList  -> hideColumn ( 1 );
-        this -> playList -> hideColumn(5);
+        // setup play list
+        this -> playlist -> setPlayList(this -> playList);
 
 connect      (this -> playList, SIGNAL (doubleClicked (const QModelIndex & )), this,
           SLOT (play(const QModelIndex & )));
@@ -268,30 +251,8 @@ connect      (this -> playList, SIGNAL (doubleClicked (const QModelIndex & )), t
 
       // before doing something we should check if it open success
       if (this -> player -> open(fileName, this -> fileId)) {
-
-        // Set sample rate info
-        this -> widget -> findChild < QLabel * > ("sampleRateInfoLabel")
-        -> setText(this -> player -> getSampleRateInfoString(this -> fileId).c_str());
-
-        // Set channel info
-        this -> widget -> findChild < QLabel * > ("channelsInfoLabel")
-        -> setNum(this -> player -> getChannels(this -> fileId));
-
-        // Set bps info
-        this -> widget -> findChild < QLabel * > ("bpsInfoLabel")
-        -> setNum(this -> player -> getBitsPerSample(this -> fileId));
-
-        // Set bit rate info
-        this -> widget -> findChild < QLabel * > ("bitrateInfoLabel")
-        -> setText(this -> player -> getBitRateString(this -> fileId).c_str());
-
-        // Set total time info
-        this -> widget -> findChild < QLabel * > ("totalTimeInfoLabel")
-        -> setText(this -> player -> getTotalTime(this -> fileId).c_str());
-
-        // Set file size info
-        this -> widget -> findChild < QLabel * > ("fileSizeInfoLabel")
-        -> setText(this -> player -> getFileSizeString(this -> fileId).c_str());
+        // show information
+        this -> trackinfo -> showInfo(this -> fileId, this -> player);
 
         this -> player -> close(this -> fileId);
       }
@@ -303,7 +264,7 @@ connect      (this -> playList, SIGNAL (doubleClicked (const QModelIndex & )), t
 
     void MainWindow_UI::acivatePlayPauseButton(const QModelIndex & index) {
       this -> playPauseButton -> setEnabled(true);
-      disconnect ( this -> playList, SIGNAL (pressed(const QModelIndex &)), this, SLOT (acivatePlayPauseButton(const QModelIndex &)));
+      //      disconnect ( this -> playList, SIGNAL (pressed(const QModelIndex &)), this, SLOT (acivatePlayPauseButton(const QModelIndex &)));
     }
 
     void MainWindow_UI::updateSliderPosition() {

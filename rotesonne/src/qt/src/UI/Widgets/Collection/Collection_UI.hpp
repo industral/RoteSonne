@@ -42,10 +42,10 @@
 #include <QLineEdit>
 
 // include UI loader
-#include "../LoadUI.hpp"
+#include "../../LoadUI.hpp"
 
 // include Collection
-#include "../../Collection.hpp"
+#include "../../../Collection.hpp"
 
 using namespace std;
 

@@ -28,27 +28,24 @@
 
 // include require Qt headers
 #include <QUiLoader>
-#include <QFile>
-#include <QWidget>
 #include <QMainWindow>
 #include <QAction>
-#include <QApplication>
-#include <QTableView>
 #include <QLabel>
 #include <QTimer>
 #include <QSlider>
 
 // include UI loader
-#include "../LoadUI.hpp"
+#include "../../LoadUI.hpp"
 
 // include Player class
-#include "../../Player.hpp"
+#include "../../../Player.hpp"
 
 // include Collection widget
-#include "Collection_UI.hpp"
+#include "../Collection/Collection_UI.hpp"
 
-// include DB
-#include <QtSql>
+// include MainWindow widgets
+#include "Widgets/TrackInfo_UI.hpp"
+#include "Widgets/PlayList_UI.hpp"
 
 namespace RoteSonne {
   namespace UI {
@@ -109,6 +106,10 @@ namespace RoteSonne {
         private:
           QWidget * widget;
           Player * player;
+
+          // widgets
+          TrackInfo_UI *trackinfo;
+          PlayList_UI *playlist;
 
           QTableView * playList;
           QPushButton * playPauseButton;
