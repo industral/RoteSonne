@@ -15,4 +15,4 @@ SOURCES     = src/UI/LoadUI.cpp \
               src/common.cpp \
               src/Collection.cpp
               
-LIBS += -lsml -lvorbisfile -lFLAC++ -lwavpack -lao -lsqlite3 -lboost_thread-mt
+LIBS += -lsml -lvorbisfile -lFLAC++ -lwavpack -lao -lsqlite3 -lboost_thread-mt -lboost_filesystem-mt

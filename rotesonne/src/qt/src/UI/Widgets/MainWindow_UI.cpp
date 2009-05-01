@@ -91,10 +91,16 @@ namespace RoteSonne {
             "nextButton");
       }
 
-      string MainWindow_UI::getRandomID(const string& fileName) {
-        srand(time(NULL));
+      string MainWindow_UI::getRandomID(const string &fileName) {
+        boost::mt19937 rng;
+        rng.seed(static_cast < unsigned > (std::time(0)));
+        boost::uniform_int < > distribution(1, LONG_MAX);
+        boost::variate_generator < boost::mt19937&, boost::uniform_int < > >
+            die(rng, distribution);
+
         stringstream out;
-        out << fileName << rand();
+        out << fileName << die();
+
         return out.str();
       }
 

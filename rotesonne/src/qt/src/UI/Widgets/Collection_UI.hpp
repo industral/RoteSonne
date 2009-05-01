@@ -35,6 +35,7 @@
 #include <QFileDialog>
 #include <QWidget>
 #include <QApplication>
+#include <QTimer>
 
 #include <QPushButton>
 #include <QDialogButtonBox>
@@ -99,14 +100,18 @@ namespace RoteSonne {
           void openDialog();
           void scanCollection();
           void close();
+          void updateProcessBar();
           //    void collectionPreferences();
 
         private:
           // self pointer. Need to delete myself.
           Collection_UI *self;
 
+          Collection *collectionDb;
+
           // Collection widget
           QWidget * widget;
+          QTimer * timer;
 
           QDialogButtonBox * closeButton;
           QPushButton * browseButton;

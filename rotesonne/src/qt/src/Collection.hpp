@@ -29,6 +29,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
 
 #include <unistd.h> // chdir(2), stat(2)
 #include <sys/types.h> // stat(2)
@@ -37,6 +38,9 @@
 
 #include <dirent.h>
 #include <sqlite3.h>
+
+// include pthread
+#include <pthread.h>
 
 using namespace std;
 
@@ -50,18 +54,21 @@ namespace RoteSonne {
       void flush();
       void close();
       void scan(const string& path);
+      void start();
 
-      int scanFiles(string path, int level = 0);
+      int scanFiles(const string &path, const int &level = 0);
       string replace(string str) const;
+      void updateDb();
+      long getProcess();
     private:
       sqlite3 * db;
-      //    SQLite * sql;
 
-      //    SilentMedia::Audio * audio;
-      //    SilentMedia::DecodedData * ddata;
-      //       libssoss::DSP * dsp;
-      //       libssoss::DSP * thdsp;
       map < string, string > vorbisComm;
+      vector < string > queryList;
+
+      string path;
+      long process;
+      pthread_t pid;
   };
 }
 

@@ -32,6 +32,13 @@
 
 #include "Collection.hpp"
 
+void * scanThreadFunc(void * data) {
+  RoteSonne::Collection * collection =
+      static_cast < RoteSonne::Collection * > (data);
+  collection -> start();
+  return NULL;
+}
+
 static int filter(const struct dirent * dir) {
   if ((dir -> d_name[0] == '.') && (dir -> d_name[1] == 0)) {
     return 0;
@@ -58,12 +65,19 @@ namespace RoteSonne {
   }
 
   void Collection::close() {
+    pthread_join(this -> pid, NULL);
     sqlite3_close(this -> db);
   }
 
-  void Collection::scan(const string& path) {
+  void Collection::scan(const string &path) {
+    this -> path = path;
+    pthread_create(&this -> pid, NULL, scanThreadFunc, this);
+  }
+
+  void Collection::start() {
     this -> flush();
-    this -> scanFiles(path);
+    this -> scanFiles(this -> path);
+    this -> updateDb();
   }
 
   void Collection::flush() {
@@ -74,12 +88,11 @@ namespace RoteSonne {
           "album VARCHAR (255), tracknum INTEGER )", NULL, NULL, NULL);
   }
 
-  int Collection::scanFiles(string path, int level) {
+  int Collection::scanFiles(const string &path, const int &level) {
     if (!path.empty()) {
 
       if (chdir(path.c_str()) == -1) {
-        //  if (errno == )
-        //      cout << "Error to chdir() in Collection::Collection() " << endl;
+        cerr << "Could not change directory " << endl;
       }
 
       struct dirent **namelist;
@@ -88,8 +101,7 @@ namespace RoteSonne {
       int n = scandir("./", &namelist, filter, alphasort);
 
       if (n >= 0) {
-        int cnt;
-        for (cnt = 0; cnt < n; ++cnt) {
+        for (int cnt = 0; cnt < n; ++cnt) {
 
           char currPathBuf[255];
           if (getcwd(currPathBuf, 254) == NULL) {
@@ -135,20 +147,37 @@ namespace RoteSonne {
               query += "" /*this -> replace(vorbisComm["TRACKNUMBER"])*/;
               query += "\")";
 
+              cout << fullPathFileName_ << endl;
+              this -> queryList.push_back(query);
+
               //            this -> audio -> closeF(id);
               //                   this -> audio -> flush();
-              sqlite3_exec(this -> db, query.c_str(), NULL, NULL, NULL);
             }
           }
-          //        free(namelist[cnt]);
+          free(namelist[cnt]);
         }
-        //      free(namelist);
+        free(namelist);
       } else {
         perror("Couldn't open the directory");
       }
       chdir("..");
     }
     return 1;
+  }
+
+  void Collection::updateDb() {
+    for (int i = 0; i < this -> queryList.size(); ++i) {
+      cout << "DB: " << (queryList[i]) << endl;
+
+      this -> process = 100
+          / (static_cast < double > (this -> queryList.size()) / (i + 1));
+
+      sqlite3_exec(this -> db, queryList[i].c_str(), NULL, NULL, NULL);
+    }
+  }
+
+  long Collection::getProcess() {
+    return this -> process;
   }
 
   /*

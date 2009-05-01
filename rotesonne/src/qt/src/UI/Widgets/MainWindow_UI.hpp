@@ -50,8 +50,6 @@
 // include DB
 #include <QtSql>
 
-#include <time.h>
-
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {

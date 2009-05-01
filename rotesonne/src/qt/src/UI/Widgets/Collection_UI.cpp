@@ -35,6 +35,9 @@ namespace RoteSonne {
 
       Collection_UI::Collection_UI(Collection_UI *p) {
         this -> self = p;
+        this -> timer = new QTimer(this);
+
+        this -> collectionDb = new Collection();
 
         // load UI widget
         this -> widget = LoadUI::loadUI(":/forms/ui/Collection.ui");
@@ -58,6 +61,8 @@ namespace RoteSonne {
       //      }
 
       Collection_UI::~Collection_UI() {
+        delete this -> collectionDb;
+        this -> collectionDb = NULL;
       }
 
       void Collection_UI::show() {
@@ -99,6 +104,10 @@ namespace RoteSonne {
         // add "Scan" handler
         connect(this -> scanButton, SIGNAL(clicked()), this, SLOT(
             scanCollection()));
+
+        // Update process bar position every n seconds
+//        connect(this -> timer, SIGNAL(timeout()), this,
+//            SLOT(updateProcessBar()));
       }
 
       void Collection_UI::callDestructor() {
@@ -106,6 +115,7 @@ namespace RoteSonne {
         delete this -> self;
         this -> self = NULL;
       }
+
       // --------------------------------------------------------------------
       // Slots
       // --------------------------------------------------------------------
@@ -124,15 +134,24 @@ namespace RoteSonne {
         string collectionPath =
             this -> collectionPathLineEdit -> text().toStdString();
 
-        Collection *collectionDb = new Collection();
+        this -> collectionDb = new Collection();
 
-        collectionDb -> open();
-        collectionDb -> scan(collectionPath);
-        collectionDb -> close();
+        this -> collectionDb -> open();
+        this -> collectionDb -> scan(collectionPath);
+
+//        this -> timer -> start(100);
+
+        this -> collectionDb -> close();
+
+        //        this -> timer -> stop();
       }
 
       void Collection_UI::close() {
         this -> callDestructor();
+      }
+
+      void Collection_UI::updateProcessBar() {
+        cout << this -> collectionDb -> getProcess() << endl;
       }
 
     //

@@ -27,7 +27,6 @@
 #define _ROTESONNE_PLAYER_HPP_
 
 #include <libsml/all.hpp>
-#include <libsml/Audio/Audio.hpp>
 
 namespace RoteSonne {
   class Player: public SilentMedia::Audio::Audio {
