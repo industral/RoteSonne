@@ -65,8 +65,9 @@ namespace RoteSonne {
               this -> model = new QSqlTableModel();
 
               this -> model -> setTable("collection");
-              this -> model -> setEditStrategy(QSqlTableModel::OnManualSubmit);
+              this -> model -> setFilter(this -> filter);
               this -> model -> select();
+
               this -> model -> setHeaderData(2, Qt::Horizontal, QObject::tr(
                   "Track"));
               this -> model -> setHeaderData(3, Qt::Horizontal, QObject::tr(
@@ -75,6 +76,8 @@ namespace RoteSonne {
                   "Artist"));
               this -> model -> setHeaderData(5, Qt::Horizontal, QObject::tr(
                   "Album"));
+
+              this -> model -> setEditStrategy(QSqlTableModel::OnManualSubmit);
 
               this -> trackListComponent -> setModel(this -> model);
 
@@ -86,6 +89,9 @@ namespace RoteSonne {
               this -> trackListComponent -> setEditTriggers(
                   QAbstractItemView::NoEditTriggers);
 
+              // odd
+              this -> trackListComponent -> setAlternatingRowColors(true);
+
               // set size
               this -> trackListComponent -> setColumnWidth(2, 50); // track
               this -> trackListComponent -> setColumnWidth(3, 330); // name
@@ -96,11 +102,16 @@ namespace RoteSonne {
               this -> trackListComponent -> hideColumn(1); // filename
             }
 
+            void TrackList_UI::setFilter(const QString &filter) {
+              this -> filter = filter;
+            }
+
             void TrackList_UI::dropPlayList() {
               this -> model -> clear();
               delete this -> model;
               this -> model = NULL;
             }
+
             // --------------------------------------------------------------------
             // Private methods
             // --------------------------------------------------------------------

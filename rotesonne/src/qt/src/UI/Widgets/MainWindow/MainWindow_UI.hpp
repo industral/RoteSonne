@@ -47,6 +47,7 @@
 #include "Widgets/TrackInfo_UI.hpp"
 #include "Widgets/Cover_UI.hpp"
 #include "Widgets/PlayList/TrackList_UI.hpp"
+#include "Widgets/PlayList/ArtistList_UI.hpp"
 
 namespace RoteSonne {
   namespace UI {
@@ -57,8 +58,7 @@ namespace RoteSonne {
          */
         class MainWindow_UI: public QMainWindow {
             Q_OBJECT
-            friend class Collection_UI;
-          public:
+            public:
             /**
              * Default constructor.
              */
@@ -117,6 +117,8 @@ namespace RoteSonne {
                 *trackinfo;
             RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList_UI
                 *trackList;
+            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::ArtistList_UI
+                *artistList;
             RoteSonne::UI::Widgets::MainWindow::Widgets::Cover_UI *cover;
 
             QTableView * playListComponent;

@@ -23,67 +23,74 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#include "Player.hpp"
+#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_ARTISTLIST_HPP_
+#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_ARTISTLIST_HPP_
+
+#include <iostream>
+
+// include require Qt headers
+#include <QWidget>
+#include <QListWidget>
+
+// include AbstractPlayList
+#include "AbstractPlayList.hpp"
+
+#include "TrackList_UI.hpp"
+
+// include DB
+#include <QtSql>
+
+using namespace std;
 
 namespace RoteSonne {
-  Player::Player() {
-    this -> playerStatus = Stop;
+  namespace UI {
+    namespace Widgets {
+      namespace MainWindow {
+        namespace Widgets {
+          namespace PlayList {
+            class ArtistList_UI: public QWidget,
+                virtual public AbstractPlayList {
+                Q_OBJECT
+                public:
+                //                static ArtistList_UI * Instance();
+
+                /**
+                 * Default constructor.
+                 */
+                ArtistList_UI();
+
+                /**
+                 * Default destructor.
+                 */
+                ~ArtistList_UI();
+
+                void init(QWidget *widget);
+                void setPlayList();
+                void dropPlayList();
+              private:
+                //                static ArtistList_UI * _artistListUI;
+
+
+                QWidget * widget;
+
+                QSqlDatabase db;
+                QSqlQuery query;
+
+                QListWidget * artistListComponent;
+
+                TrackList_UI * trackList;
+
+                void findChilds();
+                void addHandlers();
+
+private            slots:
+            bool setFilter(QListWidgetItem * item);
+          };
+        }
+      }
+    }
   }
-
-  Player::~Player() {
-  }
-
-  void Player::setAudioDriver(const string &driver) {
-    init(driver);
-  }
-
-  void Player::setAudioDriver() {
-    init();
-  }
-
-  // Player status
-  Player::PlayerStatus Player::getPlayerStatus() {
-    return this -> playerStatus;
-  }
-
-  void Player::setPlayerStatus(PlayerStatus status) {
-    this -> playerStatus = status;
-  }
-
-  // Info
-  string Player::getFileSizeString(const string &fileId) {
-    double fileSize = ((getFileSize(fileId)) / 1024 / 1024.00);
-    ostringstream out;
-    out.precision(3);
-    out << fileSize << "Mb";
-    return out.str();
-  }
-
-  string Player::getSampleRateInfoString(const string &fileId) {
-    ostringstream out;
-    out << getSampleRate(fileId);
-    out << "Hz";
-    return out.str();
-  }
-
-  string Player::getBitRateString(const string &fileId) {
-    ostringstream out;
-    out << getBitRate(fileId) / 1000;
-    out << "kbps";
-    return out.str();
-  }
-
-  string Player::getTotalTime(const string &fileId) {
-    ostringstream out;
-    out
-        << (static_cast < int > (SilentMedia::Audio::Audio::getTotalTime(fileId))
-            / 60); // min
-    out << ":";
-    out
-        << (static_cast < int > (SilentMedia::Audio::Audio::getTotalTime(fileId))
-            % 60); // sec
-
-    return out.str();
-  }
-
 }
+}
+
+#endif

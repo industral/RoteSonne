@@ -23,8 +23,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_PLAYLIST_HPP_
-#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_PLAYLIST_HPP_
+#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_TRACKLIST_HPP_
+#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_TRACKLIST_HPP_
 
 #include <iostream>
 
@@ -56,7 +56,10 @@ namespace RoteSonne {
                 ~TrackList_UI();
 
                 void init(QWidget *widget);
+
                 void setPlayList();
+                void setFilter(const QString &filter);
+
                 void dropPlayList();
               private:
                 static TrackList_UI * _playListUI;
@@ -70,6 +73,8 @@ namespace RoteSonne {
                 QSqlDatabase db;
                 QSqlTableModel * model;
                 QTableView * trackListComponent;
+
+                QString filter;
 
                 void findChilds();
                 bool openDbConnection();
