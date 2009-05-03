@@ -29,9 +29,9 @@ namespace RoteSonne {
 
   /**
    * DB structure:
-
+   PRAGMA encoding = "UTF-8";
    CREATE TABLE collection (id INTEGER PRIMARY KEY AUTOINCREMENT, fileName VARCHAR (255),
-   tracknum INTEGER, title VARCHAR (255), artist VARCHAR (255), album VARCHAR (255))
+   tracknum INTEGER, title VARCHAR (255), artist VARCHAR (255), album VARCHAR (255));
 
    */
 

@@ -30,6 +30,13 @@
 using namespace RoteSonne::UI::Widgets::MainWindow;
 
 int main(int argc, char **argv) {
+
+  // set encoding to UTF-8
+  QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+  QTextCodec::setCodecForTr(codec);
+  QTextCodec::setCodecForLocale(codec);
+  QTextCodec::setCodecForCStrings(codec);
+
   QApplication app(argc, argv);
 
   MainWindow_UI * mainWindow = new MainWindow_UI();
