@@ -81,7 +81,8 @@ namespace RoteSonne {
     out << ":";
     out
         << (static_cast < int > (SilentMedia::Audio::Audio::getTotalTime(fileId))
-            % 60); //sec
+            % 60) << "m"; // sec
+
     return out.str();
   }
 

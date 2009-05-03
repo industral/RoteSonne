@@ -9,12 +9,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1258</width>
-    <height>695</height>
+    <width>1404</width>
+    <height>710</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>RoteSonner</string>
+   <string>ЯoteSonne</string>
   </property>
   <property name="windowIcon">
    <iconset resource="../rotesonne.qrc">
@@ -171,6 +171,9 @@
          </property>
         </widget>
         <widget class="QSlider" name="playerSlider">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="geometry">
           <rect>
            <x>250</x>
@@ -178,6 +181,9 @@
            <width>714</width>
            <height>19</height>
           </rect>
+         </property>
+         <property name="focusPolicy">
+          <enum>Qt::NoFocus</enum>
          </property>
          <property name="orientation">
           <enum>Qt::Horizontal</enum>
@@ -345,46 +351,14 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,2">
+         <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,5">
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_5" stretch="2,1">
             <item>
-             <widget class="QListWidget" name="alboumList">
-              <item>
-               <property name="text">
-                <string>New Item</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>New Item</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>New Item</string>
-               </property>
-              </item>
-             </widget>
+             <widget class="QListWidget" name="artistList"/>
             </item>
             <item>
-             <widget class="QListWidget" name="listWidget">
-              <item>
-               <property name="text">
-                <string>New Item</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>New Item</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>New Item</string>
-               </property>
-              </item>
-             </widget>
+             <widget class="QListWidget" name="albumList"/>
             </item>
            </layout>
           </item>
@@ -413,7 +387,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1258</width>
+     <width>1404</width>
      <height>25</height>
     </rect>
    </property>

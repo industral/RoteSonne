@@ -23,8 +23,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_UI_COLLECTION_HPP_
-#define _ROTESONNE_UI_COLLECTION_HPP_
+#ifndef _ROTESONNE_UI_WIDGETS_COLLECTION_COLLECTION_HPP_
+#define _ROTESONNE_UI_WIDGETS_COLLECTION_COLLECTION_HPP_
 
 // main include
 #include <iostream>
@@ -49,89 +49,90 @@
 // include Collection
 #include "../../../Collection.hpp"
 
-// include MainWindow
-#include "../MainWindow/Widgets/PlayList_UI.hpp"
+// include
+#include "../MainWindow/Widgets/PlayList/PlayList_UI.hpp"
 
 using namespace std;
 
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {
-      class MainWindow_UI;
+      namespace Collection {
+        /**
+         * Collection preferences/scan widget.
+         * Simple example how to use. To show this widget, need just create object
+         * and call show method:
+         * @code
+         * Collection_UI *collection = new Collection_UI(collection);
+         * collection -> show();
+         * @endcode
+         * Thats all.
+         */
+        class Collection_UI: public QWidget {
+            Q_OBJECT
+            public:
 
-      /**
-       * Collection preferences/scan widget.
-       * Simple example how to use. To show this widget, need just create object
-       * and call show method:
-       * @code
-       * Collection_UI *collection = new Collection_UI(collection);
-       * collection -> show();
-       * @endcode
-       * Thats all.
-       */
-      class Collection_UI: public QWidget {
-          Q_OBJECT
-          public:
+            /**
+             * Main constructor. Should be used to create widget instance.
+             * @param p point to memory address of widget.
+             * @code
+             * Collection_UI *collection = new Collection_UI(collection);
+             * @endcode
+             */
+            Collection_UI(Collection_UI *p, QTableView *playList);
 
-          /**
-           * Main constructor. Should be used to create widget instance.
-           * @param p point to memory address of widget.
-           * @code
-           * Collection_UI *collection = new Collection_UI(collection);
-           * @endcode
-           */
-          Collection_UI(Collection_UI *p, QTableView *playList);
+            //          /**
+            //           * Default constructor used when user not allocate memory.
+            //           * @code
+            //           * Collection_UI collection;
+            //           * @endcode
+            //           */
+            //          Collection_UI();
 
-          //          /**
-          //           * Default constructor used when user not allocate memory.
-          //           * @code
-          //           * Collection_UI collection;
-          //           * @endcode
-          //           */
-          //          Collection_UI();
+            /**
+             * Standart destructor.
+             */
+            ~Collection_UI();
 
-          /**
-           * Standart destructor.
-           */
-          ~Collection_UI();
+            /**
+             * Show widget. Call this function to provide appearing widget.
+             * @code
+             * collection -> show();
+             * @endcode
+             */
+            void show();
 
-          /**
-           * Show widget. Call this function to provide appearing widget.
-           * @code
-           * collection -> show();
-           * @endcode
-           */
-          void show();
+            private slots:
+            void openDialog();
+            void scanCollection();
+            void close();
+            void updateProcessBar();
+            //    void collectionPreferences();
 
-          private slots:
-          void openDialog();
-          void scanCollection();
-          void close();
-          void updateProcessBar();
-          //    void collectionPreferences();
+          private:
+            // self pointer. Need to delete myself.
+            Collection_UI *self;
 
-        private:
-          // self pointer. Need to delete myself.
-          Collection_UI *self;
+            RoteSonne::Collection *collectionDb;
+            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::PlayList_UI
+                * playListUI;
+            QTableView *playList;
 
-          Collection *collectionDb;
-          PlayList_UI * playListUI;
-          QTableView *playList;
+            // Collection widget
+            QWidget * widget;
+            QTimer * timer;
 
-          // Collection widget
-          QWidget * widget;
-          QTimer * timer;
+            QDialogButtonBox * closeButton;
+            QPushButton * browseButton;
+            QPushButton * scanButton;
+            QLineEdit * collectionPathLineEdit;
+            QProgressBar * progressBar;
 
-          QDialogButtonBox * closeButton;
-          QPushButton * browseButton;
-          QPushButton * scanButton;
-          QLineEdit * collectionPathLineEdit;
-          QProgressBar * progressBar;
-
-          void findChilds();
-          void addHandlers();
-          void callDestructor();
-      };
+            void findChilds();
+            void addHandlers();
+            void callDestructor();
+        };
+      }
     }
   }
 }

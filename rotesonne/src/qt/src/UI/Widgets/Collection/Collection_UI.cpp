@@ -28,133 +28,137 @@
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {
+      namespace Collection {
 
-      // --------------------------------------------------------------------
-      // Public methods
-      // --------------------------------------------------------------------
+        // --------------------------------------------------------------------
+        // Public methods
+        // --------------------------------------------------------------------
 
-      Collection_UI::Collection_UI(Collection_UI *p, QTableView *playList) {
-        this -> playList = playList;
+        Collection_UI::Collection_UI(Collection_UI *p, QTableView *playList) {
+          this -> playList = playList;
 
-        this -> self = p;
-        this -> timer = new QTimer(this);
+          this -> self = p;
+          this -> timer = new QTimer(this);
 
-        this -> collectionDb = new Collection();
-        this -> playListUI = PlayList_UI::Instance();
+          this -> collectionDb = new RoteSonne::Collection();
+          this -> playListUI
+              = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::PlayList_UI::Instance();
 
-        // load UI widget
-        this -> widget = LoadUI::loadUI(":/forms/ui/Collection.ui");
+          // load UI widget
+          this -> widget = LoadUI::loadUI(":/forms/ui/Collection.ui");
 
-        // find all components in widget
-        this -> findChilds();
+          // find all components in widget
+          this -> findChilds();
 
-        // attach handlers
-        this -> addHandlers();
+          // attach handlers
+          this -> addHandlers();
 
-        this -> collectionPathLineEdit -> setText("/data/music");
-      }
-
-      Collection_UI::~Collection_UI() {
-        delete this -> collectionDb;
-        this -> collectionDb = NULL;
-
-        //        delete this -> playListUI;
-        //        this -> playListUI = NULL;
-      }
-
-      void Collection_UI::show() {
-        this -> widget -> show();
-      }
-
-      // --------------------------------------------------------------------
-      // Private methods
-      // --------------------------------------------------------------------
-
-      void Collection_UI::findChilds() {
-        this -> closeButton
-            = this -> widget -> findChild < QDialogButtonBox * > ("closeButton");
-
-        this -> browseButton = this -> widget -> findChild < QPushButton * > (
-            "browseButton");
-
-        this -> scanButton = this -> widget -> findChild < QPushButton * > (
-            "scanButton");
-
-        this -> progressBar = this -> widget -> findChild < QProgressBar * > (
-            "progressBar");
-
-        this -> collectionPathLineEdit = this -> widget -> findChild <
-            QLineEdit * > ("collectionPathLineEdit");
-      }
-
-      void Collection_UI::addHandlers() {
-        // add "Close" handle
-        // close widget
-        connect(this -> closeButton,
-            SIGNAL(clicked(QAbstractButton*)), widget, SLOT(close()));
-
-        // free resource on close
-        connect(this -> closeButton,
-            SIGNAL(clicked(QAbstractButton*)), this, SLOT(close()));
-
-        // add "Browse" handler
-        connect(this -> browseButton, SIGNAL(clicked()), this, SLOT(
-            openDialog()));
-
-        // add "Scan" handler
-        connect(this -> scanButton, SIGNAL(clicked()), this, SLOT(
-            scanCollection()));
-
-        // Update process bar position every n seconds
-        connect(this -> timer, SIGNAL(timeout()), this,
-            SLOT(updateProcessBar()));
-      }
-
-      void Collection_UI::callDestructor() {
-        cout << "Destruct" << endl;
-        delete this -> self;
-        this -> self = NULL;
-      }
-
-      // --------------------------------------------------------------------
-      // Slots
-      // --------------------------------------------------------------------
-
-      void Collection_UI::openDialog() {
-        QFileDialog fileDialog;
-
-        string collectionFolder = ((fileDialog.getExistingDirectory(this, tr(
-            "Select collection folder"), QDir::homePath(),
-            QFileDialog::ShowDirsOnly)).toStdString());
-
-        this -> collectionPathLineEdit -> setText((collectionFolder).c_str());
-      }
-
-      void Collection_UI::scanCollection() {
-        this -> playListUI -> dropPlayList();
-
-        string collectionPath =
-            this -> collectionPathLineEdit -> text().toStdString();
-
-        this -> collectionDb -> open("collection.db");
-        this -> collectionDb -> scan(collectionPath);
-
-        this -> timer -> start();
-      }
-
-      void Collection_UI::close() {
-        this -> callDestructor();
-      }
-
-      void Collection_UI::updateProcessBar() {
-        // Waiting end
-        if (!this -> collectionDb -> getStatus()) {
-          this -> timer -> stop();
-          this -> playListUI -> setPlayList(this -> playList);
+          this -> collectionPathLineEdit -> setText("/data/music");
         }
-        progressBar -> setValue(this -> collectionDb -> getProcess());
-      }
 
+        Collection_UI::~Collection_UI() {
+          delete this -> collectionDb;
+          this -> collectionDb = NULL;
+
+          //        delete this -> playListUI;
+          //        this -> playListUI = NULL;
+        }
+
+        void Collection_UI::show() {
+          this -> widget -> show();
+        }
+
+        // --------------------------------------------------------------------
+        // Private methods
+        // --------------------------------------------------------------------
+
+        void Collection_UI::findChilds() {
+          this -> closeButton = this -> widget -> findChild <
+              QDialogButtonBox * > ("closeButton");
+
+          this -> browseButton
+              = this -> widget -> findChild < QPushButton * > ("browseButton");
+
+          this -> scanButton = this -> widget -> findChild < QPushButton * > (
+              "scanButton");
+
+          this -> progressBar
+              = this -> widget -> findChild < QProgressBar * > ("progressBar");
+
+          this -> collectionPathLineEdit = this -> widget -> findChild <
+              QLineEdit * > ("collectionPathLineEdit");
+        }
+
+        void Collection_UI::addHandlers() {
+          // add "Close" handle
+          // close widget
+          connect(this -> closeButton,
+              SIGNAL(clicked(QAbstractButton*)), widget, SLOT(close()));
+
+          // free resource on close
+          connect(this -> closeButton,
+              SIGNAL(clicked(QAbstractButton*)), this, SLOT(close()));
+
+          // add "Browse" handler
+          connect(this -> browseButton, SIGNAL(clicked()), this, SLOT(
+              openDialog()));
+
+          // add "Scan" handler
+          connect(this -> scanButton, SIGNAL(clicked()), this, SLOT(
+              scanCollection()));
+
+          // Update process bar position every n seconds
+          connect(this -> timer, SIGNAL(timeout()), this, SLOT(
+              updateProcessBar()));
+        }
+
+        void Collection_UI::callDestructor() {
+          cout << "Destruct" << endl;
+          delete this -> self;
+          this -> self = NULL;
+        }
+
+        // --------------------------------------------------------------------
+        // Slots
+        // --------------------------------------------------------------------
+
+        void Collection_UI::openDialog() {
+          QFileDialog fileDialog;
+
+          string collectionFolder = ((fileDialog.getExistingDirectory(this, tr(
+              "Select collection folder"), QDir::homePath(),
+              QFileDialog::ShowDirsOnly)).toStdString());
+
+          this -> collectionPathLineEdit -> setText((collectionFolder).c_str());
+        }
+
+        void Collection_UI::scanCollection() {
+          this -> playListUI -> dropPlayList();
+
+          string collectionPath =
+              this -> collectionPathLineEdit -> text().toStdString();
+
+          this -> collectionDb -> open();
+          this -> collectionDb -> startScan(collectionPath);
+
+          this -> timer -> start();
+        }
+
+        void Collection_UI::close() {
+          this -> collectionDb -> stopScan();
+          this -> callDestructor();
+        }
+
+        void Collection_UI::updateProcessBar() {
+          // Waiting end
+          if (!this -> collectionDb -> getStatus()) {
+            this -> timer -> stop();
+            this -> playListUI -> setPlayList(this -> playList);
+          }
+          progressBar -> setValue(this -> collectionDb -> getProcess());
+        }
+
+      }
     }
   }
 }

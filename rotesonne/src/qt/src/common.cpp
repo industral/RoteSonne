@@ -27,7 +27,7 @@
 
 #include "UI/Widgets/MainWindow/MainWindow_UI.hpp"
 
-using namespace RoteSonne::UI::Widgets;
+using namespace RoteSonne::UI::Widgets::MainWindow;
 
 int main(int argc, char **argv) {
   QApplication app(argc, argv);

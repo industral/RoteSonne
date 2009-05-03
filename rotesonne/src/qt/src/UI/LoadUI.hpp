@@ -23,8 +23,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_LOADUI_HPP_
-#define _ROTESONNE_LOADUI_HPP_
+#ifndef _ROTESONNE_UI_LOADUI_HPP_
+#define _ROTESONNE_UI_LOADUI_HPP_
 
 // include require Qt headers
 #include <QUiLoader>

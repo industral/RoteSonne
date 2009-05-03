@@ -28,48 +28,52 @@
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {
+      namespace MainWindow {
+        namespace Widgets {
 
-      // --------------------------------------------------------------------
-      // Public methods
-      // --------------------------------------------------------------------
+          // --------------------------------------------------------------------
+          // Public methods
+          // --------------------------------------------------------------------
 
-      TrackInfo_UI::TrackInfo_UI(QWidget *widget) {
-        this -> widget = widget;
+          TrackInfo_UI::TrackInfo_UI(QWidget *widget) {
+            this -> widget = widget;
+          }
+
+          TrackInfo_UI::~TrackInfo_UI() {
+          }
+
+          void TrackInfo_UI::showInfo(const string &fileId, Player *player) {
+            // Set sample rate info
+            this -> widget -> findChild < QLabel * > ("sampleRateInfoLabel") -> setText(
+                player -> getSampleRateInfoString(fileId).c_str());
+
+            // Set channel info
+            this -> widget -> findChild < QLabel * > ("channelsInfoLabel") -> setNum(
+                player -> getChannels(fileId));
+
+            // Set bps info
+            this -> widget -> findChild < QLabel * > ("bpsInfoLabel") -> setNum(
+                player -> getBitsPerSample(fileId));
+
+            // Set bit rate info
+            this -> widget -> findChild < QLabel * > ("bitrateInfoLabel") -> setText(
+                player -> getBitRateString(fileId).c_str());
+
+            // Set total time info
+            this -> widget -> findChild < QLabel * > ("totalTimeInfoLabel") -> setText(
+                player -> getTotalTime(fileId).c_str());
+
+            // Set file size info
+            this -> widget -> findChild < QLabel * > ("fileSizeInfoLabel") -> setText(
+                player -> getFileSizeString(fileId).c_str());
+          }
+
+        // --------------------------------------------------------------------
+        // Private methods
+        // --------------------------------------------------------------------
+
+        }
       }
-
-      TrackInfo_UI::~TrackInfo_UI() {
-      }
-
-      void TrackInfo_UI::showInfo(const string &fileId, Player *player) {
-        // Set sample rate info
-        this -> widget -> findChild < QLabel * > ("sampleRateInfoLabel") -> setText(
-            player -> getSampleRateInfoString(fileId).c_str());
-
-        // Set channel info
-        this -> widget -> findChild < QLabel * > ("channelsInfoLabel") -> setNum(
-            player -> getChannels(fileId));
-
-        // Set bps info
-        this -> widget -> findChild < QLabel * > ("bpsInfoLabel") -> setNum(
-            player -> getBitsPerSample(fileId));
-
-        // Set bit rate info
-        this -> widget -> findChild < QLabel * > ("bitrateInfoLabel") -> setText(
-            player -> getBitRateString(fileId).c_str());
-
-        // Set total time info
-        this -> widget -> findChild < QLabel * > ("totalTimeInfoLabel") -> setText(
-            player -> getTotalTime(fileId).c_str());
-
-        // Set file size info
-        this -> widget -> findChild < QLabel * > ("fileSizeInfoLabel") -> setText(
-            player -> getFileSizeString(fileId).c_str());
-      }
-
-    // --------------------------------------------------------------------
-    // Private methods
-    // --------------------------------------------------------------------
-
     }
   }
 }

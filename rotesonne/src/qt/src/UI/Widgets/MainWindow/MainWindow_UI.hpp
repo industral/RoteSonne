@@ -23,8 +23,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_MAINWINDOW_HPP_
-#define _ROTESONNE_MAINWINDOW_HPP_
+#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_MAINWINDOW_HPP_
+#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_MAINWINDOW_HPP_
 
 // include require Qt headers
 #include <QUiLoader>
@@ -45,101 +45,105 @@
 
 // include MainWindow widgets
 #include "Widgets/TrackInfo_UI.hpp"
-#include "Widgets/PlayList_UI.hpp"
+#include "Widgets/PlayList/PlayList_UI.hpp"
 
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {
-      /**
-       * Main player class.
-       */
-      class MainWindow_UI: public QMainWindow {
-        friend class Collection_UI;
-          Q_OBJECT
+      namespace MainWindow {
+        /**
+         * Main player class.
+         */
+        class MainWindow_UI: public QMainWindow {
+            Q_OBJECT
+            friend class Collection_UI;
           public:
-          /**
-           * Default constructor.
-           */
-          MainWindow_UI();
+            /**
+             * Default constructor.
+             */
+            MainWindow_UI();
 
-          /**
-           * Default destructor.
-           */
-          ~MainWindow_UI();
+            /**
+             * Default destructor.
+             */
+            ~MainWindow_UI();
 
-          /**
-           * Return widget pointer.
-           * @return widget pointer.
-           */
-          QWidget * getUI() const;
+            /**
+             * Return widget pointer.
+             * @return widget pointer.
+             */
+            QWidget * getUI() const;
 
-          void init();
+            void init();
 
-          private slots:
-          void aboutQt();
-          void about();
-          void collectionPreferences();
-          void play(const QModelIndex &index);
-          void pause(const QModelIndex &index);
-          void showInfo(const QModelIndex &index);
-          void initLocation(const QModelIndex &index);
-          void acivatePlayPauseButton(const QModelIndex &index);
+            private slots:
+            void aboutQt();
+            void about();
+            void collectionPreferences();
+            void play(const QModelIndex &index);
+            void pause(const QModelIndex &index);
+            void showInfo(const QModelIndex &index);
+            void initLocation(const QModelIndex &index);
+            void activateEmelents(const QModelIndex &index);
 
-          /**
-           * Timer function , update slider position.
-           */
-          void updateSliderPosition();
-          void setSeek();
+            /**
+             * Timer function , update slider position.
+             */
+            void updateSliderPosition();
+            void setSeek();
 
-          void writeSliderPosition(int position);
+            void writeSliderPosition(int position);
 
-          void beginUpdateSlider();
-          void stopUpdateSlider();
+            void beginUpdateSlider();
+            void stopUpdateSlider();
 
-          /**
-           * Set slider in position from sliderPosition variable.
-           */
-          void setSliderPosition();
+            /**
+             * Set slider in position from sliderPosition variable.
+             */
+            void setSliderPosition();
 
-          /**
-           * Toggle status SLOT.
-           */
-          void playPauseToggle();
+            /**
+             * Toggle status SLOT.
+             */
+            void playPauseToggle();
 
-        private:
-          QWidget * widget;
-          Player * player;
+          private:
+            QWidget * widget;
+            Player * player;
 
-          // widgets
-          TrackInfo_UI *trackinfo;
-          PlayList_UI *playlist;
+            // widgets
+            RoteSonne::UI::Widgets::MainWindow::Widgets::TrackInfo_UI
+                *trackinfo;
+            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::PlayList_UI
+                *playlist;
 
-          QTableView * playList;
-          QPushButton * playPauseButton;
-          QPushButton * prevButton;
-          QPushButton * nextButton;
+            QTableView * playList;
+            QPushButton * playPauseButton;
+            QPushButton * prevButton;
+            QPushButton * nextButton;
 
-          QModelIndex index;
+            QModelIndex index;
 
-          QSlider * playerSlider;
-          QTimer * timer;
+            QSlider * playerSlider;
+            QTimer * timer;
 
-          // selected fileId
-          string fileId;
+            // selected fileId
+            string fileId;
 
-          // playing current fileId
-          string playingFileId;
+            // playing current fileId
+            string playingFileId;
 
-          // slider current position
-          int sliderPosition;
+            // slider current position
+            int sliderPosition;
 
-          void findChilds();
-          void addHandlers();
-          void setPlayList();
-          void dropPlayList();
+            void findChilds();
+            void addHandlers();
+            void setPlayList();
+            void dropPlayList();
 
-          string getRandomID(const string& fileName);
-      };
+            string getRandomID(const string& fileName);
+        };
+      }
     }
   }
 }

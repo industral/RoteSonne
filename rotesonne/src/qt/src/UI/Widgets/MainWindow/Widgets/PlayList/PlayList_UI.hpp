@@ -23,8 +23,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_PLAYLIST_HPP_
-#define _ROTESONNE_PLAYLIST_HPP_
+#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_PLAYLIST_HPP_
+#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_PLAYLIST_HPP_
 
 #include <iostream>
 
@@ -40,33 +40,39 @@ using namespace std;
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {
-      class PlayList_UI {
-        public:
-          static PlayList_UI * Instance();
+      namespace MainWindow {
+        namespace Widgets {
+          namespace PlayList {
+            class PlayList_UI {
+              public:
+                static PlayList_UI * Instance();
 
-          /**
-           * Default destructor.
-           */
-          ~PlayList_UI();
+                /**
+                 * Default destructor.
+                 */
+                ~PlayList_UI();
 
-          void init(QWidget *widget);
-          void setPlayList(QTableView *playList);
-          void dropPlayList();
-        private:
-          static PlayList_UI * _playListUI;
+                void init(QWidget *widget);
+                void setPlayList(QTableView *playList);
+                void dropPlayList();
+              private:
+                static PlayList_UI * _playListUI;
 
-          /**
-           * Default constructor.
-           */
-          PlayList_UI();
+                /**
+                 * Default constructor.
+                 */
+                PlayList_UI();
 
-          QWidget *widget;
-          QSqlDatabase db;
-          QSqlTableModel * model;
+                QWidget *widget;
+                QSqlDatabase db;
+                QSqlTableModel * model;
 
-          bool openDbConnection();
-          void closeDbConnection();
-      };
+                bool openDbConnection();
+                void closeDbConnection();
+            };
+          }
+        }
+      }
     }
   }
 }

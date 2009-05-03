@@ -27,25 +27,38 @@
 
 namespace RoteSonne {
 
+  /**
+   * DB structure:
+
+   CREATE TABLE collection (id INTEGER PRIMARY KEY AUTOINCREMENT, fileName VARCHAR (255),
+   tracknum INTEGER, title VARCHAR (255), artist VARCHAR (255), album VARCHAR (255))
+
+   */
+
   // --------------------------------------------------------------------
   // Public methods
   // --------------------------------------------------------------------
 
   Collection::Collection() :
     status(true) {
+    this -> player = new Player();
   }
 
   Collection::~Collection() {
   }
 
-  void Collection::open(const string &dbName) {
+  void Collection::open() {
     // connect to existing connection
     this -> db = QSqlDatabase::database();
   }
 
-  void Collection::scan(const string &path) {
+  void Collection::startScan(const string &path) {
     this -> scanPath = path;
     this -> start();
+  }
+
+  void Collection::stopScan() {
+    this -> status = false;
   }
 
   long Collection::getProcess() const {
@@ -77,29 +90,50 @@ namespace RoteSonne {
 
     boost::filesystem::directory_iterator end_itr;
     for (boost::filesystem::directory_iterator itr(path); itr != end_itr; ++itr) {
+      if (status) {
+        string currentPathExt =
+            boost::filesystem::path(itr->filename()).extension();
 
-      string currentPathExt =
-          boost::filesystem::path(itr->filename()).extension();
+        if (is_directory(itr->status())) {
+          scanFiles(itr->path());
+          // TODO: Should be fetch extensions fom file
+        } else if (!currentPathExt.compare(".wav") || !currentPathExt.compare(
+            ".ogg") || !currentPathExt.compare(".flac")
+            || !currentPathExt.compare(".wv")) {
 
-      if (is_directory(itr->status())) {
-        scanFiles(itr->path());
-        // TODO: Should be fetch extensions fom file
-      } else if (!currentPathExt.compare(".wav") || !currentPathExt.compare(
-          ".ogg") || !currentPathExt.compare(".flac")
-          || !currentPathExt.compare(".wv")) {
-        string query = "INSERT INTO collection VALUES (NULL, \"";
-        query += this -> replace(itr->path().string());
-        query += "\", \"";
-        query += "" /*this -> replace(vorbisComm["TITLE"])*/;
-        query += "\", \"";
-        query += "" /*this -> replace(vorbisComm["ARTIST"])*/;
-        query += "\", \"";
-        query += "" /*this -> replace(vorbisComm["ALBUM"])*/;
-        query += "\", \"";
-        query += "" /*this -> replace(vorbisComm["TRACKNUMBER"])*/;
-        query += "\");";
+          // open file, fetch vorbis comments
+          string fileId = itr->path().string();
+          string fileName = itr->path().string();
 
-        this -> queryList.push_back(query);
+          this -> player -> open(fileName, fileId);
+          map < string, string > vorbisComments =
+              this -> player -> getVorbisComments(fileId);
+
+          stringstream out;
+          out << "INSERT INTO collection VALUES (NULL, '";
+          out << this -> replace(itr->path().string());
+          out << "', '";
+
+          out << this -> replace(vorbisComments["TRACKNUMBER"]);
+          out << "', '";
+
+          if (!this -> replace(vorbisComments["TITLE"]).empty()) {
+            out << this -> replace(vorbisComments["TITLE"]);
+          } else {
+            out << this -> replace(itr->path().filename());
+          }
+          out << "', '";
+
+          out << this -> replace(vorbisComments["ARTIST"]);
+          out << "', '";
+
+          out << this -> replace(vorbisComments["ALBUM"]);
+          out << "');";
+
+          this -> player -> close(fileId);
+
+          this -> queryList.push_back(out.str());
+        }
       }
     }
     return true;
@@ -111,7 +145,8 @@ namespace RoteSonne {
 
     this -> db.transaction();
 
-    for (int i = 0; i < this -> queryList.size(); ++i) {
+    for (uint i = 0; i < this -> queryList.size(); ++i) {
+
       this -> process = 100
           / (static_cast < double > (this -> queryList.size()) / (i + 1));
 

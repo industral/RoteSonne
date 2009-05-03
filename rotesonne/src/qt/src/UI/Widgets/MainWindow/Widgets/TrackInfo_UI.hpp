@@ -23,8 +23,8 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_TRACKINFO_HPP_
-#define _ROTESONNE_TRACKINFO_HPP_
+#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_TRACKINFO_HPP_
+#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_TRACKINFO_HPP_
 
 #include <iostream>
 
@@ -40,22 +40,26 @@ using namespace std;
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {
-      class TrackInfo_UI {
-        public:
-          /**
-           * Default constructor.
-           */
-          TrackInfo_UI(QWidget *widget);
+      namespace MainWindow {
+        namespace Widgets {
+          class TrackInfo_UI {
+            public:
+              /**
+               * Default constructor.
+               */
+              TrackInfo_UI(QWidget *widget);
 
-          /**
-           * Default destructor.
-           */
-          ~TrackInfo_UI();
+              /**
+               * Default destructor.
+               */
+              ~TrackInfo_UI();
 
-          void showInfo(const string &fileId, Player *player);
-        private:
-          QWidget * widget;
-      };
+              void showInfo(const string &fileId, Player *player);
+            private:
+              QWidget * widget;
+          };
+        }
+      }
     }
   }
 }

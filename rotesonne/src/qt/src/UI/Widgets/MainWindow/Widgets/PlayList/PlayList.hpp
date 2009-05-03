@@ -23,64 +23,23 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_COLLECTOPN_HPP_
-#define _ROTESONNE_COLLECTOPN_HPP_
-
-#include <iostream>
-#include <string>
-#include <map>
-#include <vector>
-
-// boost filesystem
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/fstream.hpp>
-
-// boost foreach
-#include <boost/foreach.hpp>
-
-// include DB
-#include <QtSql>
-
-// include thread
-#include <QThread>
-
-// include Player
-#include "Player.hpp"
-
-#define foreach BOOST_FOREACH
-using namespace std;
+#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_PLAYLIST_HPP_
+#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_PLAYLIST_HPP_
 
 namespace RoteSonne {
-  class Collection: public QThread {
-    public:
-      Collection();
-      ~Collection();
-
-      void open();
-      void startScan(const string& path);
-      void stopScan();
-      long getProcess() const;
-      bool getStatus() const;
-
-    private:
-      QSqlDatabase db;
-      Player * player;
-
-      map < string, string > vorbisComm;
-      vector < string > queryList;
-
-      long process;
-      bool status;
-      string scanPath;
-
-      virtual void run();
-
-      void flush();
-      bool scanFiles(const boost::filesystem::path &path);
-      string replace(string str) const;
-      void updateDb();
-      void showError(QSqlQuery *q);
-  };
+  namespace UI {
+    namespace Widgets {
+      namespace MainWindow {
+        namespace Widgets {
+          namespace PlayList {
+            class PlayList {
+              public:
+            };
+          }
+        }
+      }
+    }
+  }
 }
 
 #endif
