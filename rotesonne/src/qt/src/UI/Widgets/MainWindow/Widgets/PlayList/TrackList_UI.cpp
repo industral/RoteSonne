@@ -23,7 +23,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#include "PlayList_UI.hpp"
+#include "TrackList_UI.hpp"
 
 namespace RoteSonne {
   namespace UI {
@@ -33,11 +33,11 @@ namespace RoteSonne {
           namespace PlayList {
 
             // Singleton
-            PlayList_UI * PlayList_UI::_playListUI = NULL;
+            TrackList_UI * TrackList_UI::_playListUI = NULL;
 
-            PlayList_UI * PlayList_UI::Instance() {
+            TrackList_UI * TrackList_UI::Instance() {
               if (_playListUI == NULL) {
-                _playListUI = new PlayList_UI();
+                _playListUI = new TrackList_UI();
               }
               return _playListUI;
             }
@@ -46,21 +46,22 @@ namespace RoteSonne {
             // Public methods
             // --------------------------------------------------------------------
 
-            PlayList_UI::PlayList_UI() :
+            TrackList_UI::TrackList_UI() :
               model(NULL) {
               this -> openDbConnection();
             }
 
-            PlayList_UI::~PlayList_UI() {
+            TrackList_UI::~TrackList_UI() {
               cout << "Destructor" << endl;
               this -> closeDbConnection();
             }
 
-            void PlayList_UI::init(QWidget *widget) {
+            void TrackList_UI::init(QWidget *widget) {
               this -> widget = widget;
+              this -> findChilds();
             }
 
-            void PlayList_UI::setPlayList(QTableView *playList) {
+            void TrackList_UI::setPlayList() {
               this -> model = new QSqlTableModel();
 
               this -> model -> setTable("collection");
@@ -75,25 +76,27 @@ namespace RoteSonne {
               this -> model -> setHeaderData(5, Qt::Horizontal, QObject::tr(
                   "Album"));
 
-              playList -> setModel(this -> model);
+              this -> trackListComponent -> setModel(this -> model);
 
               // select row at all
-              playList -> setSelectionBehavior(QAbstractItemView::SelectRows);
+              this -> trackListComponent -> setSelectionBehavior(
+                  QAbstractItemView::SelectRows);
 
               // deny change row in doubler click
-              playList -> setEditTriggers(QAbstractItemView::NoEditTriggers);
+              this -> trackListComponent -> setEditTriggers(
+                  QAbstractItemView::NoEditTriggers);
 
               // set size
-              playList -> setColumnWidth(2, 50); // track
-              playList -> setColumnWidth(3, 330); // name
-              playList -> setColumnWidth(4, 220); // artist
-              playList -> setColumnWidth(5, 220); // album
+              this -> trackListComponent -> setColumnWidth(2, 50); // track
+              this -> trackListComponent -> setColumnWidth(3, 330); // name
+              this -> trackListComponent -> setColumnWidth(4, 220); // artist
+              this -> trackListComponent -> setColumnWidth(5, 220); // album
 
-              playList -> hideColumn(0); // id
-              playList -> hideColumn(1); // filename
+              this -> trackListComponent -> hideColumn(0); // id
+              this -> trackListComponent -> hideColumn(1); // filename
             }
 
-            void PlayList_UI::dropPlayList() {
+            void TrackList_UI::dropPlayList() {
               this -> model -> clear();
               delete this -> model;
               this -> model = NULL;
@@ -102,7 +105,13 @@ namespace RoteSonne {
             // Private methods
             // --------------------------------------------------------------------
 
-            bool PlayList_UI::openDbConnection() {
+            void TrackList_UI::findChilds() {
+              // track list
+              this -> trackListComponent = this -> widget -> findChild <
+                  QTableView * > ("trackList");
+            }
+
+            bool TrackList_UI::openDbConnection() {
               this -> db = QSqlDatabase::addDatabase("QSQLITE");
               this -> db.setDatabaseName("collection.db");
               bool ok = this -> db.open();
@@ -114,7 +123,7 @@ namespace RoteSonne {
               return ok;
             }
 
-            void PlayList_UI::closeDbConnection() {
+            void TrackList_UI::closeDbConnection() {
               this -> db = QSqlDatabase::database();
 
               if (this -> db.isOpen()) {

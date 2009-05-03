@@ -45,7 +45,8 @@
 
 // include MainWindow widgets
 #include "Widgets/TrackInfo_UI.hpp"
-#include "Widgets/PlayList/PlayList_UI.hpp"
+#include "Widgets/Cover_UI.hpp"
+#include "Widgets/PlayList/TrackList_UI.hpp"
 
 namespace RoteSonne {
   namespace UI {
@@ -114,10 +115,11 @@ namespace RoteSonne {
             // widgets
             RoteSonne::UI::Widgets::MainWindow::Widgets::TrackInfo_UI
                 *trackinfo;
-            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::PlayList_UI
-                *playlist;
+            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList_UI
+                *trackList;
+            RoteSonne::UI::Widgets::MainWindow::Widgets::Cover_UI *cover;
 
-            QTableView * playList;
+            QTableView * playListComponent;
             QPushButton * playPauseButton;
             QPushButton * prevButton;
             QPushButton * nextButton;

@@ -23,33 +23,63 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#include "TrackInfo_UI.hpp"
+#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_PLAYLIST_HPP_
+#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_PLAYLIST_HPP_
+
+#include <iostream>
+
+// include require Qt headers
+#include <QWidget>
+#include <QTableView>
+
+// include DB
+#include <QtSql>
+
+// include AbstractPlayList
+#include "AbstractPlayList.hpp"
+
+using namespace std;
 
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {
+      namespace MainWindow {
+        namespace Widgets {
+          namespace PlayList {
+            class TrackList_UI: virtual public AbstractPlayList {
+              public:
+                static TrackList_UI * Instance();
 
-      // --------------------------------------------------------------------
-      // Public methods
-      // --------------------------------------------------------------------
+                /**
+                 * Default destructor.
+                 */
+                ~TrackList_UI();
 
-      TrackInfo_UI::TrackInfo_UI() {
+                void init(QWidget *widget);
+                void setPlayList();
+                void dropPlayList();
+              private:
+                static TrackList_UI * _playListUI;
 
+                /**
+                 * Default constructor.
+                 */
+                TrackList_UI();
+
+                QWidget * widget;
+                QSqlDatabase db;
+                QSqlTableModel * model;
+                QTableView * trackListComponent;
+
+                void findChilds();
+                bool openDbConnection();
+                void closeDbConnection();
+            };
+          }
+        }
       }
-
-      TrackInfo_UI::~TrackInfo_UI() {
-      }
-
-    // --------------------------------------------------------------------
-    // Private methods
-    // --------------------------------------------------------------------
-
-
-    // --------------------------------------------------------------------
-    // Slots
-    // --------------------------------------------------------------------
-
-
     }
   }
 }
+
+#endif

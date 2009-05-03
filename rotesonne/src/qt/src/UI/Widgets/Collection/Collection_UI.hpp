@@ -50,7 +50,7 @@
 #include "../../../Collection.hpp"
 
 // include
-#include "../MainWindow/Widgets/PlayList/PlayList_UI.hpp"
+#include "../MainWindow/Widgets/PlayList/TrackList_UI.hpp"
 
 using namespace std;
 
@@ -114,8 +114,8 @@ namespace RoteSonne {
             Collection_UI *self;
 
             RoteSonne::Collection *collectionDb;
-            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::PlayList_UI
-                * playListUI;
+            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList_UI
+                * trackList;
             QTableView *playList;
 
             // Collection widget

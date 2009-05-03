@@ -23,37 +23,31 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_TRACKINFO_HPP_
-#define _ROTESONNE_TRACKINFO_HPP_
-
-// include require Qt headers
-#include <QUiLoader>
-#include <QFile>
-#include <QWidget>
-#include <QMainWindow>
-#include <QAction>
-#include <QApplication>
-#include <QTableView>
-#include <QLabel>
-#include <QTimer>
-#include <QSlider>
+#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_ABSTRACTPLAYLIST_HPP_
+#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_ABSTRACTPLAYLIST_HPP_
 
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {
-      class TrackInfo_UI {
-        public:
-          /**
-           * Default constructor.
-           */
-          TrackInfo_UI();
+      namespace MainWindow {
+        namespace Widgets {
+          namespace PlayList {
+            class AbstractPlayList {
+              public:
+                AbstractPlayList() {
+                }
 
-          /**
-           * Default destructor.
-           */
-          ~TrackInfo_UI();
+                virtual ~AbstractPlayList() {
+                }
 
-      };
+                virtual void init(QWidget *widget) = 0;
+                virtual void setPlayList() = 0;
+                virtual void dropPlayList() = 0;
+              protected:
+            };
+          }
+        }
+      }
     }
   }
 }

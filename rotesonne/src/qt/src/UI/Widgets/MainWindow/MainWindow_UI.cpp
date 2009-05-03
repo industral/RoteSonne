@@ -44,8 +44,8 @@ namespace RoteSonne {
           delete this -> trackinfo;
           this -> trackinfo = NULL;
 
-          delete this -> playlist;
-          this -> playlist = NULL;
+          delete this -> trackList;
+          this -> trackList = NULL;
         }
 
         QWidget * MainWindow_UI::getUI() const {
@@ -65,18 +65,27 @@ namespace RoteSonne {
           // load UI resource file.
           this -> widget = LoadUI::loadUI(":/forms/ui/mainWindow.ui");
 
-          // load widgets
+          /* load widgets */
+
+          // track info
           this -> trackinfo
               = new RoteSonne::UI::Widgets::MainWindow::Widgets::TrackInfo_UI::TrackInfo_UI(
                   this -> widget);
-          this -> playlist
-              = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::PlayList_UI::Instance();
-          this -> playlist -> init(this -> widget);
+
+          // track list
+          this -> trackList
+              = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList_UI::Instance();
+          this -> trackList -> init(this -> widget);
+
+          // cover
+          this -> cover
+              = new RoteSonne::UI::Widgets::MainWindow::Widgets::Cover_UI();
+          this -> cover -> init(this -> widget);
 
           // get all components from widget
           this -> findChilds();
 
-          // set playList
+          // set playListComponent
           this -> setPlayList();
 
           // attach handles.
@@ -89,8 +98,8 @@ namespace RoteSonne {
 
         void MainWindow_UI::findChilds() {
           // play list
-          this -> playList = this -> widget -> findChild < QTableView * > (
-              "playList");
+          this -> playListComponent = this -> widget -> findChild <
+              QTableView * > ("trackList");
 
           // player slider
           this -> playerSlider = this -> widget -> findChild < QSlider * > (
@@ -160,21 +169,17 @@ namespace RoteSonne {
 
         void MainWindow_UI::setPlayList() {
           // setup play list
-          this -> playlist -> setPlayList(this -> playList);
+          this -> trackList -> setPlayList();
 
-          qDebug() << "Playlist: " << this -> playlist;
-
-connect        (this -> playList, SIGNAL (doubleClicked (const QModelIndex & )), this,
+connect        (this -> playListComponent, SIGNAL (doubleClicked (const QModelIndex & )), this,
             SLOT (play(const QModelIndex & )));
-        connect ( this -> playList, SIGNAL (pressed(const QModelIndex &)), this, SLOT (initLocation(const QModelIndex &)));
-        connect ( this -> playList, SIGNAL (pressed(const QModelIndex &)), this, SLOT (showInfo(const QModelIndex &)));
-        connect ( this -> playList, SIGNAL (pressed(const QModelIndex &)), this, SLOT (activateEmelents(const QModelIndex &)));
+        connect ( this -> playListComponent, SIGNAL (pressed(const QModelIndex &)), this, SLOT (initLocation(const QModelIndex &)));
+        connect ( this -> playListComponent, SIGNAL (pressed(const QModelIndex &)), this, SLOT (showInfo(const QModelIndex &)));
+        connect ( this -> playListComponent, SIGNAL (pressed(const QModelIndex &)), this, SLOT (activateEmelents(const QModelIndex &)));
       }
 
       void MainWindow_UI::dropPlayList() {
-
-        qDebug() << "Playlist: " << this -> playlist;
-        this -> playlist -> dropPlayList();
+        this -> trackList -> dropPlayList();
       }
 
       // --------------------------------------------------------------------
@@ -191,7 +196,7 @@ connect        (this -> playList, SIGNAL (doubleClicked (const QModelIndex & )),
       }
 
       void MainWindow_UI::collectionPreferences() {
-        RoteSonne::UI::Widgets::Collection::Collection_UI *collection = new RoteSonne::UI::Widgets::Collection::Collection_UI(collection, this -> playList);
+        RoteSonne::UI::Widgets::Collection::Collection_UI *collection = new RoteSonne::UI::Widgets::Collection::Collection_UI(collection, this -> playListComponent);
         collection -> show();
       }
 
@@ -273,6 +278,9 @@ connect        (this -> playList, SIGNAL (doubleClicked (const QModelIndex & )),
           this -> trackinfo -> showInfo(this -> fileId, this -> player);
 
           this -> player -> close(this -> fileId);
+
+          // show cover
+          this -> cover -> setCover(fileName);
         }
       }
 
@@ -283,7 +291,7 @@ connect        (this -> playList, SIGNAL (doubleClicked (const QModelIndex & )),
       void MainWindow_UI::activateEmelents(const QModelIndex & index) {
         this -> playPauseButton -> setEnabled(true);
         this -> playerSlider -> setEnabled(true);
-        //      disconnect ( this -> playList, SIGNAL (pressed(const QModelIndex &)), this, SLOT (activateEmelents(const QModelIndex &)));
+        //      disconnect ( this -> playListComponent, SIGNAL (pressed(const QModelIndex &)), this, SLOT (activateEmelents(const QModelIndex &)));
       }
 
       void MainWindow_UI::updateSliderPosition() {

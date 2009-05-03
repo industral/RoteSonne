@@ -203,7 +203,7 @@
       </property>
       <widget class="QWidget" name="tab_3">
        <attribute name="title">
-        <string>Tab 1</string>
+        <string>Player</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,4">
         <item>
@@ -212,7 +212,7 @@
            <enum>QLayout::SetDefaultConstraint</enum>
           </property>
           <item>
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="cover">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -363,7 +363,7 @@
            </layout>
           </item>
           <item>
-           <widget class="QTableView" name="playList">
+           <widget class="QTableView" name="trackList">
             <attribute name="horizontalHeaderCascadingSectionResizes">
              <bool>false</bool>
             </attribute>
@@ -375,7 +375,7 @@
       </widget>
       <widget class="QWidget" name="tab_4">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>Tags</string>
        </attribute>
       </widget>
      </widget>

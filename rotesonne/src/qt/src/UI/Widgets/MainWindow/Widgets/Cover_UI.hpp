@@ -23,17 +23,20 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_PLAYLIST_HPP_
-#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_PLAYLIST_HPP_
+#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_COVER_HPP_
+#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_COVER_HPP_
 
 #include <iostream>
+#include <string>
 
 // include require Qt headers
-#include <QWidget>
-#include <QTableView>
+#include <QLabel>
 
-// include DB
-#include <QtSql>
+// boost filesystem
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/fstream.hpp>
+
+typedef boost::filesystem::path Path;
 
 using namespace std;
 
@@ -42,35 +45,39 @@ namespace RoteSonne {
     namespace Widgets {
       namespace MainWindow {
         namespace Widgets {
-          namespace PlayList {
-            class PlayList_UI {
-              public:
-                static PlayList_UI * Instance();
+          class Cover_UI {
+            public:
+              /**
+               * Default constructor.
+               */
+              Cover_UI();
 
-                /**
-                 * Default destructor.
-                 */
-                ~PlayList_UI();
+              /**
+               * Default destructor.
+               */
+              ~Cover_UI();
 
-                void init(QWidget *widget);
-                void setPlayList(QTableView *playList);
-                void dropPlayList();
-              private:
-                static PlayList_UI * _playListUI;
+              void init(QWidget *widget);
+              void setCover(const string &fileName);
+            private:
+              // to avoid cast to double
+              const double imageSize; // image size
 
-                /**
-                 * Default constructor.
-                 */
-                PlayList_UI();
+              QWidget * widget;
+              QLabel * cover;
 
-                QWidget *widget;
-                QSqlDatabase db;
-                QSqlTableModel * model;
+              void findChilds();
 
-                bool openDbConnection();
-                void closeDbConnection();
-            };
-          }
+              /**
+               * Searching a cover file in current file directory.
+               * @param[in] fileName Track file name.
+               * @return full path to cover image.
+               */
+              string findCover(const string &fileName) const;
+              void setCoverImage(const string &image);
+              void imageTunning(const QPixmap &pix);
+
+          };
         }
       }
     }

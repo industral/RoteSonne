@@ -23,23 +23,31 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_PLAYLIST_HPP_
-#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_PLAYLIST_HPP_
+#include "Cover_UI.hpp"
 
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {
       namespace MainWindow {
         namespace Widgets {
-          namespace PlayList {
-            class PlayList {
-              public:
-            };
+
+          // --------------------------------------------------------------------
+          // Public methods
+          // --------------------------------------------------------------------
+
+          Cover_UI::Cover_UI() {
+
           }
+
+          Cover_UI::~Cover_UI() {
+          }
+
+        // --------------------------------------------------------------------
+        // Private methods
+        // --------------------------------------------------------------------
+
         }
       }
     }
   }
 }
-
-#endif
