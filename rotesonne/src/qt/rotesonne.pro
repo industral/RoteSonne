@@ -8,7 +8,8 @@ RESOURCES   = rotesonne.qrc
 HEADERS     = src/UI/Widgets/MainWindow/MainWindow_UI.hpp \
               src/UI/Widgets/MainWindow/Widgets/TrackInfo_UI.hpp \
               src/UI/Widgets/MainWindow/Widgets/PlayList_UI.hpp \
-              src/UI/Widgets/Collection/Collection_UI.hpp
+              src/UI/Widgets/Collection/Collection_UI.hpp \
+              src/Collection.hpp
 
 SOURCES     = src/UI/LoadUI.cpp \
               src/Player.cpp \
@@ -19,4 +20,4 @@ SOURCES     = src/UI/LoadUI.cpp \
               src/common.cpp \
               src/Collection.cpp
               
-LIBS += -lsml -lvorbisfile -lFLAC++ -lwavpack -lao -lsqlite3 -lboost_thread-mt -lboost_filesystem-mt
+LIBS += -lsml -lvorbisfile -lFLAC++ -lwavpack -lao -lboost_thread-mt -lboost_filesystem-mt

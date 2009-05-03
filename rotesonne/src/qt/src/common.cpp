@@ -33,6 +33,7 @@ int main(int argc, char **argv) {
   QApplication app(argc, argv);
 
   MainWindow_UI * mainWindow = new MainWindow_UI();
+  mainWindow -> init();
   QWidget *widget = mainWindow -> getUI();
 
   if (widget == NULL) {

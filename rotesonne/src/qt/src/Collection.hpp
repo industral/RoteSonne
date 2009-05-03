@@ -31,44 +31,46 @@
 #include <map>
 #include <vector>
 
-#include <unistd.h> // chdir(2), stat(2)
-#include <sys/types.h> // stat(2)
-#include <sys/stat.h> // stat(2)
-#include <cstdlib>
+// boost filesystem
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/fstream.hpp>
 
-#include <dirent.h>
-#include <sqlite3.h>
+// include DB
+#include <QtSql>
 
-// include pthread
-#include <pthread.h>
+// include thread
+#include <QThread>
 
 using namespace std;
 
 namespace RoteSonne {
-  class Collection {
+  class Collection: public QThread {
     public:
       Collection();
       ~Collection();
 
-      void open();
-      void flush();
-      void close();
+      void open(const string &dbName);
       void scan(const string& path);
-      void start();
+      long getProcess() const;
+      bool getStatus() const;
 
-      int scanFiles(const string &path, const int &level = 0);
-      string replace(string str) const;
-      void updateDb();
-      long getProcess();
     private:
-      sqlite3 * db;
+      QSqlDatabase db;
 
       map < string, string > vorbisComm;
       vector < string > queryList;
 
-      string path;
       long process;
-      pthread_t pid;
+      bool status;
+      string scanPath;
+
+      virtual void run();
+
+      void flush();
+      bool scanFiles(const boost::filesystem::path &path);
+      string replace(string str) const;
+      void updateDb();
+      void showError(QSqlQuery *q);
   };
 }
 

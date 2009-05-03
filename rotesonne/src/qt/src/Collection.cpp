@@ -23,166 +23,117 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-/*
- ВНИМАНИЕ:
- Используем stat(2) а не d_type из dirent.h, потому что этот параметр может не
- работать
- на всех файловых системах, в частности это касается raiserfs.
- */
-
 #include "Collection.hpp"
 
-void * scanThreadFunc(void * data) {
-  RoteSonne::Collection * collection =
-      static_cast < RoteSonne::Collection * > (data);
-  collection -> start();
-  return NULL;
-}
-
-static int filter(const struct dirent * dir) {
-  if ((dir -> d_name[0] == '.') && (dir -> d_name[1] == 0)) {
-    return 0;
-  }
-  if ((dir -> d_name[0] == '.') && (dir -> d_name[1] == '.')
-      && (dir -> d_name[2] == 0)) {
-    return 0;
-  }
-  return 1;
-}
-
 namespace RoteSonne {
-  Collection::Collection() {
+
+  // --------------------------------------------------------------------
+  // Public methods
+  // --------------------------------------------------------------------
+
+  Collection::Collection() :
+    status(true) {
   }
 
   Collection::~Collection() {
   }
 
-  void Collection::open() {
-    if (sqlite3_open("collection.db", &this -> db)) {
-      cerr << "Can't open database: " << sqlite3_errmsg(db) << endl;
-      this -> close();
-    }
-  }
-
-  void Collection::close() {
-    pthread_join(this -> pid, NULL);
-    sqlite3_close(this -> db);
+  void Collection::open(const string &dbName) {
+    // connect to existing connection
+    this -> db = QSqlDatabase::database();
   }
 
   void Collection::scan(const string &path) {
-    this -> path = path;
-    pthread_create(&this -> pid, NULL, scanThreadFunc, this);
+    this -> scanPath = path;
+    this -> start();
   }
 
-  void Collection::start() {
+  long Collection::getProcess() const {
+    return this -> process;
+  }
+
+  bool Collection::getStatus() const {
+    return status;
+  }
+
+  // --------------------------------------------------------------------
+  // Private methods
+  // --------------------------------------------------------------------
+
+  void Collection::run() {
     this -> flush();
-    this -> scanFiles(this -> path);
+    this -> scanFiles(this -> scanPath);
     this -> updateDb();
   }
 
   void Collection::flush() {
-    sqlite3_exec(this -> db, "DROP TABLE collection", NULL, NULL, NULL);
-    sqlite3_exec(this -> db,
-        "CREATE TABLE collection (id INTEGER PRIMARY KEY AUTOINCREMENT,"
-          "fileName VARCHAR (255), title VARCHAR (255), artist VARCHAR (255),"
-          "album VARCHAR (255), tracknum INTEGER )", NULL, NULL, NULL);
+    this -> db.exec("DELETE FROM collection");
   }
 
-  int Collection::scanFiles(const string &path, const int &level) {
-    if (!path.empty()) {
-
-      if (chdir(path.c_str()) == -1) {
-        cerr << "Could not change directory " << endl;
-      }
-
-      struct dirent **namelist;
-      struct stat statBuf;
-
-      int n = scandir("./", &namelist, filter, alphasort);
-
-      if (n >= 0) {
-        for (int cnt = 0; cnt < n; ++cnt) {
-
-          char currPathBuf[255];
-          if (getcwd(currPathBuf, 254) == NULL) {
-            perror("getcwd error");
-          }
-
-          string fullPathFileName_;
-          string fullPathFileName = currPathBuf;
-
-          fullPathFileName += "/";
-          fullPathFileName_ = fullPathFileName;
-          fullPathFileName += namelist[cnt] -> d_name;
-
-          if (stat(fullPathFileName.c_str(), &statBuf) != 0) {
-            cerr << "Error in stat() for file " << fullPathFileName << endl;
-          }
-
-          if (statBuf.st_mode & S_IFDIR) { // if dir
-            scanFiles(namelist[cnt] -> d_name, level + 1);
-          }
-
-          if (statBuf.st_mode & S_IFREG) { // if file
-            string fileName = namelist[cnt] -> d_name;
-            string ext = fileName.substr(((fileName.find(".", fileName.size()
-                - 5)) + 1), fileName.size());
-            if (ext == "wav" || ext == "ogg" || ext == "flac" || ext == "wv") {
-
-              fullPathFileName_ += this -> replace(fileName);
-
-              string id = fullPathFileName;
-              //            this -> audio -> openFile(fullPathFileName, id);
-              //            this -> vorbisComm = this -> ddata -> getVorbisComment();
-
-              std::string query = "INSERT INTO collection VALUES (NULL, \"";
-              query += fullPathFileName_;
-              query += "\", \"";
-              query += "" /*this -> replace(vorbisComm["TITLE"])*/;
-              query += "\", \"";
-              query += "" /*this -> replace(vorbisComm["ARTIST"])*/;
-              query += "\", \"";
-              query += "" /*this -> replace(vorbisComm["ALBUM"])*/;
-              query += "\", \"";
-              query += "" /*this -> replace(vorbisComm["TRACKNUMBER"])*/;
-              query += "\")";
-
-              cout << fullPathFileName_ << endl;
-              this -> queryList.push_back(query);
-
-              //            this -> audio -> closeF(id);
-              //                   this -> audio -> flush();
-            }
-          }
-          free(namelist[cnt]);
-        }
-        free(namelist);
-      } else {
-        perror("Couldn't open the directory");
-      }
-      chdir("..");
+  bool Collection::scanFiles(const boost::filesystem::path &path) {
+    if (!exists(path)) {
+      return false;
     }
-    return 1;
+
+    boost::filesystem::directory_iterator end_itr;
+    for (boost::filesystem::directory_iterator itr(path); itr != end_itr; ++itr) {
+
+      string currentPathExt =
+          boost::filesystem::path(itr->filename()).extension();
+
+      if (is_directory(itr->status())) {
+        scanFiles(itr->path());
+        // TODO: Should be fetch extensions fom file
+      } else if (!currentPathExt.compare(".wav") || !currentPathExt.compare(
+          ".ogg") || !currentPathExt.compare(".flac")
+          || !currentPathExt.compare(".wv")) {
+        string query = "INSERT INTO collection VALUES (NULL, \"";
+        query += this -> replace(itr->path().string());
+        query += "\", \"";
+        query += "" /*this -> replace(vorbisComm["TITLE"])*/;
+        query += "\", \"";
+        query += "" /*this -> replace(vorbisComm["ARTIST"])*/;
+        query += "\", \"";
+        query += "" /*this -> replace(vorbisComm["ALBUM"])*/;
+        query += "\", \"";
+        query += "" /*this -> replace(vorbisComm["TRACKNUMBER"])*/;
+        query += "\");";
+
+        this -> queryList.push_back(query);
+      }
+    }
+    return true;
   }
 
   void Collection::updateDb() {
-    for (int i = 0; i < this -> queryList.size(); ++i) {
-      cout << "DB: " << (queryList[i]) << endl;
+    // create query variable
+    string query;
 
+    this -> db.transaction();
+
+    for (int i = 0; i < this -> queryList.size(); ++i) {
       this -> process = 100
           / (static_cast < double > (this -> queryList.size()) / (i + 1));
 
-      sqlite3_exec(this -> db, queryList[i].c_str(), NULL, NULL, NULL);
+      // execute SQL queries
+      this -> db.exec(queryList[i].c_str());
+
     }
+
+    this -> db.commit();
+    this -> db.exec("VACUUM"); // not working?
+
+    this -> status = false; // end
   }
 
-  long Collection::getProcess() {
-    return this -> process;
+  void Collection::showError(QSqlQuery *q) {
+    cerr << "Error: Unable to execute sql query" << endl;
+    qDebug() << q -> lastError();
   }
 
   /*
-   Заменяем все " на ""
-   Нужно для SQLite ( ESCAPE )
+   * Replace all " on ""
+   * SQLite ESCAPE
    */
   string Collection::replace(string str) const {
     string::size_type pos = 0;
@@ -193,4 +144,5 @@ namespace RoteSonne {
     }
     return str;
   }
+
 }

@@ -26,6 +26,8 @@
 #ifndef _ROTESONNE_PLAYLIST_HPP_
 #define _ROTESONNE_PLAYLIST_HPP_
 
+#include <iostream>
+
 // include require Qt headers
 #include <QWidget>
 #include <QTableView>
@@ -33,24 +35,37 @@
 // include DB
 #include <QtSql>
 
+using namespace std;
+
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {
-      class PlayList_UI: public QWidget {
+      class PlayList_UI {
         public:
-          /**
-           * Default constructor.
-           */
-          PlayList_UI(QWidget *widget);
+          static PlayList_UI * Instance();
 
           /**
            * Default destructor.
            */
           ~PlayList_UI();
 
+          void init(QWidget *widget);
           void setPlayList(QTableView *playList);
+          void dropPlayList();
         private:
+          static PlayList_UI * _playListUI;
+
+          /**
+           * Default constructor.
+           */
+          PlayList_UI();
+
           QWidget *widget;
+          QSqlDatabase db;
+          QSqlTableModel * model;
+
+          bool openDbConnection();
+          void closeDbConnection();
       };
     }
   }

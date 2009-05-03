@@ -33,11 +33,14 @@ namespace RoteSonne {
       // Public methods
       // --------------------------------------------------------------------
 
-      Collection_UI::Collection_UI(Collection_UI *p) {
+      Collection_UI::Collection_UI(Collection_UI *p, QTableView *playList) {
+        this -> playList = playList;
+
         this -> self = p;
         this -> timer = new QTimer(this);
 
         this -> collectionDb = new Collection();
+        this -> playListUI = PlayList_UI::Instance();
 
         // load UI widget
         this -> widget = LoadUI::loadUI(":/forms/ui/Collection.ui");
@@ -47,22 +50,16 @@ namespace RoteSonne {
 
         // attach handlers
         this -> addHandlers();
-      }
 
-      //      Collection_UI::Collection_UI() {
-      //        // load UI widget
-      //        this -> widget = LoadUI::loadUI(":/forms/ui/Collection.ui");
-      //
-      //        // find all components in widget
-      //        this -> findChilds();
-      //
-      //        // attach handlers
-      //        this -> addHandlers();
-      //      }
+        this -> collectionPathLineEdit -> setText("/data/music");
+      }
 
       Collection_UI::~Collection_UI() {
         delete this -> collectionDb;
         this -> collectionDb = NULL;
+
+        //        delete this -> playListUI;
+        //        this -> playListUI = NULL;
       }
 
       void Collection_UI::show() {
@@ -82,6 +79,9 @@ namespace RoteSonne {
 
         this -> scanButton = this -> widget -> findChild < QPushButton * > (
             "scanButton");
+
+        this -> progressBar = this -> widget -> findChild < QProgressBar * > (
+            "progressBar");
 
         this -> collectionPathLineEdit = this -> widget -> findChild <
             QLineEdit * > ("collectionPathLineEdit");
@@ -106,8 +106,8 @@ namespace RoteSonne {
             scanCollection()));
 
         // Update process bar position every n seconds
-//        connect(this -> timer, SIGNAL(timeout()), this,
-//            SLOT(updateProcessBar()));
+        connect(this -> timer, SIGNAL(timeout()), this,
+            SLOT(updateProcessBar()));
       }
 
       void Collection_UI::callDestructor() {
@@ -131,19 +131,15 @@ namespace RoteSonne {
       }
 
       void Collection_UI::scanCollection() {
+        this -> playListUI -> dropPlayList();
+
         string collectionPath =
             this -> collectionPathLineEdit -> text().toStdString();
 
-        this -> collectionDb = new Collection();
-
-        this -> collectionDb -> open();
+        this -> collectionDb -> open("collection.db");
         this -> collectionDb -> scan(collectionPath);
 
-//        this -> timer -> start(100);
-
-        this -> collectionDb -> close();
-
-        //        this -> timer -> stop();
+        this -> timer -> start();
       }
 
       void Collection_UI::close() {
@@ -151,14 +147,14 @@ namespace RoteSonne {
       }
 
       void Collection_UI::updateProcessBar() {
-        cout << this -> collectionDb -> getProcess() << endl;
+        // Waiting end
+        if (!this -> collectionDb -> getStatus()) {
+          this -> timer -> stop();
+          this -> playListUI -> setPlayList(this -> playList);
+        }
+        progressBar -> setValue(this -> collectionDb -> getProcess());
       }
 
-    //
-    //  void Collection_UI::collectionPreferences() {
-    //    QWidget *widget = LoadUI::loadUI(":/forms/ui/Collection.ui");
-    //    widget -> show();
-    //  }
     }
   }
 }

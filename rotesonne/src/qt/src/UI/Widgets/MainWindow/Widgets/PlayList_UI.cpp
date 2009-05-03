@@ -29,31 +29,52 @@ namespace RoteSonne {
   namespace UI {
     namespace Widgets {
 
+      // Singleton
+      PlayList_UI * PlayList_UI::_playListUI = NULL;
+
+      PlayList_UI * PlayList_UI::Instance() {
+        if (_playListUI == NULL) {
+          _playListUI = new PlayList_UI();
+        }
+        return _playListUI;
+      }
+
       // --------------------------------------------------------------------
       // Public methods
       // --------------------------------------------------------------------
 
-      PlayList_UI::PlayList_UI(QWidget *widget) {
-        this -> widget = widget;
+      PlayList_UI::PlayList_UI() :
+        model(NULL) {
+        this -> openDbConnection();
       }
 
       PlayList_UI::~PlayList_UI() {
+        cout << "Destructor" << endl;
+        this -> closeDbConnection();
+      }
+
+      void PlayList_UI::init(QWidget *widget) {
+        this -> widget = widget;
       }
 
       void PlayList_UI::setPlayList(QTableView *playList) {
-        QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-        db.setDatabaseName("collection.db");
-        bool ok = db.open();
+        qDebug() << "setPlayList(): Setup play list";
 
-        QSqlTableModel * model = new QSqlTableModel;
-        model -> setTable("collection");
-        model -> setEditStrategy(QSqlTableModel::OnManualSubmit);
-        model -> select();
-        model -> setHeaderData(2, Qt::Horizontal, tr("Name"));
-        model -> setHeaderData(3, Qt::Horizontal, tr("Artist"));
-        model -> setHeaderData(4, Qt::Horizontal, tr("Album"));
+        qDebug() << model;
 
-        playList -> setModel(model);
+        this -> model = new QSqlTableModel();
+
+        qDebug() << model;
+        qDebug() << this;
+
+        this -> model -> setTable("collection");
+        this -> model -> setEditStrategy(QSqlTableModel::OnManualSubmit);
+        this -> model -> select();
+        this -> model -> setHeaderData(2, Qt::Horizontal, QObject::tr("Name"));
+        this -> model -> setHeaderData(3, Qt::Horizontal, QObject::tr("Artist"));
+        this -> model -> setHeaderData(4, Qt::Horizontal, QObject::tr("Album"));
+
+        playList -> setModel(this -> model);
 
         // select row at all
         playList -> setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -71,10 +92,39 @@ namespace RoteSonne {
         playList -> hideColumn(5);
       }
 
-    // --------------------------------------------------------------------
-    // Private methods
-    // --------------------------------------------------------------------
+      void PlayList_UI::dropPlayList() {
+        this -> model -> clear();
+        delete this -> model;
+        this -> model = NULL;
+      }
+      // --------------------------------------------------------------------
+      // Private methods
+      // --------------------------------------------------------------------
 
+      bool PlayList_UI::openDbConnection() {
+        this -> db = QSqlDatabase::addDatabase("QSQLITE");
+        this -> db.setDatabaseName("collection.db");
+        bool ok = this -> db.open();
+
+        if (!ok) {
+          cerr << "Error: Unable to open database `" << "collection.db" << "'"
+              << endl;
+        }
+        return ok;
+      }
+
+      void PlayList_UI::closeDbConnection() {
+        this -> db = QSqlDatabase::database();
+
+        if (this -> db.isOpen()) {
+          this -> db.close();
+        }
+
+        if (this -> db.isValid()) {
+          this -> db.removeDatabase(this -> db.connectionNames()[0]);
+        }
+
+      }
     }
   }
 }

@@ -34,30 +34,6 @@ namespace RoteSonne {
       // --------------------------------------------------------------------
 
       MainWindow_UI::MainWindow_UI() {
-        this -> sliderPosition = 0;
-        this -> timer = new QTimer(this);
-
-        this -> player = new Player();
-        this -> player -> setAudioDriver();
-
-        // in start player is in STOP status
-        this -> player -> setPlayerStatus(Player::Stop);
-
-        // load UI resource file.
-        this -> widget = LoadUI::loadUI(":/forms/ui/mainWindow.ui");
-
-        // load widgets
-        this -> trackinfo = new TrackInfo_UI(this -> widget);
-        this -> playlist = new PlayList_UI(this -> widget);
-
-        // get all components from widget
-        this -> findChilds();
-
-        // set playList
-        this -> setPlayList();
-
-        // attach handles.
-        this -> addHandlers();
       }
 
       MainWindow_UI::~MainWindow_UI() {
@@ -73,6 +49,34 @@ namespace RoteSonne {
 
       QWidget * MainWindow_UI::getUI() const {
         return this -> widget;
+      }
+
+      void MainWindow_UI::init() {
+        this -> sliderPosition = 0;
+        this -> timer = new QTimer(this);
+
+        this -> player = new Player();
+        this -> player -> setAudioDriver();
+
+        // in start player is in STOP status
+        this -> player -> setPlayerStatus(Player::Stop);
+
+        // load UI resource file.
+        this -> widget = LoadUI::loadUI(":/forms/ui/mainWindow.ui");
+
+        // load widgets
+        this -> trackinfo = new TrackInfo_UI(this -> widget);
+        this -> playlist = PlayList_UI::Instance();
+        this -> playlist -> init(this -> widget);
+
+        // get all components from widget
+        this -> findChilds();
+
+        // set playList
+        this -> setPlayList();
+
+        // attach handles.
+        this -> addHandlers();
       }
 
       // --------------------------------------------------------------------
@@ -152,11 +156,19 @@ namespace RoteSonne {
         // setup play list
         this -> playlist -> setPlayList(this -> playList);
 
+        qDebug() << "Playlist: " << this -> playlist;
+
 connect      (this -> playList, SIGNAL (doubleClicked (const QModelIndex & )), this,
           SLOT (play(const QModelIndex & )));
       connect ( this -> playList, SIGNAL (pressed(const QModelIndex &)), this, SLOT (initLocation(const QModelIndex &)));
       connect ( this -> playList, SIGNAL (pressed(const QModelIndex &)), this, SLOT (showInfo(const QModelIndex &)));
       connect ( this -> playList, SIGNAL (pressed(const QModelIndex &)), this, SLOT (acivatePlayPauseButton(const QModelIndex &)));
+    }
+
+    void MainWindow_UI::dropPlayList() {
+
+      qDebug() << "Playlist: " << this -> playlist;
+      this -> playlist -> dropPlayList();
     }
 
     // --------------------------------------------------------------------
@@ -173,7 +185,7 @@ connect      (this -> playList, SIGNAL (doubleClicked (const QModelIndex & )), t
     }
 
     void MainWindow_UI::collectionPreferences() {
-      Collection_UI *collection = new Collection_UI(collection);
+      Collection_UI *collection = new Collection_UI(collection, this -> playList);
       collection -> show();
     }
 

@@ -36,10 +36,12 @@
 #include <QWidget>
 #include <QApplication>
 #include <QTimer>
+#include <QTableView>
 
 #include <QPushButton>
 #include <QDialogButtonBox>
 #include <QLineEdit>
+#include <QProgressBar>
 
 // include UI loader
 #include "../../LoadUI.hpp"
@@ -47,11 +49,16 @@
 // include Collection
 #include "../../../Collection.hpp"
 
+// include MainWindow
+#include "../MainWindow/Widgets/PlayList_UI.hpp"
+
 using namespace std;
 
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {
+      class MainWindow_UI;
+
       /**
        * Collection preferences/scan widget.
        * Simple example how to use. To show this widget, need just create object
@@ -73,7 +80,7 @@ namespace RoteSonne {
            * Collection_UI *collection = new Collection_UI(collection);
            * @endcode
            */
-          Collection_UI(Collection_UI *p);
+          Collection_UI(Collection_UI *p, QTableView *playList);
 
           //          /**
           //           * Default constructor used when user not allocate memory.
@@ -108,6 +115,8 @@ namespace RoteSonne {
           Collection_UI *self;
 
           Collection *collectionDb;
+          PlayList_UI * playListUI;
+          QTableView *playList;
 
           // Collection widget
           QWidget * widget;
@@ -117,6 +126,7 @@ namespace RoteSonne {
           QPushButton * browseButton;
           QPushButton * scanButton;
           QLineEdit * collectionPathLineEdit;
+          QProgressBar * progressBar;
 
           void findChilds();
           void addHandlers();

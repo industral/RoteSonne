@@ -54,6 +54,7 @@ namespace RoteSonne {
        * Main player class.
        */
       class MainWindow_UI: public QMainWindow {
+        friend class Collection_UI;
           Q_OBJECT
           public:
           /**
@@ -71,6 +72,8 @@ namespace RoteSonne {
            * @return widget pointer.
            */
           QWidget * getUI() const;
+
+          void init();
 
           private slots:
           void aboutQt();
@@ -133,6 +136,7 @@ namespace RoteSonne {
           void findChilds();
           void addHandlers();
           void setPlayList();
+          void dropPlayList();
 
           string getRandomID(const string& fileName);
       };
