@@ -69,8 +69,14 @@ namespace RoteSonne {
 
               this -> cover -> setPixmap(pixmap);
             } else { // if not cover found
-              this -> cover -> setPixmap(QPixmap(":/images/images/nocover.png"));
+              this -> cover -> setFixedSize(this -> imageSize,
+                  this -> imageSize);
+              this -> setNoCoverImage();
             }
+          }
+
+          void Cover_UI::setNoCoverImage() {
+            this -> cover -> setPixmap(QPixmap(":/images/images/nocover.png"));
           }
 
           string Cover_UI::findCover(const string &fileName) const {

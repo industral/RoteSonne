@@ -36,6 +36,7 @@
 #include "AbstractPlayList.hpp"
 
 #include "TrackList_UI.hpp"
+#include "AlbumList_UI.hpp"
 
 // include DB
 #include <QtSql>
@@ -48,11 +49,12 @@ namespace RoteSonne {
       namespace MainWindow {
         namespace Widgets {
           namespace PlayList {
+            class AlbumList_UI;
             class ArtistList_UI: public QWidget,
                 virtual public AbstractPlayList {
                 Q_OBJECT
                 public:
-                //                static ArtistList_UI * Instance();
+                static ArtistList_UI * Instance();
 
                 /**
                  * Default constructor.
@@ -67,9 +69,11 @@ namespace RoteSonne {
                 void init(QWidget *widget);
                 void setPlayList();
                 void dropPlayList();
-              private:
-                //                static ArtistList_UI * _artistListUI;
 
+                QString getCurrentArtist() const;
+                void setCurrentArtist(const QString &artist);
+              private:
+                static ArtistList_UI * _artistListUI;
 
                 QWidget * widget;
 
@@ -79,6 +83,9 @@ namespace RoteSonne {
                 QListWidget * artistListComponent;
 
                 TrackList_UI * trackList;
+                AlbumList_UI * albumList;
+
+                QString currentArtist;
 
                 void findChilds();
                 void addHandlers();

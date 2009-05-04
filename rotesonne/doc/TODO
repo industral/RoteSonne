@@ -1,4 +1,5 @@
 - Rewrite with QString ?
+- track list ontrigger model
 
 
 - add handle to control
@@ -25,3 +26,4 @@
 - auto next track
 
 - Zoom on mouse over cover
+- Advanced and recursive code found

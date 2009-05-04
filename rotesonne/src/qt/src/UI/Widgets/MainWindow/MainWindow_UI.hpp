@@ -48,6 +48,7 @@
 #include "Widgets/Cover_UI.hpp"
 #include "Widgets/PlayList/TrackList_UI.hpp"
 #include "Widgets/PlayList/ArtistList_UI.hpp"
+#include "Widgets/PlayList/AlbumList_UI.hpp"
 
 namespace RoteSonne {
   namespace UI {
@@ -119,6 +120,8 @@ namespace RoteSonne {
                 *trackList;
             RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::ArtistList_UI
                 *artistList;
+            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::AlbumList_UI
+                * albumList;
             RoteSonne::UI::Widgets::MainWindow::Widgets::Cover_UI *cover;
 
             QTableView * playListComponent;

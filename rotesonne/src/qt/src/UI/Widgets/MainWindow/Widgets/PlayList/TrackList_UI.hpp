@@ -46,9 +46,15 @@ namespace RoteSonne {
       namespace MainWindow {
         namespace Widgets {
           namespace PlayList {
-            class TrackList_UI: virtual public AbstractPlayList {
-              public:
+            class TrackList_UI: public QWidget, virtual public AbstractPlayList {
+                Q_OBJECT
+                public:
                 static TrackList_UI * Instance();
+
+                /**
+                 * Default constructor.
+                 */
+                TrackList_UI();
 
                 /**
                  * Default destructor.
@@ -64,11 +70,6 @@ namespace RoteSonne {
               private:
                 static TrackList_UI * _playListUI;
 
-                /**
-                 * Default constructor.
-                 */
-                TrackList_UI();
-
                 QWidget * widget;
                 QSqlDatabase db;
                 QSqlTableModel * model;
@@ -79,12 +80,15 @@ namespace RoteSonne {
                 void findChilds();
                 bool openDbConnection();
                 void closeDbConnection();
-            };
-          }
+                void addHandlers();
+private            slots:
+            void setView(const QModelIndex & m);
+          };
         }
       }
     }
   }
+}
 }
 
 #endif

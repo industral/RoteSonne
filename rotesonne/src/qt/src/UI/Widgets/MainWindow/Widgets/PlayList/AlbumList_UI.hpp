@@ -23,20 +23,23 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_COVER_HPP_
-#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_COVER_HPP_
+#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_ALBUMLIST_HPP_
+#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_ALBUMLIST_HPP_
 
 #include <iostream>
-#include <string>
 
 // include require Qt headers
-#include <QLabel>
+#include <QWidget>
+#include <QListWidget>
 
-// boost filesystem
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/fstream.hpp>
+// include AbstractPlayList
+#include "AbstractPlayList.hpp"
 
-typedef boost::filesystem::path Path;
+#include "TrackList_UI.hpp"
+#include "ArtistList_UI.hpp"
+
+// include DB
+#include <QtSql>
 
 using namespace std;
 
@@ -45,44 +48,51 @@ namespace RoteSonne {
     namespace Widgets {
       namespace MainWindow {
         namespace Widgets {
-          class Cover_UI {
-            public:
-              /**
-               * Default constructor.
-               */
-              Cover_UI();
+          namespace PlayList {
+            class ArtistList_UI;
+            class AlbumList_UI: public QWidget,
+                virtual public AbstractPlayList {
+                Q_OBJECT
+                public:
+                static AlbumList_UI * Instance();
 
-              /**
-               * Default destructor.
-               */
-              ~Cover_UI();
+                /**
+                 * Default constructor.
+                 */
+                AlbumList_UI();
 
-              void init(QWidget *widget);
-              void setCover(const string &fileName);
-            private:
-              // to avoid cast to double
-              const double imageSize; // image size
+                /**
+                 * Default destructor.
+                 */
+                ~AlbumList_UI();
 
-              QWidget * widget;
-              QLabel * cover;
+                void init(QWidget *widget);
+                void setPlayList();
+                void dropPlayList();
+              private:
+                static AlbumList_UI * _albumListUI;
 
-              void findChilds();
+                QWidget * widget;
 
-              /**
-               * Searching a cover file in current file directory.
-               * @param[in] fileName Track file name.
-               * @return full path to cover image.
-               */
-              string findCover(const string &fileName) const;
-              void setCoverImage(const string &image);
-              void setNoCoverImage();
-              void imageTunning(const QPixmap &pix);
+                QSqlDatabase db;
+                QSqlQuery query;
 
+                QListWidget * albumListComponent;
+
+                TrackList_UI * trackList;
+                ArtistList_UI * artistList;
+
+                void findChilds();
+                void addHandlers();
+
+private            slots:
+            bool setFilter(QListWidgetItem * item);
           };
         }
       }
     }
   }
+}
 }
 
 #endif

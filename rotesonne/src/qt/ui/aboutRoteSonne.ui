@@ -70,20 +70,10 @@ p, li { white-space: pre-wrap; }
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>Advanced media player based on SilentMedia audio library</string>
+          <string>Advanced media player based on SilentMedia library</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_4">
-         <property name="text">
-          <string>Author: Alex Ivasyuv, 2009</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -144,11 +134,10 @@ p, li { white-space: pre-wrap; }
   </layout>
   <zorder>buttonBox</zorder>
   <zorder>tabWidget</zorder>
-  <zorder>label</zorder>
  </widget>
  <resources>
   <include location="../rotesonne.qrc"/>
-  <include location="../../../../../../rotesonne.qrc"/>
+  <include location="../rotesonne.qrc"/>
  </resources>
  <connections>
   <connection>

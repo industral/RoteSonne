@@ -59,6 +59,7 @@ namespace RoteSonne {
             void TrackList_UI::init(QWidget *widget) {
               this -> widget = widget;
               this -> findChilds();
+              this -> addHandlers();
             }
 
             void TrackList_UI::setPlayList() {
@@ -66,6 +67,8 @@ namespace RoteSonne {
 
               this -> model -> setTable("collection");
               this -> model -> setFilter(this -> filter);
+              //              this -> model -> setSort(5, Qt::AscendingOrder);
+              this -> model -> setSort(2, Qt::AscendingOrder);
               this -> model -> select();
 
               this -> model -> setHeaderData(2, Qt::Horizontal, QObject::tr(
@@ -144,11 +147,27 @@ namespace RoteSonne {
               if (this -> db.isValid()) {
                 this -> db.removeDatabase(this -> db.connectionNames()[0]);
               }
-
             }
+
+            void TrackList_UI::addHandlers() {
+connect            ( this -> trackListComponent, SIGNAL (doubleClicked(const QModelIndex &)), this, SLOT (setView(const QModelIndex &)));
+          }
+
+          // --------------------------------------------------------------------
+          // Private slots
+          // --------------------------------------------------------------------
+
+          void TrackList_UI::setView(const QModelIndex & m) {
+            qDebug() << "in view ";
+            //            QFont font = QFont("Arial", 17, QFont::Bold);
+            //            QVariant v = qVariantFromValue(font);
+            //            QString s = "asdasd";
+            //            v.setValue(s);
+            //            this -> model -> setData(m, v);
           }
         }
       }
     }
   }
+}
 }

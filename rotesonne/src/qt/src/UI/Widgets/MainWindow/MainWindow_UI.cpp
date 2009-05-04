@@ -79,8 +79,13 @@ namespace RoteSonne {
 
           // artist list
           this -> artistList
-              = new RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::ArtistList_UI();
+              = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::ArtistList_UI::Instance();
           this -> artistList -> init(this -> widget);
+
+          // album list
+          this -> albumList
+              = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::AlbumList_UI::Instance();
+          this -> albumList -> init(this -> widget);
 
           // cover
           this -> cover
@@ -176,6 +181,7 @@ namespace RoteSonne {
           // setup play list
           this -> trackList -> setPlayList();
           this -> artistList -> setPlayList();
+          this -> albumList -> setPlayList();
 
 connect        (this -> playListComponent, SIGNAL (doubleClicked (const QModelIndex & )), this,
             SLOT (play(const QModelIndex & )));

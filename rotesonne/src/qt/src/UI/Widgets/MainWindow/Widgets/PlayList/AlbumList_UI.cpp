@@ -23,7 +23,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#include "ArtistList_UI.hpp"
+#include "AlbumList_UI.hpp"
 
 namespace RoteSonne {
   namespace UI {
@@ -33,28 +33,28 @@ namespace RoteSonne {
           namespace PlayList {
 
             // Singleton
-            ArtistList_UI * ArtistList_UI::_artistListUI = NULL;
+            AlbumList_UI * AlbumList_UI::_albumListUI = NULL;
 
-            ArtistList_UI * ArtistList_UI::Instance() {
-              if (_artistListUI == NULL) {
-                _artistListUI = new ArtistList_UI();
+            AlbumList_UI * AlbumList_UI::Instance() {
+              if (_albumListUI == NULL) {
+                _albumListUI = new AlbumList_UI();
               }
-              return _artistListUI;
+              return _albumListUI;
             }
 
             // --------------------------------------------------------------------
             // Public methods
             // --------------------------------------------------------------------
 
-            ArtistList_UI::ArtistList_UI() {
+            AlbumList_UI::AlbumList_UI() {
             }
 
-            ArtistList_UI::~ArtistList_UI() {
+            AlbumList_UI::~AlbumList_UI() {
             }
 
-            void ArtistList_UI::init(QWidget *widget) {
+            void AlbumList_UI::init(QWidget *widget) {
               this -> trackList = TrackList_UI::Instance();
-              this -> albumList = AlbumList_UI::Instance();
+              this -> artistList = ArtistList_UI::Instance();
 
               this -> widget = widget;
               this -> findChilds();
@@ -64,49 +64,47 @@ namespace RoteSonne {
               this -> db = QSqlDatabase::database();
             }
 
-            void ArtistList_UI::setPlayList() {
-              // select all available artist
-              this -> query = this -> db.exec(
-                  "SELECT DISTINCT artist FROM collection");
+            void AlbumList_UI::setPlayList() {
+              QString currentArtist = this -> artistList -> getCurrentArtist();
+              QString query = "SELECT DISTINCT album FROM collection ";
+              QString whereClause = "WHERE artist=\"" + currentArtist + "\"";
 
-              // add first item as "All Artists"
-              this -> artistListComponent -> addItem("All Artists");
+              if (!currentArtist.isEmpty()) {
+                query += whereClause;
+              }
+
+              // select all available artist
+              QSqlQuery q(this -> db);
+
+              q.exec(query);
 
               // populate list
-              while (query.next()) {
-                QString artist = query.value(0).toString();
+              while (q.next()) {
+                QString album = q.value(0).toString();
 
-                if (artist.isEmpty()) {
-                  artist = "Unknown Artist";
+                if (album.isEmpty()) {
+                  album = "Unknown Album";
                 }
-                this -> artistListComponent -> addItem(artist);
+                this -> albumListComponent -> addItem(album);
               }
             }
 
-            void ArtistList_UI::dropPlayList() {
-              this -> artistListComponent -> clear();
-            }
-
-            QString ArtistList_UI::getCurrentArtist() const {
-              return this -> currentArtist;
-            }
-
-            void ArtistList_UI::setCurrentArtist(const QString &artist) {
-              this -> currentArtist = artist;
+            void AlbumList_UI::dropPlayList() {
+              this -> albumListComponent -> clear();
             }
 
             // --------------------------------------------------------------------
             // Private methods
             // --------------------------------------------------------------------
 
-            void ArtistList_UI::findChilds() {
+            void AlbumList_UI::findChilds() {
               // track list
-              this -> artistListComponent = this -> widget -> findChild <
-                  QListWidget * > ("artistList");
+              this -> albumListComponent = this -> widget -> findChild <
+                  QListWidget * > ("albumList");
             }
 
-            void ArtistList_UI::addHandlers() {
-connect            (this -> artistListComponent, SIGNAL(itemClicked(
+            void AlbumList_UI::addHandlers() {
+connect            (this -> albumListComponent, SIGNAL(itemClicked(
                         QListWidgetItem * )), this, SLOT(setFilter(
                         QListWidgetItem * )));
           }
@@ -115,36 +113,27 @@ connect            (this -> artistListComponent, SIGNAL(itemClicked(
           // Private slots
           // --------------------------------------------------------------------
 
-          bool ArtistList_UI::setFilter(QListWidgetItem * item) {
+          bool AlbumList_UI::setFilter(QListWidgetItem * item) {
             QString value = item -> text();
-            QString filter = ""; // default filter value
+            QString albumFilter = ""; // default filter value
+            QString artistFilter = "";
 
-            if (!value.compare("Unknown Artist")) {
+            if (!value.compare("Unknown Album")) {
               value = "";
             }
 
-            // update current artist variable
-            this -> setCurrentArtist(value);
-
-            // if it not All Artists
-            if (value.compare("All Artists")) {
-              filter = "artist=\"" + value + "\"";
-            }
+            artistFilter = "artist=\"" + this -> artistList -> getCurrentArtist() + "\"";
+            albumFilter = "album=\"" + value + "\"";
 
             // drop track list
             this -> trackList -> dropPlayList();
 
-            // drop album list
-            this -> albumList -> dropPlayList();
-
             // set filter
-            this -> trackList -> setFilter(filter);
+            this -> trackList -> setFilter(artistFilter);
+            this -> trackList -> setFilter(albumFilter);
 
             // set track list
             this -> trackList -> setPlayList();
-
-            // set album list
-            this -> albumList -> setPlayList();
 
             return true;
           }
