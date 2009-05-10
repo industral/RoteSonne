@@ -74,9 +74,12 @@ namespace RoteSonne {
   // --------------------------------------------------------------------
 
   void Collection::run() {
-    this -> flush();
-    this -> scanFiles(this -> scanPath);
-    this -> updateDb();
+    {
+      this -> flush();
+      this -> scanFiles(this -> scanPath);
+      this -> createQuery();
+      this -> updateDb();
+    }
   }
 
   void Collection::flush() {
@@ -101,39 +104,52 @@ namespace RoteSonne {
             ".ogg") || !currentPathExt.compare(".flac")
             || !currentPathExt.compare(".wv")) {
 
-          // open file, fetch vorbis comments
-          string fileId = itr->path().string();
-          string fileName = itr->path().string();
-
-          this -> player -> open(fileName, fileId);
-          map < string, string > vorbisComments =
-              this -> player -> getVorbisComments(fileId);
-
-          stringstream out;
-          out << "INSERT INTO collection VALUES (NULL, '";
-          out << this -> replace(itr->path().string());
-          out << "', '";
-
-          out << this -> replace(vorbisComments["TRACKNUMBER"]);
-          out << "', '";
-
-          if (!this -> replace(vorbisComments["TITLE"]).empty()) {
-            out << this -> replace(vorbisComments["TITLE"]);
-          } else {
-            out << this -> replace(itr->path().filename());
-          }
-          out << "', '";
-
-          out << this -> replace(vorbisComments["ARTIST"]);
-          out << "', '";
-
-          out << this -> replace(vorbisComments["ALBUM"]);
-          out << "');";
-
-          this -> player -> close(fileId);
-
-          this -> queryList.push_back(out.str());
+          this -> fileList.push_back(itr->path().string());
         }
+      }
+    }
+    return true;
+  }
+
+  bool Collection::createQuery() {
+    // open file, fetch vorbis comments
+    for (uint i = 0; i < this -> fileList.size(); ++i) {
+      if (status) {
+
+        this -> process = 100
+            / (static_cast < double > (this -> fileList.size()) / (i + 1));
+
+        string fileId = this -> fileList[i];
+        string fileName = this -> fileList[i];
+
+        this -> player -> open(fileName, fileId);
+        map < string, string > vorbisComments =
+            this -> player -> getVorbisComments(fileId);
+
+        stringstream out;
+        out << "INSERT INTO collection VALUES (NULL, '";
+        out << this -> replace(this -> fileList[i]);
+        out << "', '";
+
+        out << this -> replace(vorbisComments["TRACKNUMBER"]);
+        out << "', '";
+
+        if (!this -> replace(vorbisComments["TITLE"]).empty()) {
+          out << this -> replace(vorbisComments["TITLE"]);
+        } else {
+          out << this -> replace(Path(this -> fileList[i]).filename());
+        }
+        out << "', '";
+
+        out << this -> replace(vorbisComments["ARTIST"]);
+        out << "', '";
+
+        out << this -> replace(vorbisComments["ALBUM"]);
+        out << "');";
+
+        this -> player -> close(fileId);
+
+        this -> queryList.push_back(out.str());
       }
     }
     return true;
@@ -146,13 +162,8 @@ namespace RoteSonne {
     this -> db.transaction();
 
     for (uint i = 0; i < this -> queryList.size(); ++i) {
-
-      this -> process = 100
-          / (static_cast < double > (this -> queryList.size()) / (i + 1));
-
       // execute SQL queries
       this -> db.exec(queryList[i].c_str());
-
     }
 
     this -> db.commit();

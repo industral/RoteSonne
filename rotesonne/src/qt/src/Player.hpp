@@ -28,8 +28,10 @@
 
 #include <libsml/all.hpp>
 
+using namespace SilentMedia::Media;
+
 namespace RoteSonne {
-  class Player: public SilentMedia::Audio::Audio {
+  class Player: public Audio::Audio {
     public:
 
       enum PlayerStatus {

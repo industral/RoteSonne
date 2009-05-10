@@ -76,11 +76,11 @@ namespace RoteSonne {
   string Player::getTotalTime(const string &fileId) {
     ostringstream out;
     out
-        << (static_cast < int > (SilentMedia::Audio::Audio::getTotalTime(fileId))
+        << (static_cast < int > (Audio::getTotalTime(fileId))
             / 60); // min
     out << ":";
     out
-        << (static_cast < int > (SilentMedia::Audio::Audio::getTotalTime(fileId))
+        << (static_cast < int > (Audio::getTotalTime(fileId))
             % 60); // sec
 
     return out.str();

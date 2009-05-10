@@ -44,11 +44,11 @@
 #include "../Collection/Collection_UI.hpp"
 
 // include MainWindow widgets
-#include "Widgets/TrackInfo_UI.hpp"
-#include "Widgets/Cover_UI.hpp"
-#include "Widgets/PlayList/TrackList_UI.hpp"
-#include "Widgets/PlayList/ArtistList_UI.hpp"
-#include "Widgets/PlayList/AlbumList_UI.hpp"
+#include "Main/Widgets/TrackInfo_UI.hpp"
+#include "Main/Widgets/Cover_UI.hpp"
+#include "Main/Widgets/PlayList/TrackList_UI.hpp"
+#include "Main/Widgets/PlayList/ArtistList_UI.hpp"
+#include "Main/Widgets/PlayList/AlbumList_UI.hpp"
 
 namespace RoteSonne {
   namespace UI {

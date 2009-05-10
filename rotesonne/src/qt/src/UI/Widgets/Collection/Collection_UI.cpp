@@ -41,8 +41,14 @@ namespace RoteSonne {
           this -> timer = new QTimer(this);
 
           this -> collectionDb = new RoteSonne::Collection();
+
+          // lists
           this -> trackList
               = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList_UI::Instance();
+          this -> artistList
+              = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::ArtistList_UI::Instance();
+          this -> albumList
+              = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::AlbumList_UI::Instance();
 
           // load UI widget
           this -> widget = LoadUI::loadUI(":/forms/ui/Collection.ui");
@@ -134,6 +140,8 @@ namespace RoteSonne {
 
         void Collection_UI::scanCollection() {
           this -> trackList -> dropPlayList();
+          this -> artistList -> dropPlayList();
+          this -> albumList -> dropPlayList();
 
           string collectionPath =
               this -> collectionPathLineEdit -> text().toStdString();
@@ -154,6 +162,8 @@ namespace RoteSonne {
           if (!this -> collectionDb -> getStatus()) {
             this -> timer -> stop();
             this -> trackList -> setPlayList();
+            this -> artistList -> setPlayList();
+            this -> albumList -> setPlayList();
           }
           progressBar -> setValue(this -> collectionDb -> getProcess());
         }

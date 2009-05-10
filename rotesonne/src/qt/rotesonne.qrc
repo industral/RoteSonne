@@ -4,13 +4,23 @@
     <file>ui/aboutRoteSonne.ui</file>
     <file>ui/Collection.ui</file>
   </qresource>
-  <qresource prefix="/images" >
+  <qresource>
+    <file>../images/application-exit.png</file>
+    <file>../images/edit-delete.png</file>
+    <file>../images/go-next.png</file>
+    <file>../images/go-previous.png</file>
+    <file>../images/help-contents.png</file>
+    <file>../images/help-faq.png</file>
+    <file>../images/insert-image.png</file>
+    <file>../images/list-add.png</file>
+    <file>../images/list-remove.png</file>
+    <file>../images/media-playback-pause.png</file>
+    <file>../images/media-playback-start.png</file>
+    <file>../images/media-playback-stop.png</file>
+    <file>../images/media-seek-backward.png</file>
+    <file>../images/media-seek-forward.png</file>
+    <file>../images/system-run.png</file>
     <file>../images/media-podcast.png</file>
     <file>../images/nocover.png</file>
-    <file>../images/player_fwd.png</file>
-    <file>../images/player_pause.png</file>
-    <file>../images/player_play.png</file>
-    <file>../images/player_rew.png</file>
-    <file>../images/player_stop.png</file>
   </qresource>
 </RCC>

@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../rotesonne.qrc">
-    <normaloff>:/images/images/media-podcast.png</normaloff>:/images/images/media-podcast.png</iconset>
+    <normaloff>:/images/media-podcast.png</normaloff>:/images/media-podcast.png</iconset>
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">

@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../rotesonne.qrc">
-    <normaloff>:/images/images/media-podcast.png</normaloff>:/images/images/media-podcast.png</iconset>
+    <normaloff>:/images/media-podcast.png</normaloff>:/images/media-podcast.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -43,7 +43,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap resource="../rotesonne.qrc">:/images/images/media-podcast.png</pixmap>
+          <pixmap>:/images/images/media-podcast.png</pixmap>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>

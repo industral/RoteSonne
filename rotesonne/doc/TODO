@@ -1,29 +1,19 @@
 - Rewrite with QString ?
 - track list ontrigger model
+- fix track num (string)
+- add cue support
 
-
-- add handle to control
-- add images
 - create logo
 
 - Need to move *ALL* main window widget to separated classes (slider, etc)
 
-- rewrite ugly collection with boost
-- drop pthread
-
-- First while moving futher need to create graphic
-
-- provide stop/pause
-
 - use config file
 
-- UTF-8 in playlist
 - Track sorting
 - scroll wrong horizontal
-- folder cover
 - album
 - on play - hightlighting song
 - auto next track
 
 - Zoom on mouse over cover
-- Advanced and recursive code found
+- Advanced and recursive cover found

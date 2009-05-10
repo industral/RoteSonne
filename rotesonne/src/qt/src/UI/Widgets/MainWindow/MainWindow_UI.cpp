@@ -217,12 +217,13 @@ connect        (this -> playListComponent, SIGNAL (doubleClicked (const QModelIn
         if (((this -> player -> getPlayerStatus()) == Player::Stop) ||
             ((this -> player -> getPlayerStatus()) == Player::Pause)) {
           // change icon
-          this -> playPauseButton -> setIcon (QIcon(":/images/images/player_pause.png"));
+          this -> playPauseButton -> setIcon (QIcon(":/images/media-playback-pause.png"));
         }
 
         if (this -> player -> getPlayerStatus() == Player::Pause) {
           this -> player -> play(this -> playingFileId, true);
-          //        this -> beginUpdateSlider();
+          // change Play status
+          this -> player -> setPlayerStatus(Player::Play);
         } else {
 
           // check if previous song is playing
@@ -269,12 +270,12 @@ connect        (this -> playListComponent, SIGNAL (doubleClicked (const QModelIn
         if (((this -> player -> getPlayerStatus()) == Player::Stop) ||
             ((this -> player -> getPlayerStatus()) == Player::Pause)) {
           // change icon
-          this -> playPauseButton -> setIcon (QIcon(":/images/images/player_pause.png"));
+          this -> playPauseButton -> setIcon (QIcon(":/images/media-playback-pause.png"));
           // play
           this -> play(this -> index);
         } else if ((this -> player -> getPlayerStatus()) == Player::Play) {
           // change icon
-          this -> playPauseButton -> setIcon (QIcon(":/images/images/player_play.png"));
+          this -> playPauseButton -> setIcon (QIcon(":/images/media-playback-start.png"));
           // pause
           this -> pause(this -> index);
         }

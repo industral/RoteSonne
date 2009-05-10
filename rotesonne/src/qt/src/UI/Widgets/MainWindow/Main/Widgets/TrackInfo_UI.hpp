@@ -33,7 +33,7 @@
 #include <QLabel>
 
 // include Player class
-#include "../../../../Player.hpp"
+#include "../../../../../Player.hpp"
 
 using namespace std;
 
