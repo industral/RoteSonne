@@ -31,6 +31,7 @@
 
 // include require Qt headers
 #include <QLabel>
+#include <QDebug>
 
 // boost filesystem
 #include <boost/filesystem/operations.hpp>
@@ -47,10 +48,7 @@ namespace RoteSonne {
         namespace Widgets {
           class Cover_UI {
             public:
-              /**
-               * Default constructor.
-               */
-              Cover_UI();
+              static Cover_UI * Instance();
 
               /**
                * Default destructor.
@@ -60,20 +58,29 @@ namespace RoteSonne {
               void init(QWidget *widget);
               void setCover(const string &fileName);
             private:
+              static Cover_UI * _coverUI;
+
+              /**
+               * Default constructor.
+               */
+              Cover_UI();
+
               // to avoid cast to double
               const double imageSize; // image size
 
               QWidget * widget;
               QLabel * cover;
+              vector<string> coverList;
+              ;
 
               void findChilds();
 
               /**
                * Searching a cover file in current file directory.
-               * @param[in] fileName Track file name.
-               * @return full path to cover image.
+               * @param[in] path Next iteration directory.
                */
-              string findCover(const string &fileName) const;
+              bool findCover(const boost::filesystem::path &path);
+
               void setCoverImage(const string &image);
               void setNoCoverImage();
               void imageTunning(const QPixmap &pix);

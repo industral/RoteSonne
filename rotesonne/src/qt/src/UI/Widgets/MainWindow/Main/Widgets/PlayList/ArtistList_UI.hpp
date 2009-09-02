@@ -57,11 +57,6 @@ namespace RoteSonne {
                 static ArtistList_UI * Instance();
 
                 /**
-                 * Default constructor.
-                 */
-                ArtistList_UI();
-
-                /**
                  * Default destructor.
                  */
                 ~ArtistList_UI();
@@ -74,6 +69,11 @@ namespace RoteSonne {
                 void setCurrentArtist(const QString &artist);
               private:
                 static ArtistList_UI * _artistListUI;
+
+                /**
+                 * Default constructor.
+                 */
+                ArtistList_UI();
 
                 QWidget * widget;
 

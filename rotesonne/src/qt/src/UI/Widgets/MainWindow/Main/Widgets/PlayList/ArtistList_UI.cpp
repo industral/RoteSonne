@@ -46,9 +46,6 @@ namespace RoteSonne {
             // Public methods
             // --------------------------------------------------------------------
 
-            ArtistList_UI::ArtistList_UI() {
-            }
-
             ArtistList_UI::~ArtistList_UI() {
             }
 
@@ -99,6 +96,9 @@ namespace RoteSonne {
             // Private methods
             // --------------------------------------------------------------------
 
+            ArtistList_UI::ArtistList_UI() {
+            }
+
             void ArtistList_UI::findChilds() {
               // track list
               this -> artistListComponent = this -> widget -> findChild <
@@ -116,19 +116,19 @@ connect            (this -> artistListComponent, SIGNAL(itemClicked(
           // --------------------------------------------------------------------
 
           bool ArtistList_UI::setFilter(QListWidgetItem * item) {
-            QString value = item -> text();
+            QString artist = item -> text();
             QString filter = ""; // default filter value
 
-            if (!value.compare("Unknown Artist")) {
-              value = "";
+            if (!artist.compare("Unknown Artist")) {
+              artist = "";
             }
 
             // update current artist variable
-            this -> setCurrentArtist(value);
+            this -> setCurrentArtist(artist);
 
             // if it not All Artists
-            if (value.compare("All Artists")) {
-              filter = "artist=\"" + value + "\"";
+            if (artist.compare("All Artists")) {
+              filter = "artist=\"" + artist + "\" ORDER BY album, tracknum";
             }
 
             // drop track list

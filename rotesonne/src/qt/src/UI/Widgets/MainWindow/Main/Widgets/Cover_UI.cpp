@@ -35,9 +35,14 @@ namespace RoteSonne {
           // Public methods
           // --------------------------------------------------------------------
 
-          Cover_UI::Cover_UI() :
-            imageSize(250) {
+          // Singleton
+          Cover_UI * Cover_UI::_coverUI = NULL;
 
+          Cover_UI * Cover_UI::Instance() {
+            if (_coverUI == NULL) {
+              _coverUI = new Cover_UI();
+            }
+            return _coverUI;
           }
 
           Cover_UI::~Cover_UI() {
@@ -49,16 +54,54 @@ namespace RoteSonne {
           }
 
           void Cover_UI::setCover(const string &fileName) {
-            this -> setCoverImage(this -> findCover(fileName));
+            // clear cover at start point
+            this -> coverList.clear();
+
+            // prefer cover
+            string preferCover;
+
+            if (!fileName.empty()) {
+              //TODO: first should check if it file or directory
+              const string currentDirectory =
+                  Path(fileName).remove_filename().string();
+              this -> findCover(currentDirectory);
+
+              // if there available more than one cover, try to find font cover
+              if (this -> coverList.size() > 1) {
+                for (uint i = 0; i < this -> coverList.size(); ++i) {
+                  const string coverFileName = this -> coverList[i];
+                  if (coverFileName.find("front") != string::npos) {
+                    preferCover = coverFileName;
+                  }
+                }
+
+                // if we don't found front cover, set prefer cover as default
+                if (preferCover.empty()) {
+                  preferCover = this -> coverList[0];
+                }
+              }
+
+              // if we don't found front cover, set prefer cover as default
+              if (this -> coverList.size() == 1) {
+                preferCover = this -> coverList[0];
+              }
+            }
+
+            this -> setCoverImage(preferCover);
+
           }
 
           // --------------------------------------------------------------------
           // Private methods
           // --------------------------------------------------------------------
 
+          Cover_UI::Cover_UI() :
+            imageSize(250) {
+          }
+
           void Cover_UI::findChilds() {
             // cover label component
-            this -> cover = this -> widget -> findChild < QLabel * > ("cover");
+            this -> cover = this -> widget -> findChild<QLabel *> ("cover");
           }
 
           void Cover_UI::setCoverImage(const string &image) {
@@ -79,29 +122,28 @@ namespace RoteSonne {
             this -> cover -> setPixmap(QPixmap(":/images/nocover.png"));
           }
 
-          string Cover_UI::findCover(const string &fileName) const {
-            // directory location current file
-            string directory = Path(fileName).remove_filename().string();
+          bool Cover_UI::findCover(const boost::filesystem::path &path) {
+            if (!exists(path)) {
+              return false;
+            }
 
             boost::filesystem::directory_iterator end_itr;
-            for (boost::filesystem::directory_iterator itr(directory); itr
+            for (boost::filesystem::directory_iterator itr(path); itr
                 != end_itr; ++itr) {
-              if (boost::filesystem::is_regular_file((itr->status()))) {
-                string fileName = Path(itr->filename()).string();
-                string fileExtension = Path(fileName).extension();
 
-                // transform to upper case for case insensitive searching
-                transform(fileName.begin(), fileName.end(), fileName.begin(),
-                    ::toupper);
-
-                if (fileName.find("COVER", 0) != string::npos
-                    && (fileExtension.compare(".png") || fileExtension.compare(
-                        ".jpg"))) {
-                  return itr->path().string();
-                }
+              string currentPathExt =
+                  boost::filesystem::path(itr->filename()).extension();
+              if (is_directory(itr->status())) {
+                findCover(itr->path());
+                // TODO: Should be fetch extensions from a file
+              } else if (!currentPathExt.compare(".png")
+                  || !currentPathExt.compare(".jpg")
+                  || !currentPathExt.compare(".jpeg")
+                  || !currentPathExt.compare(".bmp")) {
+                this -> coverList.push_back(itr->path().string());
               }
             }
-            return "";
+            return true;
           }
 
           void Cover_UI::imageTunning(const QPixmap &pix) {

@@ -46,6 +46,21 @@ namespace RoteSonne {
 
           delete this -> trackList;
           this -> trackList = NULL;
+
+          delete this -> cover;
+          this -> cover = NULL;
+
+          delete this -> library;
+          this -> library = NULL;
+
+          delete this -> trackList;
+          this -> trackList = NULL;
+
+          delete this -> albumList;
+          this -> albumList = NULL;
+
+          delete this -> artistList;
+          this -> artistList = NULL;
         }
 
         QWidget * MainWindow_UI::getUI() const {
@@ -66,6 +81,11 @@ namespace RoteSonne {
           this -> widget = LoadUI::loadUI(":/forms/ui/mainWindow.ui");
 
           /* load widgets */
+
+          // cover
+          this -> cover
+              = RoteSonne::UI::Widgets::MainWindow::Widgets::Cover_UI::Instance();
+          this -> cover -> init(this -> widget);
 
           // library
           this -> library
@@ -91,11 +111,6 @@ namespace RoteSonne {
           this -> albumList
               = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::AlbumList_UI::Instance();
           this -> albumList -> init(this -> widget);
-
-          // cover
-          this -> cover
-              = new RoteSonne::UI::Widgets::MainWindow::Widgets::Cover_UI();
-          this -> cover -> init(this -> widget);
 
           // get all components from widget
           this -> findChilds();

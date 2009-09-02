@@ -46,11 +46,6 @@ namespace RoteSonne {
             // Public methods
             // --------------------------------------------------------------------
 
-            TrackList_UI::TrackList_UI() :
-              model(NULL) {
-              this -> openDbConnection();
-            }
-
             TrackList_UI::~TrackList_UI() {
               cout << "Destructor" << endl;
               this -> closeDbConnection();
@@ -67,8 +62,6 @@ namespace RoteSonne {
 
               this -> model -> setTable("collection");
               this -> model -> setFilter(this -> filter);
-              //              this -> model -> setSort(5, Qt::AscendingOrder);
-              this -> model -> setSort(2, Qt::AscendingOrder);
               this -> model -> select();
 
               this -> model -> setHeaderData(2, Qt::Horizontal, QObject::tr(
@@ -95,14 +88,18 @@ namespace RoteSonne {
               // odd
               this -> trackListComponent -> setAlternatingRowColors(true);
 
-              // set size
-              this -> trackListComponent -> setColumnWidth(2, 50); // track
-              this -> trackListComponent -> setColumnWidth(3, 330); // name
-              this -> trackListComponent -> setColumnWidth(4, 220); // artist
-              this -> trackListComponent -> setColumnWidth(5, 220); // album
-
+              // hide column
               this -> trackListComponent -> hideColumn(0); // id
               this -> trackListComponent -> hideColumn(1); // filename
+
+              // set size
+              this -> trackListComponent -> setColumnWidth(2, 50); // track
+              this -> trackListComponent -> setColumnWidth(3, 320); // name
+              this -> trackListComponent -> setColumnWidth(4, 150); // artist
+              this -> trackListComponent -> setColumnWidth(5, 150); // album
+
+              // remove vertical stuff
+              this -> trackListComponent -> verticalHeader() -> hide();
             }
 
             void TrackList_UI::setFilter(const QString &filter) {
@@ -119,10 +116,15 @@ namespace RoteSonne {
             // Private methods
             // --------------------------------------------------------------------
 
+            TrackList_UI::TrackList_UI() :
+              model(NULL) {
+              this -> openDbConnection();
+            }
+
             void TrackList_UI::findChilds() {
               // track list
-              this -> trackListComponent = this -> widget -> findChild <
-                  QTableView * > ("trackList");
+              this -> trackListComponent = this -> widget -> findChild<
+                  QTableView *> ("trackList");
             }
 
             bool TrackList_UI::openDbConnection() {

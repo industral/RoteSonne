@@ -37,6 +37,7 @@
 
 #include "TrackList_UI.hpp"
 #include "ArtistList_UI.hpp"
+#include "../Cover_UI.hpp"
 
 // include DB
 #include <QtSql>
@@ -50,16 +51,10 @@ namespace RoteSonne {
         namespace Widgets {
           namespace PlayList {
             class ArtistList_UI;
-            class AlbumList_UI: public QWidget,
-                virtual public AbstractPlayList {
-                Q_OBJECT
-                public:
+            class AlbumList_UI: public QWidget, virtual public AbstractPlayList {
+              Q_OBJECT
+              public:
                 static AlbumList_UI * Instance();
-
-                /**
-                 * Default constructor.
-                 */
-                AlbumList_UI();
 
                 /**
                  * Default destructor.
@@ -72,16 +67,28 @@ namespace RoteSonne {
               private:
                 static AlbumList_UI * _albumListUI;
 
+                /**
+                 * Default constructor.
+                 */
+                AlbumList_UI();
+
                 QWidget * widget;
 
                 QSqlDatabase db;
                 QSqlQuery query;
 
                 QListWidget * albumListComponent;
+                ::RoteSonne::UI::Widgets::MainWindow::Widgets::Cover_UI * cover;
 
                 TrackList_UI * trackList;
                 ArtistList_UI * artistList;
 
+                /**
+                 * Set album cover when user click.
+                 * @param[in] artist Artist
+                 * @param[in] album Album
+                 */
+                void setCover(const QString &artist, const QString &album = "");
                 void findChilds();
                 void addHandlers();
 

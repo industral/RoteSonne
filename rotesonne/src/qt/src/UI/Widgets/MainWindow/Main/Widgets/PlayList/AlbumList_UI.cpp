@@ -46,15 +46,13 @@ namespace RoteSonne {
             // Public methods
             // --------------------------------------------------------------------
 
-            AlbumList_UI::AlbumList_UI() {
-            }
-
             AlbumList_UI::~AlbumList_UI() {
             }
 
             void AlbumList_UI::init(QWidget *widget) {
               this -> trackList = TrackList_UI::Instance();
               this -> artistList = ArtistList_UI::Instance();
+              this -> cover = Cover_UI::Instance();
 
               this -> widget = widget;
               this -> findChilds();
@@ -66,17 +64,24 @@ namespace RoteSonne {
 
             void AlbumList_UI::setPlayList() {
               QString currentArtist = this -> artistList -> getCurrentArtist();
-              QString query = "SELECT DISTINCT album FROM collection ";
+              QString query = "SELECT album FROM collection ";
               QString whereClause = "WHERE artist=\"" + currentArtist + "\"";
 
               if (!currentArtist.isEmpty()) {
                 query += whereClause;
               }
 
+              query += " GROUP BY album";
+
               // select all available artist
               QSqlQuery q(this -> db);
 
               q.exec(query);
+
+              /*
+               * sqlite doesn't support return size of affected row. So we should count it manually.
+               */
+              int length = 0;
 
               // populate list
               while (q.next()) {
@@ -86,7 +91,13 @@ namespace RoteSonne {
                   album = "Unknown Album";
                 }
                 this -> albumListComponent -> addItem(album);
+                ++length;
               }
+
+              if (length == 1) {
+                this -> setCover(currentArtist);
+              }
+
             }
 
             void AlbumList_UI::dropPlayList() {
@@ -97,10 +108,13 @@ namespace RoteSonne {
             // Private methods
             // --------------------------------------------------------------------
 
+            AlbumList_UI::AlbumList_UI() {
+            }
+
             void AlbumList_UI::findChilds() {
               // track list
-              this -> albumListComponent = this -> widget -> findChild <
-                  QListWidget * > ("albumList");
+              this -> albumListComponent = this -> widget -> findChild<
+                  QListWidget *> ("albumList");
             }
 
             void AlbumList_UI::addHandlers() {
@@ -109,21 +123,49 @@ connect            (this -> albumListComponent, SIGNAL(itemClicked(
                         QListWidgetItem * )));
           }
 
+          void AlbumList_UI::setCover(const QString &artist, const QString &album) {
+            //TODO: rewrite query
+            QString query;
+
+            if (!album.size()) {
+              query = "SELECT fileName FROM collection WHERE artist=\"" + artist + "\" LIMIT 0,1";
+            } else {
+              query = "SELECT fileName FROM collection WHERE artist=\"" + artist + "\" and album=\"" + album + "\" LIMIT 0,1";
+            }
+
+            // select all available artist
+            QSqlQuery q(this -> db);
+
+            q.exec(query);
+            QString track;
+
+            while (q.next()) {
+              track = q.value(0).toString();
+            }
+
+            this -> cover -> setCover(track.toStdString().c_str());
+          }
+
           // --------------------------------------------------------------------
           // Private slots
           // --------------------------------------------------------------------
 
           bool AlbumList_UI::setFilter(QListWidgetItem * item) {
-            QString value = item -> text();
+            QString album = item -> text();
+            QString artist = this -> artistList -> getCurrentArtist();
+
             QString albumFilter = ""; // default filter value
             QString artistFilter = "";
 
-            if (!value.compare("Unknown Album")) {
-              value = "";
+            if (!album.compare("Unknown Album")) {
+              album = "";
             }
 
-            artistFilter = "artist=\"" + this -> artistList -> getCurrentArtist() + "\"";
-            albumFilter = "album=\"" + value + "\"";
+            artistFilter = "artist=\"" + artist + "\"";
+            albumFilter = "album=\"" + album + "\" ORDER BY tracknum";
+
+            // set cover
+            this -> setCover(artist, album);
 
             // drop track list
             this -> trackList -> dropPlayList();

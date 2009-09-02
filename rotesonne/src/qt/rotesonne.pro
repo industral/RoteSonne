@@ -30,4 +30,4 @@ SOURCES     = src/UI/LoadUI.cpp \
               src/StartUp.cpp \
               src/Collection.cpp
               
-LIBS += -lsml -lvorbisfile -lFLAC++ -lwavpack -lao -lboost_thread-mt -lboost_filesystem-mt -lasound -lspiff
+LIBS += -lsml -lvorbisfile -lFLAC++ -lwavpack -lao -lboost_thread-mt -lboost_filesystem-mt -lasound -lxspf

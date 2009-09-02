@@ -31,6 +31,7 @@
 // include require Qt headers
 #include <QWidget>
 #include <QTableView>
+#include <QHeaderView>
 
 // include DB
 #include <QtSql>
@@ -52,11 +53,6 @@ namespace RoteSonne {
                 static TrackList_UI * Instance();
 
                 /**
-                 * Default constructor.
-                 */
-                TrackList_UI();
-
-                /**
                  * Default destructor.
                  */
                 ~TrackList_UI();
@@ -69,6 +65,11 @@ namespace RoteSonne {
                 void dropPlayList();
               private:
                 static TrackList_UI * _playListUI;
+
+                /**
+                 * Default constructor.
+                 */
+                TrackList_UI();
 
                 QWidget * widget;
                 QSqlDatabase db;
