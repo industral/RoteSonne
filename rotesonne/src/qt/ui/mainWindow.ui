@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1404</width>
-    <height>797</height>
+    <width>1536</width>
+    <height>802</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -194,9 +194,97 @@
                 <attribute name="title">
                  <string>Main</string>
                 </attribute>
-                <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,4">
+                <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,1,4">
                  <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,4">
+                  <widget class="QTreeWidget" name="treeWidget">
+                   <property name="itemsExpandable">
+                    <bool>true</bool>
+                   </property>
+                   <property name="animated">
+                    <bool>true</bool>
+                   </property>
+                   <property name="allColumnsShowFocus">
+                    <bool>false</bool>
+                   </property>
+                   <property name="wordWrap">
+                    <bool>false</bool>
+                   </property>
+                   <property name="headerHidden">
+                    <bool>true</bool>
+                   </property>
+                   <property name="expandsOnDoubleClick">
+                    <bool>true</bool>
+                   </property>
+                   <attribute name="headerHighlightSections">
+                    <bool>false</bool>
+                   </attribute>
+                   <attribute name="headerHighlightSections">
+                    <bool>false</bool>
+                   </attribute>
+                   <column>
+                    <property name="text">
+                     <string/>
+                    </property>
+                   </column>
+                   <item>
+                    <property name="text">
+                     <string>Library</string>
+                    </property>
+                    <item>
+                     <property name="text">
+                      <string>Music</string>
+                     </property>
+                     <item>
+                      <property name="text">
+                       <string>Playlist</string>
+                      </property>
+                      <item>
+                       <property name="text">
+                        <string>Default</string>
+                       </property>
+                      </item>
+                     </item>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Radio</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Podcasts</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Music Community</string>
+                     </property>
+                     <item>
+                      <property name="text">
+                       <string>Libre.fm</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Last.fm</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Jamendo</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Magnatune</string>
+                      </property>
+                     </item>
+                    </item>
+                   </item>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QVBoxLayout" name="verticalLayout_6" stretch="1,2">
                    <property name="sizeConstraint">
                     <enum>QLayout::SetDefaultConstraint</enum>
                    </property>
@@ -204,12 +292,6 @@
                     <widget class="QLabel" name="cover">
                      <property name="enabled">
                       <bool>true</bool>
-                     </property>
-                     <property name="minimumSize">
-                      <size>
-                       <width>0</width>
-                       <height>0</height>
-                      </size>
                      </property>
                      <property name="maximumSize">
                       <size>
@@ -358,7 +440,7 @@
                   </layout>
                  </item>
                  <item>
-                  <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="2,5">
+                  <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="2,4">
                    <item>
                     <layout class="QVBoxLayout" name="verticalLayout_9" stretch="2,1">
                      <item>
@@ -538,7 +620,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1404</width>
+     <width>1536</width>
      <height>25</height>
     </rect>
    </property>
@@ -622,6 +704,7 @@
   </action>
  </widget>
  <resources>
+  <include location="../rotesonne.qrc"/>
   <include location="../rotesonne.qrc"/>
  </resources>
  <connections>

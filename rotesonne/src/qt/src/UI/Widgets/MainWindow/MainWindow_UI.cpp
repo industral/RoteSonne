@@ -67,6 +67,11 @@ namespace RoteSonne {
 
           /* load widgets */
 
+          // library
+          this -> library
+              = new RoteSonne::UI::Widgets::MainWindow::Widgets::Library::Library_UI(
+                  this -> widget);
+
           // track info
           this -> trackinfo
               = new RoteSonne::UI::Widgets::MainWindow::Widgets::TrackInfo_UI::TrackInfo_UI(
@@ -166,7 +171,7 @@ namespace RoteSonne {
               updateSliderPosition()));
 
           // write slider value
-          connect ( this -> playerSlider, SIGNAL (valueChanged (int)), this, SLOT (writeSliderPosition (int)));
+           connect ( this -> playerSlider, SIGNAL (valueChanged (int)), this, SLOT (writeSliderPosition (int)));
           // while move slider, disconnect slider
           connect(this -> playerSlider, SIGNAL(sliderPressed()), this, SLOT(
               stopUpdateSlider()));

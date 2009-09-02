@@ -44,6 +44,7 @@
 #include "../Collection/Collection_UI.hpp"
 
 // include MainWindow widgets
+#include "Main/Widgets/Library/Library_UI.hpp"
 #include "Main/Widgets/TrackInfo_UI.hpp"
 #include "Main/Widgets/Cover_UI.hpp"
 #include "Main/Widgets/PlayList/TrackList_UI.hpp"
@@ -58,8 +59,8 @@ namespace RoteSonne {
          * Main player class.
          */
         class MainWindow_UI: public QMainWindow {
-            Q_OBJECT
-            public:
+          Q_OBJECT
+          public:
             /**
              * Default constructor.
              */
@@ -114,6 +115,8 @@ namespace RoteSonne {
             Player * player;
 
             // widgets
+            RoteSonne::UI::Widgets::MainWindow::Widgets::Library::Library_UI
+                *library;
             RoteSonne::UI::Widgets::MainWindow::Widgets::TrackInfo_UI
                 *trackinfo;
             RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList_UI

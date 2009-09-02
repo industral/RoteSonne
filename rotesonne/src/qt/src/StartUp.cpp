@@ -23,42 +23,43 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#include <QApplication>
-
-#include "UI/Widgets/MainWindow/MainWindow_UI.hpp"
 #include "StartUp.hpp"
 
-using namespace RoteSonne;
-using namespace RoteSonne::UI::Widgets::MainWindow;
+namespace RoteSonne {
 
-int main(int argc, char **argv) {
-  StartUP * startup = new StartUP();
-  if (!startup -> init()) {
-    qDebug() << "Can't startup application";
-    return -1;
+  // --------------------------------------------------------------------
+  // Public methods
+  // --------------------------------------------------------------------
+
+  StartUP::StartUP() {
   }
 
-  // set encoding to UTF-8
-  QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-  QTextCodec::setCodecForTr(codec);
-  QTextCodec::setCodecForLocale(codec);
-  QTextCodec::setCodecForCStrings(codec);
+  StartUP::~StartUP() {
 
-  QApplication app(argc, argv);
-
-  MainWindow_UI * mainWindow = new MainWindow_UI();
-  mainWindow -> init();
-  QWidget *widget = mainWindow -> getUI();
-
-  if (widget == NULL) {
-    return -1;
   }
 
-  widget -> show();
-  int r = app.exec();
+  bool StartUP::init() {
+    const QString applicationFolder = USER_APPLICATION_NAME;
+    QString userHomeDir = QDir::homePath();
+    const QString fullPathToApplication =
+        QString("%1/%2").arg(userHomeDir).arg(applicationFolder);
 
-  delete mainWindow;
-  delete widget;
+    this -> checkApplicationHomeDir(fullPathToApplication);
+  }
 
-  return r;
+  // --------------------------------------------------------------------
+  // Private methods
+  // --------------------------------------------------------------------
+
+  bool StartUP::checkApplicationHomeDir(const QString &path) {
+    if (this -> qDir.exists(path)) {
+      return true;
+    } else {
+      if (this -> qDir.mkdir(path)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 }

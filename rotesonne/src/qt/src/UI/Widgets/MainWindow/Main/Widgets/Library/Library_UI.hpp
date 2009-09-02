@@ -23,42 +23,47 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#include <QApplication>
+#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_LIBRARY_LIBRARY_UI_HPP_
+#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_LIBRARY_LIBRARY_UI_HPP_
 
-#include "UI/Widgets/MainWindow/MainWindow_UI.hpp"
-#include "StartUp.hpp"
+// include require Qt headers
+#include <QUiLoader>
+#include <QWidget>
+#include <QTreeWidget>
+#include <QListWidget>
+#include <QCheckBox>
 
-using namespace RoteSonne;
-using namespace RoteSonne::UI::Widgets::MainWindow;
+namespace RoteSonne {
+  namespace UI {
+    namespace Widgets {
+      namespace MainWindow {
+        namespace Widgets {
+          namespace Library {
+            class Library_UI {
+              public:
+                /**
+                 * Default constructor.
+                 */
+                Library_UI(QWidget *widget);
 
-int main(int argc, char **argv) {
-  StartUP * startup = new StartUP();
-  if (!startup -> init()) {
-    qDebug() << "Can't startup application";
-    return -1;
+                /**
+                 * Default destructor.
+                 */
+                ~Library_UI();
+
+              private:
+                void findChilds();
+                void setPlayList();
+                void setExpand();
+
+                QWidget * widget;
+                QTreeWidget *treeWidget;
+            };
+          }
+        }
+      }
+    }
   }
-
-  // set encoding to UTF-8
-  QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-  QTextCodec::setCodecForTr(codec);
-  QTextCodec::setCodecForLocale(codec);
-  QTextCodec::setCodecForCStrings(codec);
-
-  QApplication app(argc, argv);
-
-  MainWindow_UI * mainWindow = new MainWindow_UI();
-  mainWindow -> init();
-  QWidget *widget = mainWindow -> getUI();
-
-  if (widget == NULL) {
-    return -1;
-  }
-
-  widget -> show();
-  int r = app.exec();
-
-  delete mainWindow;
-  delete widget;
-
-  return r;
 }
+
+#endif

@@ -23,42 +23,10 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#include <QApplication>
+#ifndef _ROTESONNE_DEFINE_HPP_
+#define _ROTESONNE_DEFINE_HPP_
 
-#include "UI/Widgets/MainWindow/MainWindow_UI.hpp"
-#include "StartUp.hpp"
+#define USER_APPLICATION_NAME ".rotesonner"
+#define PLAYLIST_STORAGE_FOLDER = "playlists"
 
-using namespace RoteSonne;
-using namespace RoteSonne::UI::Widgets::MainWindow;
-
-int main(int argc, char **argv) {
-  StartUP * startup = new StartUP();
-  if (!startup -> init()) {
-    qDebug() << "Can't startup application";
-    return -1;
-  }
-
-  // set encoding to UTF-8
-  QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-  QTextCodec::setCodecForTr(codec);
-  QTextCodec::setCodecForLocale(codec);
-  QTextCodec::setCodecForCStrings(codec);
-
-  QApplication app(argc, argv);
-
-  MainWindow_UI * mainWindow = new MainWindow_UI();
-  mainWindow -> init();
-  QWidget *widget = mainWindow -> getUI();
-
-  if (widget == NULL) {
-    return -1;
-  }
-
-  widget -> show();
-  int r = app.exec();
-
-  delete mainWindow;
-  delete widget;
-
-  return r;
-}
+#endif
