@@ -23,10 +23,42 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_DEFINE_HPP_
-#define _ROTESONNE_DEFINE_HPP_
+#ifndef _CONFIGURATION_HPP_
+#define _CONFIGURATION_HPP_
 
 #define USER_APPLICATION_NAME ".rotesonner"
-#define PLAYLIST_STORAGE_FOLDER = "playlists"
+#define PLAYLIST_STORAGE_FOLDER "playlists"
+
+#include <QtCore>
+#include <libconfig.h++>
+
+using namespace libconfig;
+
+namespace RoteSonne {
+  class Configuration {
+    public:
+      static Configuration * Instance();
+
+      /**
+       * Default destructor.
+       */
+      ~Configuration();
+
+      QString getPlayListFolderPath() const;
+      QString getHomeDirApplication() const;
+    private:
+      /**
+       * Default constructor.
+       */
+      Configuration();
+
+      static Configuration * _configuration;
+
+      void init();
+
+      QString playListFolderPath;
+      QString homeDirApplication;
+  };
+}
 
 #endif

@@ -26,15 +26,11 @@
 #ifndef _ROTESONNE_STARTUP_HPP_
 #define _ROTESONNE_STARTUP_HPP_
 
-#include <iostream>
-#include <libconfig.h++>
-#include "define.hpp"
+// Qt
+#include <QtCore>
 
-#include <QDebug>
-#include <QDir>
-
-using namespace libconfig;
-using namespace std;
+// other relative
+#include "Configuration.hpp"
 
 namespace RoteSonne {
   class StartUP {
@@ -42,11 +38,20 @@ namespace RoteSonne {
       StartUP();
       ~StartUP();
 
+      /**
+       * Check require files for app, create them if they doesn't exist.
+       */
       bool init();
     private:
-      bool checkApplicationHomeDir(const QString &path);
+      /**
+       * Check for passing path, create it if it not exist.
+       * @param[in] path Directory that should be exist.
+       */
+      bool checkApplicationDir(const QString &path);
 
       QDir qDir;
+
+      Configuration * cfg;
   };
 }
 

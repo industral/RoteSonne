@@ -64,8 +64,9 @@ namespace RoteSonne {
 
             void AlbumList_UI::setPlayList() {
               QString currentArtist = this -> artistList -> getCurrentArtist();
-              QString query = "SELECT album FROM collection ";
-              QString whereClause = "WHERE artist=\"" + currentArtist + "\"";
+              QString query = "SELECT album FROM collection";
+              QString whereClause = QString(" WHERE artist=\"%1\"").arg(
+                  currentArtist);
 
               if (!currentArtist.isEmpty()) {
                 query += whereClause;
@@ -113,7 +114,7 @@ namespace RoteSonne {
 
             void AlbumList_UI::findChilds() {
               // track list
-              this -> albumListComponent = this -> widget -> findChild<
+              this -> albumListComponent = this -> widget -> findChild <
                   QListWidget *> ("albumList");
             }
 
@@ -128,9 +129,9 @@ connect            (this -> albumListComponent, SIGNAL(itemClicked(
             QString query;
 
             if (!album.size()) {
-              query = "SELECT fileName FROM collection WHERE artist=\"" + artist + "\" LIMIT 0,1";
+              query = QString("SELECT fileName FROM collection WHERE artist=\"%1\" LIMIT 0,1").arg(artist);
             } else {
-              query = "SELECT fileName FROM collection WHERE artist=\"" + artist + "\" and album=\"" + album + "\" LIMIT 0,1";
+              query = QString("SELECT fileName FROM collection WHERE artist=\"%1\" and album=\"%2\" LIMIT 0,1").arg(artist).arg(album);
             }
 
             // select all available artist
@@ -161,8 +162,8 @@ connect            (this -> albumListComponent, SIGNAL(itemClicked(
               album = "";
             }
 
-            artistFilter = "artist=\"" + artist + "\"";
-            albumFilter = "album=\"" + album + "\" ORDER BY tracknum";
+            artistFilter = QString("artist=\"%1\"").arg(artist);
+            albumFilter = QString("album=\"%1\" ORDER BY tracknum").arg(album);
 
             // set cover
             this -> setCover(artist, album);

@@ -23,7 +23,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#include "StartUp.hpp"
+#include "Configuration.hpp"
 
 namespace RoteSonne {
 
@@ -31,34 +31,49 @@ namespace RoteSonne {
   // Public methods
   // --------------------------------------------------------------------
 
-  StartUP::StartUP() :
-    cfg(Configuration::Instance()) {
+  // Singleton
+  Configuration * Configuration::_configuration = NULL;
+
+  Configuration * Configuration::Instance() {
+    if (_configuration == NULL) {
+      _configuration = new Configuration();
+    }
+    return _configuration;
   }
 
-  StartUP::~StartUP() {
+  Configuration::~Configuration() {
   }
 
-  bool StartUP::init() {
-    this -> checkApplicationDir(cfg -> getHomeDirApplication());
-    this -> checkApplicationDir(cfg -> getPlayListFolderPath());
+  QString Configuration::getPlayListFolderPath() const {
+    return this -> playListFolderPath;
+  }
+
+  QString Configuration::getHomeDirApplication() const {
+    return this -> homeDirApplication;
   }
 
   // --------------------------------------------------------------------
   // Private methods
   // --------------------------------------------------------------------
 
-  //TODO: Rewrite with throws
-  bool StartUP::checkApplicationDir(const QString &path) {
-    if (this -> qDir.exists(path)) {
-      return true;
-    } else {
-      if (this -> qDir.mkdir(path)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-    return false;
+  Configuration::Configuration() {
+    this -> init();
+  }
+
+  void Configuration::init() {
+    const QString applicationFolder = USER_APPLICATION_NAME;
+    const QString playListFolder = PLAYLIST_STORAGE_FOLDER;
+
+    QString userHomeDir = QDir::homePath();
+
+    const QString homeDirApplication = QString("%1/%2").arg(userHomeDir).arg(
+        applicationFolder);
+
+    const QString playListFolderPath =
+        QString("%1/%2").arg(homeDirApplication).arg(playListFolder);
+
+    this -> homeDirApplication = homeDirApplication;
+    this -> playListFolderPath = playListFolderPath;
   }
 
 }

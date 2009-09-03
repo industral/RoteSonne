@@ -32,11 +32,22 @@ namespace RoteSonne {
         namespace Widgets {
           namespace Library {
 
+            const QString Library_UI::itemPlayListDefinition = QString(
+                "PLAYLIST");
+            const int Library_UI::itemPlayListNumber = 500;
+            const int Library_UI::itemPlayListFilePathNumber = 501;
+
             // --------------------------------------------------------------------
             // Public methods
             // --------------------------------------------------------------------
 
-            Library_UI::Library_UI(QWidget *widget) {
+            Library_UI::Library_UI() {
+            }
+
+            Library_UI::Library_UI(QWidget *widget) :
+              cfg(Configuration::Instance()) {
+              Library_UI();
+
               this -> widget = widget;
 
               this -> findChilds();
@@ -53,10 +64,18 @@ namespace RoteSonne {
 
             void Library_UI::findChilds() {
               this -> treeWidget
-                  = this -> widget -> findChild < QTreeWidget * > ("treeWidget");
+                  = this -> widget -> findChild <QTreeWidget *> ("treeWidget");
+            }
+
+            void Library_UI::defineRoots() {
+              this -> playListQTreeWidgetItem
+                  = this -> treeWidget -> topLevelItem(0) -> child(0) -> child(
+                      0);
             }
 
             void Library_UI::setExpand() {
+              this -> defineRoots();
+
               // expand root
               this -> treeWidget -> expandItem(
                   this -> treeWidget -> topLevelItem(0));
@@ -66,19 +85,73 @@ namespace RoteSonne {
                   this -> treeWidget -> topLevelItem(0) -> child(0));
 
               // expand playlist
-              this -> treeWidget -> expandItem(
-                  this -> treeWidget -> topLevelItem(0) -> child(0) -> child(0));
+              this -> treeWidget -> expandItem(this -> playListQTreeWidgetItem);
+            }
+
+            bool Library_UI::scanPlayListFiles(
+                const boost::filesystem::path &path) {
+              if (!exists(path)) {
+                return false;
+              }
+
+              boost::filesystem::directory_iterator end_itr;
+              for (boost::filesystem::directory_iterator itr(path); itr
+                  != end_itr; ++itr) {
+                string currentPathExt =
+                    boost::filesystem::path(itr->filename()).extension();
+
+                if (is_directory(itr->status())) {
+                  qDebug() << "New root: " << itr->path().string().c_str();
+                  scanPlayListFiles(itr->path());
+                  // TODO: Should be fetch extensions fom file
+                } else if (!currentPathExt.compare(".xspf")) {
+                  qDebug() << "New item: " << itr->path().string().c_str();
+                  //this -> fileList.push_back(itr->path().string());
+                }
+              }
+              return true;
             }
 
             void Library_UI::setPlayList() {
+              QString path = this -> cfg -> getPlayListFolderPath();
+              this -> scanPlayListFiles(path.toStdString().c_str());
 
               this -> treeWidget -> setColumnCount(1);
-              QList < QTreeWidgetItem * > items;
-              for (int i = 0; i < 10; ++i)
-                items.append(new QTreeWidgetItem((QTreeWidget*) 0, QStringList(
-                    QString("item: %1").arg(i))));
-              this -> treeWidget -> topLevelItem(0) -> child(0) -> child(0) -> addChildren(
-                  items);
+              QList <QTreeWidgetItem *> items;
+
+              QTreeWidgetItem * i = new QTreeWidgetItem(QStringList("asd"));
+
+              i -> setData(itemPlayListNumber, Qt::DisplayRole, QVariant(
+                  itemPlayListDefinition));
+              i -> setData(itemPlayListFilePathNumber, Qt::DisplayRole,
+                  QVariant("YTRY"));
+
+              items.append(i);
+
+              //              for (int i = 0; i < 10; ++i) {
+              //                items.append(new QTreeWidgetItem(QStringList(
+              //                    QString("item: %1").arg(i))));
+              //              }
+
+              this -> playListQTreeWidgetItem -> addChildren(items);
+
+              connect(this -> treeWidget,
+                  SIGNAL(itemClicked(QTreeWidgetItem *, int)),
+                  SLOT(eventHandler(QTreeWidgetItem *, int)));
+            }
+
+            void Library_UI::handlePlayList() {
+
+            }
+
+            // --------------------------------------------------------------------
+            // Private slots
+            // --------------------------------------------------------------------
+
+            void Library_UI::eventHandler(QTreeWidgetItem * item, int column) {
+              qDebug() << item -> text(column);
+              qDebug()
+                  << item -> data(itemPlayListNumber, Qt::DisplayRole).toString();
             }
 
           }

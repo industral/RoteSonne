@@ -14,7 +14,8 @@ HEADERS     = src/UI/Widgets/MainWindow/MainWindow_UI.hpp \
               src/UI/Widgets/MainWindow/Main/Widgets/PlayList/AlbumList_UI.hpp \
               src/UI/Widgets/Collection/Collection_UI.hpp \
               src/Collection.hpp \
-              src/StartUp.hpp
+              src/StartUp.hpp \
+              src/Configuration.hpp
 
 SOURCES     = src/UI/LoadUI.cpp \
               src/Player.cpp \
@@ -28,6 +29,7 @@ SOURCES     = src/UI/LoadUI.cpp \
               src/UI/Widgets/Collection/Collection_UI.cpp \
               src/common.cpp \
               src/StartUp.cpp \
-              src/Collection.cpp
+              src/Collection.cpp \
+              src/Configuration.cpp
               
 LIBS += -lsml -lvorbisfile -lFLAC++ -lwavpack -lao -lboost_thread-mt -lboost_filesystem-mt -lasound -lxspf

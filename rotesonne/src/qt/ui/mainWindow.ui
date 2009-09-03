@@ -239,11 +239,6 @@
                           <property name="text">
                            <string>Playlist</string>
                           </property>
-                          <item>
-                           <property name="text">
-                            <string>Default</string>
-                           </property>
-                          </item>
                          </item>
                         </item>
                         <item>

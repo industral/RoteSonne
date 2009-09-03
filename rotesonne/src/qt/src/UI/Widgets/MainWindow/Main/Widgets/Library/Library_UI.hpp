@@ -27,11 +27,18 @@
 #define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_LIBRARY_LIBRARY_UI_HPP_
 
 // include require Qt headers
-#include <QUiLoader>
-#include <QWidget>
-#include <QTreeWidget>
-#include <QListWidget>
-#include <QCheckBox>
+#include <QtGui>
+
+#include <string>
+
+// boost filesystem
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/fstream.hpp>
+
+//TODO: Fix this shit!
+#include "../../../../../../Configuration.hpp"
+
+using namespace std;
 
 namespace RoteSonne {
   namespace UI {
@@ -39,8 +46,12 @@ namespace RoteSonne {
       namespace MainWindow {
         namespace Widgets {
           namespace Library {
-            class Library_UI {
+            class Library_UI: public QWidget {
+              Q_OBJECT
               public:
+
+                Library_UI();
+
                 /**
                  * Default constructor.
                  */
@@ -50,14 +61,25 @@ namespace RoteSonne {
                  * Default destructor.
                  */
                 ~Library_UI();
-
               private:
                 void findChilds();
                 void setPlayList();
+                void defineRoots();
                 void setExpand();
+                bool scanPlayListFiles(const boost::filesystem::path &path);
+                void handlePlayList();
+
+                static const QString itemPlayListDefinition;
+                static const int itemPlayListNumber;
+                static const int itemPlayListFilePathNumber;
 
                 QWidget * widget;
                 QTreeWidget *treeWidget;
+                Configuration * cfg;
+
+                QTreeWidgetItem * playListQTreeWidgetItem;
+              private slots:
+                void eventHandler(QTreeWidgetItem *, int);
             };
           }
         }
