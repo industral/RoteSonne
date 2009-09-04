@@ -45,7 +45,8 @@ namespace RoteSonne {
             }
 
             Library_UI::Library_UI(QWidget *widget) :
-              cfg(Configuration::Instance()) {
+              cfg(Configuration::Instance()), pl(
+                  new SilentMedia::Media::PlayList::PlayList) {
               Library_UI();
 
               this -> widget = widget;
@@ -101,37 +102,40 @@ namespace RoteSonne {
                     boost::filesystem::path(itr->filename()).extension();
 
                 if (is_directory(itr->status())) {
-                  qDebug() << "New root: " << itr->path().string().c_str();
                   scanPlayListFiles(itr->path());
                   // TODO: Should be fetch extensions fom file
                 } else if (!currentPathExt.compare(".xspf")) {
-                  qDebug() << "New item: " << itr->path().string().c_str();
-                  //this -> fileList.push_back(itr->path().string());
+                  this -> playListList.push_back(itr->path().string().c_str());
                 }
               }
               return true;
             }
 
             void Library_UI::setPlayList() {
-              QString path = this -> cfg -> getPlayListFolderPath();
-              this -> scanPlayListFiles(path.toStdString().c_str());
+              const QString playListFolderPath =
+                  this -> cfg -> getPlayListFolderPath();
+
+              this -> scanPlayListFiles(
+                  playListFolderPath.toStdString().c_str());
 
               this -> treeWidget -> setColumnCount(1);
               QList <QTreeWidgetItem *> items;
 
-              QTreeWidgetItem * i = new QTreeWidgetItem(QStringList("asd"));
+              for (int i = 0; i < this -> playListList.size(); ++i) {
+                const QString playListPath = this -> playListList[i];
+                const QString playListName = playListPath.split(
+                    playListFolderPath)[1];
 
-              i -> setData(itemPlayListNumber, Qt::DisplayRole, QVariant(
-                  itemPlayListDefinition));
-              i -> setData(itemPlayListFilePathNumber, Qt::DisplayRole,
-                  QVariant("YTRY"));
+                QTreeWidgetItem * i = new QTreeWidgetItem(QStringList(
+                    playListName));
 
-              items.append(i);
+                i -> setData(itemPlayListNumber, Qt::DisplayRole, QVariant(
+                    itemPlayListDefinition));
+                i -> setData(itemPlayListFilePathNumber, Qt::DisplayRole,
+                    QVariant(playListPath));
 
-              //              for (int i = 0; i < 10; ++i) {
-              //                items.append(new QTreeWidgetItem(QStringList(
-              //                    QString("item: %1").arg(i))));
-              //              }
+                items.append(i);
+              }
 
               this -> playListQTreeWidgetItem -> addChildren(items);
 
@@ -140,7 +144,18 @@ namespace RoteSonne {
                   SLOT(eventHandler(QTreeWidgetItem *, int)));
             }
 
-            void Library_UI::handlePlayList() {
+            void Library_UI::handlePlayList(QTreeWidgetItem * item, int column) {
+              QString playListFilePath = item -> data(
+                  itemPlayListFilePathNumber, Qt::DisplayRole).toString();
+
+              this -> pl -> open(playListFilePath.toStdString().c_str());
+              list <string> l = this -> pl -> getPlayList();
+
+              for (list <string>::iterator it = l.begin(); it != l.end(); it++) {
+                cout << *it << endl;
+              }
+
+              this -> pl -> close();
 
             }
 
@@ -149,9 +164,13 @@ namespace RoteSonne {
             // --------------------------------------------------------------------
 
             void Library_UI::eventHandler(QTreeWidgetItem * item, int column) {
-              qDebug() << item -> text(column);
-              qDebug()
-                  << item -> data(itemPlayListNumber, Qt::DisplayRole).toString();
+              QString playList = item -> data(itemPlayListNumber,
+                  Qt::DisplayRole).toString();
+
+              if (!playList.compare(itemPlayListDefinition)) {
+                this -> handlePlayList(item, column);
+              }
+
             }
 
           }

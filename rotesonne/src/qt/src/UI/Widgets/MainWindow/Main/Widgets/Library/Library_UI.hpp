@@ -38,6 +38,8 @@
 //TODO: Fix this shit!
 #include "../../../../../../Configuration.hpp"
 
+#include <libsml/all.hpp>
+
 using namespace std;
 
 namespace RoteSonne {
@@ -67,7 +69,7 @@ namespace RoteSonne {
                 void defineRoots();
                 void setExpand();
                 bool scanPlayListFiles(const boost::filesystem::path &path);
-                void handlePlayList();
+                void handlePlayList(QTreeWidgetItem * item, int column);
 
                 static const QString itemPlayListDefinition;
                 static const int itemPlayListNumber;
@@ -77,7 +79,11 @@ namespace RoteSonne {
                 QTreeWidget *treeWidget;
                 Configuration * cfg;
 
+                SilentMedia::Media::PlayList::PlayList * pl;
+
                 QTreeWidgetItem * playListQTreeWidgetItem;
+                QList <QString> playListList;
+
               private slots:
                 void eventHandler(QTreeWidgetItem *, int);
             };
