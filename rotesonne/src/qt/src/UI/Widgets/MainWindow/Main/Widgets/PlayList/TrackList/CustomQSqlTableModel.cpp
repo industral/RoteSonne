@@ -23,14 +23,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_ARTISTLIST_HPP_
-#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_ARTISTLIST_HPP_
-
-#include <include.hpp>
-
-#include "AbstractPlayList.hpp"
-#include "TrackList/TrackList_UI.hpp"
-#include "AlbumList_UI.hpp"
+#include "CustomQSqlTableModel.hpp"
 
 namespace RoteSonne {
   namespace UI {
@@ -38,55 +31,45 @@ namespace RoteSonne {
       namespace MainWindow {
         namespace Widgets {
           namespace PlayList {
-            class AlbumList_UI;
-            class ArtistList_UI: public QWidget,
-                virtual public AbstractPlayList {
-                Q_OBJECT
-                public:
-                static ArtistList_UI * Instance();
+            namespace TrackList {
 
-                /**
-                 * Default destructor.
-                 */
-                ~ArtistList_UI();
+              CustomQSqlTableModel::CustomQSqlTableModel() {
+              }
 
-                void init(QWidget *widget);
-                void setPlayList();
-                void dropPlayList();
+              CustomQSqlTableModel::~CustomQSqlTableModel() {
+              }
 
-                QString getCurrentArtist() const;
-                void setCurrentArtist(const QString &artist);
-              private:
-                static ArtistList_UI * _artistListUI;
+              QVariant CustomQSqlTableModel::data(const QModelIndex &index,
+                  int role) const {
+                QVariant value = QSqlQueryModel::data(index, role);
 
-                /**
-                 * Default constructor.
-                 */
-                ArtistList_UI();
+                if (value.isValid() && role == Qt::DisplayRole) {
+                  if (index.column() == 2) {
+                    return value.toString().prepend("#");
+                  } else if (index.column() == 2) {
+                    return value.toString().toUpper();
+                  }
+                }
 
-                QWidget * widget;
+                if (role == Qt::TextColorRole && index.column() == 3) {
+                  return qVariantFromValue(QColor(Qt::blue));
+                }
 
-                QSqlDatabase db;
-                QSqlQuery query;
+                return value;
+              }
 
-                QListWidget * artistListComponent;
+              bool CustomQSqlTableModel::setData(const QModelIndex & index,
+                  const QVariant & value, int role) {
 
-                TrackList::TrackList_UI * trackList;
-                AlbumList_UI * albumList;
+//                bool lResult = false;
+//                lResult = QSqlTableModel::setData(index, qVariantFromValue(QColor(Qt::red)), Qt::TextColorRole);
+//                return lResult;
+              }
 
-                QString currentArtist;
-
-                void findChilds();
-                void addHandlers();
-
-private            slots:
-            bool setFilter(QListWidgetItem * item);
-          };
+            }
+          }
         }
       }
     }
   }
 }
-}
-
-#endif

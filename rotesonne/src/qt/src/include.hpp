@@ -23,70 +23,30 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_ARTISTLIST_HPP_
-#define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_ARTISTLIST_HPP_
+#ifndef _ROTESONNE_INCLUDE_HPP_
+#define _ROTESONNE_INCLUDE_HPP_
 
-#include <include.hpp>
+// main C++ headers
+#include <libsml/include.hpp>
 
-#include "AbstractPlayList.hpp"
-#include "TrackList/TrackList_UI.hpp"
-#include "AlbumList_UI.hpp"
+// Qt
+#include <QtGui>
+#include <QtSql>
+#include <QThread>
+#include <QUiLoader>
 
-namespace RoteSonne {
-  namespace UI {
-    namespace Widgets {
-      namespace MainWindow {
-        namespace Widgets {
-          namespace PlayList {
-            class AlbumList_UI;
-            class ArtistList_UI: public QWidget,
-                virtual public AbstractPlayList {
-                Q_OBJECT
-                public:
-                static ArtistList_UI * Instance();
+// boost filesystem
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/fstream.hpp>
 
-                /**
-                 * Default destructor.
-                 */
-                ~ArtistList_UI();
+// libconfig
+#include <libconfig.h++>
 
-                void init(QWidget *widget);
-                void setPlayList();
-                void dropPlayList();
+// typedef
+typedef boost::filesystem::path Path;
 
-                QString getCurrentArtist() const;
-                void setCurrentArtist(const QString &artist);
-              private:
-                static ArtistList_UI * _artistListUI;
-
-                /**
-                 * Default constructor.
-                 */
-                ArtistList_UI();
-
-                QWidget * widget;
-
-                QSqlDatabase db;
-                QSqlQuery query;
-
-                QListWidget * artistListComponent;
-
-                TrackList::TrackList_UI * trackList;
-                AlbumList_UI * albumList;
-
-                QString currentArtist;
-
-                void findChilds();
-                void addHandlers();
-
-private            slots:
-            bool setFilter(QListWidgetItem * item);
-          };
-        }
-      }
-    }
-  }
-}
-}
+// namespace
+using namespace std;
+using namespace libconfig;
 
 #endif

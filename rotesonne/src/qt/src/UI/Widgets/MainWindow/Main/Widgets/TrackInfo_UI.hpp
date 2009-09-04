@@ -26,16 +26,10 @@
 #ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_TRACKINFO_HPP_
 #define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_TRACKINFO_HPP_
 
-#include <iostream>
-
-// include require Qt headers
-#include <QWidget>
-#include <QLabel>
+#include <include.hpp>
 
 // include Player class
-#include "../../../../../Player.hpp"
-
-using namespace std;
+#include <Player.hpp>
 
 namespace RoteSonne {
   namespace UI {

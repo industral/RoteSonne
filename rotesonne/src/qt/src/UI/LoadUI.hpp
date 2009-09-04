@@ -26,11 +26,7 @@
 #ifndef _ROTESONNE_UI_LOADUI_HPP_
 #define _ROTESONNE_UI_LOADUI_HPP_
 
-// include require Qt headers
-#include <QUiLoader>
-#include <QFile>
-
-using namespace std;
+#include <include.hpp>
 
 namespace RoteSonne {
   namespace UI {

@@ -29,10 +29,7 @@
 #define USER_APPLICATION_NAME ".rotesonner"
 #define PLAYLIST_STORAGE_FOLDER "playlists"
 
-#include <QtCore>
-#include <libconfig.h++>
-
-using namespace libconfig;
+#include <include.hpp>
 
 namespace RoteSonne {
   class Configuration {

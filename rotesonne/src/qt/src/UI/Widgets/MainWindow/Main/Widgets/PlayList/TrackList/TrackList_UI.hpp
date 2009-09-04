@@ -26,20 +26,10 @@
 #ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_TRACKLIST_HPP_
 #define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_TRACKLIST_HPP_
 
-#include <iostream>
+#include <include.hpp>
 
-// include require Qt headers
-#include <QWidget>
-#include <QTableView>
-#include <QHeaderView>
-
-// include DB
-#include <QtSql>
-
-// include AbstractPlayList
-#include "AbstractPlayList.hpp"
-
-using namespace std;
+#include "../AbstractPlayList.hpp"
+#include "CustomQSqlTableModel.hpp"
 
 namespace RoteSonne {
   namespace UI {
@@ -47,44 +37,46 @@ namespace RoteSonne {
       namespace MainWindow {
         namespace Widgets {
           namespace PlayList {
-            class TrackList_UI: public QWidget, virtual public AbstractPlayList {
+            namespace TrackList {
+              class TrackList_UI: public QWidget,
+                  virtual public AbstractPlayList {
                 Q_OBJECT
                 public:
-                static TrackList_UI * Instance();
+                  static TrackList_UI * Instance();
 
-                /**
-                 * Default destructor.
-                 */
-                ~TrackList_UI();
+                  /**
+                   * Default destructor.
+                   */
+                  ~TrackList_UI();
 
-                void init(QWidget *widget);
+                  void init(QWidget *widget);
 
-                void setPlayList();
-                void setFilter(const QString &filter);
+                  void setPlayList();
+                  void setFilter(const QString &filter);
+                  void dropPlayList();
+                private:
+                  static TrackList_UI * _playListUI;
 
-                void dropPlayList();
-              private:
-                static TrackList_UI * _playListUI;
+                  /**
+                   * Default constructor.
+                   */
+                  TrackList_UI();
 
-                /**
-                 * Default constructor.
-                 */
-                TrackList_UI();
+                  QWidget * widget;
+                  QSqlDatabase db;
+                  CustomQSqlTableModel * model;
+                  QTableView * trackListComponent;
 
-                QWidget * widget;
-                QSqlDatabase db;
-                QSqlTableModel * model;
-                QTableView * trackListComponent;
+                  QString filter;
 
-                QString filter;
-
-                void findChilds();
-                bool openDbConnection();
-                void closeDbConnection();
-                void addHandlers();
-private            slots:
-            void setView(const QModelIndex & m);
-          };
+                  void findChilds();
+                  bool openDbConnection();
+                  void closeDbConnection();
+                  void addHandlers();
+private              slots:
+              void setView(const QModelIndex & m);
+            };
+          }
         }
       }
     }

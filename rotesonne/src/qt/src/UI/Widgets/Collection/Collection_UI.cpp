@@ -44,7 +44,7 @@ namespace RoteSonne {
 
           // lists
           this -> trackList
-              = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList_UI::Instance();
+              = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList::TrackList_UI::Instance();
           this -> artistList
               = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::ArtistList_UI::Instance();
           this -> albumList

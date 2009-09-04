@@ -26,30 +26,24 @@
 #ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_MAINWINDOW_HPP_
 #define _ROTESONNE_UI_WIDGETS_MAINWINDOW_MAINWINDOW_HPP_
 
-// include require Qt headers
-#include <QUiLoader>
-#include <QMainWindow>
-#include <QAction>
-#include <QLabel>
-#include <QTimer>
-#include <QSlider>
+#include <include.hpp>
 
 // include UI loader
-#include "../../LoadUI.hpp"
+#include <UI/LoadUI.hpp>
 
 // include Player class
-#include "../../../Player.hpp"
-
-// include Collection widget
-#include "../Collection/Collection_UI.hpp"
+#include <Player.hpp>
 
 // include MainWindow widgets
 #include "Main/Widgets/Library/Library_UI.hpp"
 #include "Main/Widgets/TrackInfo_UI.hpp"
 #include "Main/Widgets/Cover_UI.hpp"
-#include "Main/Widgets/PlayList/TrackList_UI.hpp"
+#include "Main/Widgets/PlayList/TrackList/TrackList_UI.hpp"
 #include "Main/Widgets/PlayList/ArtistList_UI.hpp"
 #include "Main/Widgets/PlayList/AlbumList_UI.hpp"
+
+// include Collection widget
+#include <UI/Widgets/Collection/Collection_UI.hpp>
 
 namespace RoteSonne {
   namespace UI {
@@ -79,7 +73,7 @@ namespace RoteSonne {
 
             void init();
 
-            private slots:
+          private slots:
             void aboutQt();
             void about();
             void collectionPreferences();
@@ -116,16 +110,16 @@ namespace RoteSonne {
 
             // widgets
             RoteSonne::UI::Widgets::MainWindow::Widgets::Library::Library_UI
-                *library;
+                * library;
             RoteSonne::UI::Widgets::MainWindow::Widgets::TrackInfo_UI
-                *trackinfo;
-            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList_UI
-                *trackList;
+                * trackinfo;
+            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList::TrackList_UI
+                * trackList;
             RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::ArtistList_UI
-                *artistList;
+                * artistList;
             RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::AlbumList_UI
                 * albumList;
-            RoteSonne::UI::Widgets::MainWindow::Widgets::Cover_UI *cover;
+            RoteSonne::UI::Widgets::MainWindow::Widgets::Cover_UI * cover;
 
             QTableView * playListComponent;
             QPushButton * playPauseButton;

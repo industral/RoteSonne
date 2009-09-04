@@ -26,8 +26,7 @@
 #ifndef _ROTESONNE_STARTUP_HPP_
 #define _ROTESONNE_STARTUP_HPP_
 
-// Qt
-#include <QtCore>
+#include <include.hpp>
 
 // other relative
 #include "Configuration.hpp"

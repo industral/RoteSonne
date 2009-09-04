@@ -26,21 +26,8 @@
 #ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_LIBRARY_LIBRARY_UI_HPP_
 #define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_LIBRARY_LIBRARY_UI_HPP_
 
-// include require Qt headers
-#include <QtGui>
-
-#include <string>
-
-// boost filesystem
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/fstream.hpp>
-
-//TODO: Fix this shit!
-#include "../../../../../../Configuration.hpp"
-
 #include <libsml/all.hpp>
-
-using namespace std;
+#include <Configuration.hpp>
 
 namespace RoteSonne {
   namespace UI {
@@ -84,14 +71,14 @@ namespace RoteSonne {
                 QTreeWidgetItem * playListQTreeWidgetItem;
                 QList <QString> playListList;
 
-              private slots:
-                void eventHandler(QTreeWidgetItem *, int);
-            };
-          }
+private            slots:
+            void eventHandler(QTreeWidgetItem *, int);
+          };
         }
       }
     }
   }
+}
 }
 
 #endif

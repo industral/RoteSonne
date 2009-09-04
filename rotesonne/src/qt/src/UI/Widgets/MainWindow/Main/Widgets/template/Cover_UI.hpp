@@ -26,17 +26,7 @@
 #ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_COVER_HPP_
 #define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_COVER_HPP_
 
-// include require Qt headers
-#include <QUiLoader>
-#include <QFile>
-#include <QWidget>
-#include <QMainWindow>
-#include <QAction>
-#include <QApplication>
-#include <QTableView>
-#include <QLabel>
-#include <QTimer>
-#include <QSlider>
+#include <include.hpp>
 
 namespace RoteSonne {
   namespace UI {

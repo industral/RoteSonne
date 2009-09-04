@@ -41,6 +41,7 @@ namespace RoteSonne {
   bool StartUP::init() {
     this -> checkApplicationDir(cfg -> getHomeDirApplication());
     this -> checkApplicationDir(cfg -> getPlayListFolderPath());
+    return true; // TODO: fix
   }
 
   // --------------------------------------------------------------------

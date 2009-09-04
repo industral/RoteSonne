@@ -26,33 +26,16 @@
 #ifndef _ROTESONNE_UI_WIDGETS_COLLECTION_COLLECTION_HPP_
 #define _ROTESONNE_UI_WIDGETS_COLLECTION_COLLECTION_HPP_
 
-// main include
-#include <iostream>
-
-// include require Qt headers
-#include <QUiLoader>
-#include <QFile>
-#include <QFileDialog>
-#include <QWidget>
-#include <QApplication>
-#include <QTimer>
-#include <QTableView>
-
-#include <QPushButton>
-#include <QDialogButtonBox>
-#include <QLineEdit>
-#include <QProgressBar>
+#include <include.hpp>
 
 // include UI loader
-#include "../../LoadUI.hpp"
-
-// include Collection
-#include "../../../Collection.hpp"
+#include <UI/LoadUI.hpp>
+#include <Collection.hpp>
 
 // include lists
-#include "../MainWindow/Main/Widgets/PlayList/TrackList_UI.hpp"
-#include "../MainWindow/Main/Widgets/PlayList/AlbumList_UI.hpp"
-#include "../MainWindow/Main/Widgets/PlayList/ArtistList_UI.hpp"
+#include <UI/Widgets/MainWindow/Main/Widgets/PlayList/TrackList/TrackList_UI.hpp>
+#include <UI/Widgets/MainWindow/Main/Widgets/PlayList/AlbumList_UI.hpp>
+#include <UI/Widgets/MainWindow/Main/Widgets/PlayList/ArtistList_UI.hpp>
 
 using namespace std;
 
@@ -71,8 +54,8 @@ namespace RoteSonne {
          * Thats all.
          */
         class Collection_UI: public QWidget {
-            Q_OBJECT
-            public:
+          Q_OBJECT
+          public:
 
             /**
              * Main constructor. Should be used to create widget instance.
@@ -118,7 +101,7 @@ namespace RoteSonne {
             RoteSonne::Collection *collectionDb;
 
             // lists
-            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList_UI
+            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList::TrackList_UI
                 * trackList;
             RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::ArtistList_UI
                 * artistList;

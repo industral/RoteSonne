@@ -50,7 +50,7 @@ namespace RoteSonne {
             }
 
             void ArtistList_UI::init(QWidget *widget) {
-              this -> trackList = TrackList_UI::Instance();
+              this -> trackList = TrackList::TrackList_UI::Instance();
               this -> albumList = AlbumList_UI::Instance();
 
               this -> widget = widget;

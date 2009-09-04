@@ -26,23 +26,12 @@
 #ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_ALBUMLIST_HPP_
 #define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_ALBUMLIST_HPP_
 
-#include <iostream>
+#include <include.hpp>
 
-// include require Qt headers
-#include <QWidget>
-#include <QListWidget>
-
-// include AbstractPlayList
 #include "AbstractPlayList.hpp"
-
-#include "TrackList_UI.hpp"
+#include "TrackList/TrackList_UI.hpp"
 #include "ArtistList_UI.hpp"
 #include "../Cover_UI.hpp"
-
-// include DB
-#include <QtSql>
-
-using namespace std;
 
 namespace RoteSonne {
   namespace UI {
@@ -80,7 +69,7 @@ namespace RoteSonne {
                 QListWidget * albumListComponent;
                 ::RoteSonne::UI::Widgets::MainWindow::Widgets::Cover_UI * cover;
 
-                TrackList_UI * trackList;
+                TrackList::TrackList_UI * trackList;
                 ArtistList_UI * artistList;
 
                 /**

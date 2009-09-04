@@ -26,20 +26,7 @@
 #ifndef _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_COVER_HPP_
 #define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_COVER_HPP_
 
-#include <iostream>
-#include <string>
-
-// include require Qt headers
-#include <QLabel>
-#include <QDebug>
-
-// boost filesystem
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/fstream.hpp>
-
-typedef boost::filesystem::path Path;
-
-using namespace std;
+#include <include.hpp>
 
 namespace RoteSonne {
   namespace UI {

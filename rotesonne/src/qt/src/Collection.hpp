@@ -26,27 +26,10 @@
 #ifndef _ROTESONNE_COLLECTOPN_HPP_
 #define _ROTESONNE_COLLECTOPN_HPP_
 
-#include <iostream>
-#include <string>
-#include <map>
-#include <vector>
-
-// boost filesystem
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/fstream.hpp>
-
-// include DB
-#include <QtSql>
-
-// include thread
-#include <QThread>
+#include <include.hpp>
 
 // include Player
 #include "Player.hpp"
-
-typedef boost::filesystem::path Path;
-
-using namespace std;
 
 namespace RoteSonne {
   class Collection: public QThread {
