@@ -26,10 +26,19 @@
 #ifndef _ROTESONNE_COLLECTOPN_HPP_
 #define _ROTESONNE_COLLECTOPN_HPP_
 
+/**
+ * Collection class runs thru all media library, and collects all information from
+ * it (opens file, fetches info and closes it).
+ * After, it creates database in SQLite3 format and playlist in XSPF format.
+ */
+
 #include <include.hpp>
+#include <Configuration.hpp>
 
 // include Player
 #include "Player.hpp"
+
+using namespace ::SilentMedia::Media::PlayList;
 
 namespace RoteSonne {
   class Collection: public QThread {
@@ -48,22 +57,29 @@ namespace RoteSonne {
 
       void flush();
       bool scanFiles(const boost::filesystem::path &path);
-      bool createQuery();
-      string replace(string str) const;
+
+      QString replace(string str) const;
+
+      bool prepareQuery();
       void updateDb();
+      void updatePlayList();
+
       void showError(QSqlQuery *q);
 
       // variables
+      long process;
+      bool status;
+      string scanPath;
+
       QSqlDatabase db;
+      Configuration * cfg;
       Player * player;
+      ::SilentMedia::Media::PlayList::XSPF::XSPF * xspf;
 
       map < string, string > vorbisComm;
       vector < string > queryList;
       vector < string > fileList;
-
-      long process;
-      bool status;
-      string scanPath;
+      QStringList filePath;
   };
 }
 

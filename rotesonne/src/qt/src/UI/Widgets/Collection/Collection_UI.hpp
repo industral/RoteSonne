@@ -59,20 +59,8 @@ namespace RoteSonne {
 
             /**
              * Main constructor. Should be used to create widget instance.
-             * @param p point to memory address of widget.
-             * @code
-             * Collection_UI *collection = new Collection_UI(collection);
-             * @endcode
              */
-            Collection_UI(Collection_UI *p, QTableView *playList);
-
-            //          /**
-            //           * Default constructor used when user not allocate memory.
-            //           * @code
-            //           * Collection_UI collection;
-            //           * @endcode
-            //           */
-            //          Collection_UI();
+            Collection_UI(QTableView *playList);
 
             /**
              * Standart destructor.

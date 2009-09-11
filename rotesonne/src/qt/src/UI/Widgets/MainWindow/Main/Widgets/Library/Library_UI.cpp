@@ -152,11 +152,10 @@ namespace RoteSonne {
               list <string> l = this -> pl -> getPlayList();
 
               for (list <string>::iterator it = l.begin(); it != l.end(); it++) {
-                cout << *it << endl;
+                cout << ::SilentMedia::Utils::String::fromXML(*it) << endl;
               }
 
               this -> pl -> close();
-
             }
 
             // --------------------------------------------------------------------

@@ -34,10 +34,9 @@ namespace RoteSonne {
         // Public methods
         // --------------------------------------------------------------------
 
-        Collection_UI::Collection_UI(Collection_UI *p, QTableView *playList) {
+        Collection_UI::Collection_UI(QTableView *playList) {
           this -> playList = playList;
 
-          this -> self = p;
           this -> timer = new QTimer(this);
 
           this -> collectionDb = new RoteSonne::Collection();
@@ -118,10 +117,10 @@ namespace RoteSonne {
               updateProcessBar()));
         }
 
+        //TODO: fix this shit!
         void Collection_UI::callDestructor() {
           cout << "Destruct" << endl;
-          delete this -> self;
-          this -> self = NULL;
+          //delete this;
         }
 
         // --------------------------------------------------------------------

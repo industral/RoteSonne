@@ -234,9 +234,8 @@ namespace RoteSonne {
         }
 
         void MainWindow_UI::collectionPreferences() {
-          RoteSonne::UI::Widgets::Collection::Collection_UI *collection =
-              new RoteSonne::UI::Widgets::Collection::Collection_UI(collection,
-                  this -> playListComponent);
+          RoteSonne::UI::Widgets::Collection::Collection_UI * collection =
+              new RoteSonne::UI::Widgets::Collection::Collection_UI(this -> playListComponent);
           collection -> show();
         }
 
