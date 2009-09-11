@@ -163,7 +163,7 @@ connect            (this -> albumListComponent, SIGNAL(itemClicked(
             }
 
             artistFilter = QString("artist=\"%1\"").arg(artist);
-            albumFilter = QString("album=\"%1\" ORDER BY tracknum").arg(album);
+            albumFilter = QString(" album=\"%1\" ORDER BY tracknum").arg(album);
 
             // set cover
             this -> setCover(artist, album);
@@ -172,8 +172,7 @@ connect            (this -> albumListComponent, SIGNAL(itemClicked(
             this -> trackList -> dropPlayList();
 
             // set filter
-            this -> trackList -> setFilter(artistFilter);
-            this -> trackList -> setFilter(albumFilter);
+            this -> trackList -> setFilter(artistFilter + " and " + albumFilter);
 
             // set track list
             this -> trackList -> setPlayList();

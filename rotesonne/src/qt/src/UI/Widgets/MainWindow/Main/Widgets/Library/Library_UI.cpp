@@ -148,7 +148,7 @@ namespace RoteSonne {
               QString playListFilePath = item -> data(
                   itemPlayListFilePathNumber, Qt::DisplayRole).toString();
 
-              this -> pl -> open(playListFilePath.toStdString().c_str());
+              this -> pl -> openPlayList(playListFilePath.toStdString().c_str());
               list <string> l = this -> pl -> getPlayList();
 
               for (list <string>::iterator it = l.begin(); it != l.end(); it++) {
