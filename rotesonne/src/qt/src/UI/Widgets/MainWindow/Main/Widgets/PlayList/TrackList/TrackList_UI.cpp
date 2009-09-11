@@ -118,6 +118,7 @@ namespace RoteSonne {
 
               TrackList_UI::TrackList_UI() :
                 model(NULL) {
+                this -> cfg = Configuration::Instance();
                 this -> openDbConnection();
               }
 
@@ -129,12 +130,20 @@ namespace RoteSonne {
 
               bool TrackList_UI::openDbConnection() {
                 this -> db = QSqlDatabase::addDatabase("QSQLITE");
-                this -> db.setDatabaseName("collection.db");
+
+                QString playListlocation =
+                    this -> cfg -> getPlayListFolderPath();
+
+                QString defaultCollection = playListlocation + "/"
+                    + DEFAULT_PLAYLIST + DB_EXT;
+
+                this -> db.setDatabaseName(defaultCollection);
+
                 bool ok = this -> db.open();
 
                 if (!ok) {
-                  cerr << "Error: Unable to open database `" << "collection.db"
-                      << "'" << endl;
+                  qDebug() << "Error: Unable to open database `"
+                      << defaultCollection << "'";
                 }
                 return ok;
               }

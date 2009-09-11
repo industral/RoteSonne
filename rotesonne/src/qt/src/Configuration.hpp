@@ -26,10 +26,14 @@
 #ifndef _CONFIGURATION_HPP_
 #define _CONFIGURATION_HPP_
 
-#define USER_APPLICATION_NAME ".rotesonner"
-#define PLAYLIST_STORAGE_FOLDER "playlists"
-
 #include <include.hpp>
+
+static const QString USER_APPLICATION_NAME = ".rotesonner";
+static const QString PLAYLIST_STORAGE_FOLDER = "playlists";
+
+static const QString DEFAULT_PLAYLIST = "Default";
+static const QString DB_EXT = ".sqlite3";
+static const QString PLAYLIST_EXT = ".xspf";
 
 namespace RoteSonne {
   class Configuration {

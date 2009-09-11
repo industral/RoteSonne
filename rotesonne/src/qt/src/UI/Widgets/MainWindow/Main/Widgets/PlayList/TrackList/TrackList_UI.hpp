@@ -27,6 +27,7 @@
 #define _ROTESONNE_UI_WIDGETS_MAINWINDOW_WIDGETS_PLAYLIST_TRACKLIST_HPP_
 
 #include <include.hpp>
+#include <Configuration.hpp>
 
 #include "../AbstractPlayList.hpp"
 #include "CustomQSqlTableModel.hpp"
@@ -66,6 +67,7 @@ namespace RoteSonne {
                   QSqlDatabase db;
                   CustomQSqlTableModel * model;
                   QTableView * trackListComponent;
+                  Configuration * cfg;
 
                   QString filter;
 

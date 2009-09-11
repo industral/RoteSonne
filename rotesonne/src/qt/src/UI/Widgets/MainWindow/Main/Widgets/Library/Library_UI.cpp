@@ -32,6 +32,7 @@ namespace RoteSonne {
         namespace Widgets {
           namespace Library {
 
+            const QString XSPF = ".xspf";
             const QString Library_UI::itemPlayListDefinition = QString(
                 "PLAYLIST");
             const int Library_UI::itemPlayListNumber = 500;
@@ -104,7 +105,7 @@ namespace RoteSonne {
                 if (is_directory(itr->status())) {
                   scanPlayListFiles(itr->path());
                   // TODO: Should be fetch extensions fom file
-                } else if (!currentPathExt.compare(".xspf")) {
+                } else if (!currentPathExt.compare(XSPF.toStdString())) {
                   this -> playListList.push_back(itr->path().string().c_str());
                 }
               }
@@ -123,8 +124,11 @@ namespace RoteSonne {
 
               for (int i = 0; i < this -> playListList.size(); ++i) {
                 const QString playListPath = this -> playListList[i];
-                const QString playListName = playListPath.split(
+                QString playListName = playListPath.split(
                     playListFolderPath)[1];
+
+                playListName = playListName.remove(XSPF);
+                playListName = playListName.remove(0, 1); // first slash
 
                 QTreeWidgetItem * i = new QTreeWidgetItem(QStringList(
                     playListName));

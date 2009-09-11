@@ -186,7 +186,7 @@ namespace RoteSonne {
     const QString playListFolderPath = this -> cfg -> getPlayListFolderPath();
 
     const QString prefix = "file://";
-    const QString defaultPlayList = "Default.xspf";
+    const QString defaultPlayList = DEFAULT_PLAYLIST + PLAYLIST_EXT;
     const string playList =
         (playListFolderPath + "/" + defaultPlayList).toStdString();
 
