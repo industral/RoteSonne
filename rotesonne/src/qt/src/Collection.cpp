@@ -73,6 +73,17 @@ namespace RoteSonne {
     return status;
   }
 
+  //TODO: add error catch
+  void Collection::createDbStructure() {
+    const QString
+        CREATE_TABLE =
+            "CREATE TABLE collection (id INTEGER PRIMARY KEY AUTOINCREMENT, fileName VARCHAR (255),"
+              "tracknum INTEGER, title VARCHAR (255), artist VARCHAR (255), album VARCHAR (255));";
+
+    QSqlQuery q("PRAGMA encoding = 'UTF-8';", this -> db);
+    QSqlQuery query(CREATE_TABLE, this -> db);
+  }
+
   // --------------------------------------------------------------------
   // Private methods
   // --------------------------------------------------------------------

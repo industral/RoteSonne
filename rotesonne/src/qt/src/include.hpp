@@ -49,4 +49,6 @@ typedef boost::filesystem::path Path;
 using namespace std;
 using namespace libconfig;
 
+#include <Configuration.hpp>
+
 #endif

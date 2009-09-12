@@ -52,6 +52,7 @@ namespace RoteSonne {
       long getProcess() const;
       bool getStatus() const;
 
+      void createDbStructure();
     private:
       virtual void run();
 

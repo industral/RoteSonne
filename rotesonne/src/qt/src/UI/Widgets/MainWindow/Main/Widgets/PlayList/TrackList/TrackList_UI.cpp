@@ -119,6 +119,7 @@ namespace RoteSonne {
               TrackList_UI::TrackList_UI() :
                 model(NULL) {
                 this -> cfg = Configuration::Instance();
+                this -> collectionDb = new ::RoteSonne::Collection();
                 this -> openDbConnection();
               }
 
@@ -137,6 +138,14 @@ namespace RoteSonne {
                 QString defaultCollection = playListlocation + "/"
                     + DEFAULT_PLAYLIST + DB_EXT;
 
+                bool createDb = false;
+
+                const boost::filesystem::path &path =
+                    defaultCollection.toStdString();
+                if (!exists(path)) {
+                  createDb = true;
+                }
+
                 this -> db.setDatabaseName(defaultCollection);
 
                 bool ok = this -> db.open();
@@ -145,6 +154,12 @@ namespace RoteSonne {
                   qDebug() << "Error: Unable to open database `"
                       << defaultCollection << "'";
                 }
+
+                if (createDb) {
+                  this -> collectionDb -> open();
+                  this -> collectionDb -> createDbStructure();
+                }
+
                 return ok;
               }
 
