@@ -130,9 +130,12 @@ namespace RoteSonne {
           QWidget * ssss
               = this -> widget -> findChild <QWidget *> ("Mixer");
 
-          QPushButton * qpb = new QPushButton();
+          RoteSonne::UI::Widgets::Mixer::OSS::Mixer * mixer = new RoteSonne::UI::Widgets::Mixer::OSS::Mixer();
+          mixer -> init();
+          QWidget * mixerWidget = mixer -> retW();
+//          QPushButton * qpb = new QPushButton();
           QHBoxLayout *layout = new QHBoxLayout;
-          layout -> addWidget(qpb);
+          layout -> addWidget(mixerWidget);
 
           ssss ->setLayout(layout);
 

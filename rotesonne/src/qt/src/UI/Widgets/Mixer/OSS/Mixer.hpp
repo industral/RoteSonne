@@ -27,231 +27,236 @@
 #define _ROTESONNE_UI_WIDGETS_MIXER_OSS_MIXER_HPP_
 
 #include <include.hpp>
+#include <libsml/all.hpp>
 
 #include <QtGui>
 #include "Peak.hpp"
 
 using namespace std;
 
-namespace SilentMedia {
-  namespace SoundSystem {
-    namespace OSS {
-      class Mixer;
+//class SilentMedia::Media::Audio::SoundSystem::OSS::Mixer::Mixer;
+class Peak;
+
+namespace RoteSonne {
+  namespace UI {
+    namespace Widgets {
+      namespace Mixer {
+        namespace OSS {
+          class Mixer: public QMainWindow {
+            Q_OBJECT
+
+            public:
+            Mixer();
+              ~Mixer();
+              void init();
+              QWidget * retW(void);
+
+            protected:
+              // 		void contextMenuEvent(QContextMenuEvent *event);
+              // 		void paintEvent ( QPaintEvent * );
+              QMap<int, QToolButton *> ImgButton;
+            private:
+              void createActions();
+              void createMenus();
+
+              SilentMedia::Media::Audio::SoundSystem::OSS::Mixer::Mixer
+                  * ossmix;
+              //		libssoss::DSP *ossdsp;
+              // 		SScc *sscc;
+              Peak *peak;
+              // 		Player *player;
+
+              map<int, string> listOfAvaibleCtrlDev;
+              string ListOfDevice;
+              string DEV_NAME;
+
+              int ctrlNum;
+              int numRecDev;
+              unsigned int ctrlParent;
+              bool recModeAvail;
+              bool recModeStatus;
+              short int ctrlMode;
+              short int ctlStatus;
+              int L;
+              int R;
+              int M;
+              int minCtrlValue;
+              int maxCtrlValue;
+              bool skipDev;
+              string ctrlLabel;
+              int ctrlFlag;
+
+              int coutOfCtrlEl;
+
+              string currentEnumName;
+              int currentEnumNum;
+
+              int currentRecId;
+
+              // 		FILE * ptmpConfigFile;
+              // 		FILE * pConfigFile;
+
+              fstream * ptmpConfigFile;
+              fstream * pConfigFile;
+
+              string currentConfigFile;
+              string configFile;
+              int updateCounter;
+              QMap<int, qint64> iconCacheSum;
+              QMap<int, bool> ctrlStatus;
+              QTimer *timer;
+
+              QActionGroup *alignmentGroup;
+
+              QLabel *infoLabel;
+
+              QSignalMapper *sliderSignalMapperL;
+              QSignalMapper *sliderSignalMapperR;
+              QSignalMapper *sliderSignalMapperM;
+              QSignalMapper *muteLRActSignalMapper;
+              QSignalMapper *muteLActSignalMapper;
+              QSignalMapper *muteRActSignalMapper;
+              QSignalMapper *muteMActSignalMapper;
+              QSignalMapper *setRecordSrcSignalMapper;
+              QSignalMapper *reverseActSignalMapper;
+              QSignalMapper *splitChanelActSignalMapper;
+              QSignalMapper *setCheckedControlSignalMapper;
+              QSignalMapper *setEnumControlSignalMapper;
+
+              map<int, int> IdtoDevNum;
+              map<int, int> vIdtoCtrlRecNum;
+              map<int, int> mctrlMode;
+              map<int, int> ctrlMinVal;
+              map<int, int> ctrlMaxVal;
+              map<int, string> IdtoPicName;
+
+              //       QMap < int, QPixmap * > img;
+              QMap<int, QIcon *> icon;
+
+              QMap<int, QSlider *> sliderL;
+              QMap<int, QSlider *> sliderR;
+              QMap<int, QSlider *> sliderM;
+
+              //       QMap < int, QLCDNumber * > labelL;
+              //       QMap < int, QLCDNumber * > labelR;
+              //       QMap < int, QLCDNumber * > labelM;
+
+              QMap<int, QLineEdit *> labelL;
+              QMap<int, QLineEdit *> labelR;
+              QMap<int, QLineEdit *> labelM;
+
+              QMap<int, QCheckBox *> muteLCheckBox;
+              QMap<int, QCheckBox *> muteRCheckBox;
+              QMap<int, QCheckBox *> muteMCheckBox;
+
+              QMap<int, QAction *> muteLRAct;
+
+              QMap<int, QAction *> reverseAct;
+              QMap<int, QAction *> splitChanelAct;
+              QMap<int, QAction *> setRecordSrcAct;
+              QMap<int, QComboBox *> enumComboBox;
+              QMap<int, QCheckBox *> onOffCheckbox;
+              //       QMap < int, QToolButton * > ImgButton;
+              QMap<int, QLCDNumber *> lcdL;
+              QMap<int, QLCDNumber *> lcdR;
+              QMap<int, QLCDNumber *> lcdM;
+              QMap<int, QLabel *> mixDevLabel;
+
+              map<int, string> enumListVariant;
+              int ctrlTypeName;
+
+              QLabel *l3;
+
+              QTextEdit *console;
+              QTabWidget *mainTabWidget;
+              QTabWidget *mixerTabWidget;
+              string currentSong;
+
+              QVBoxLayout *mainCtrlLayout;
+              QMap<int, QVBoxLayout *> vImageLayout;
+
+              QMap<int, QVBoxLayout *> vLayoutSliderLCDL;
+              QMap<int, QVBoxLayout *> vLayoutSliderLCDR;
+              QMap<int, QVBoxLayout *> vLayoutSliderLCDM;
+
+              QHBoxLayout *infoLayer;
+              QHBoxLayout *consoleLayer;
+
+              QGroupBox *secondGroupBox;
+              QGroupBox *onoffGroupBox;
+
+              QMap<int, QHBoxLayout *> layoutCtrl;
+              QGridLayout *layoutCtrl2;
+
+              QVBoxLayout *Layout;
+              QVBoxLayout *Layout2;
+              QVBoxLayout *Layout3;
+              QVBoxLayout *Layout4;
+
+              unsigned int parentNum;
+              unsigned int prevParentNum;
+              unsigned int nextParentNum;
+
+              unsigned int currentParent;
+              QMap<int, QHBoxLayout *> currentParentNum;
+
+              vector<int> listOfPeak;
+              map<int, int> maxValList;
+              map<int, int> peakLevelL;
+              map<int, int> peakLevelR;
+
+              QWidget *widget4;
+              QWidget *widget5;
+              QFrame *frame1;
+
+              //       QPainter *painter;
+              //       QPixmap *myPixmap;
+              QImage *image;
+              QPushButton *pb;
+              QLabel *tmpL;
+              QLabel *l;
+              QPixmap *qp;
+
+              // map < int, int > ctrlChanelMode;
+              private slots:
+              void setIconStatus ( int i, bool status );
+              // bool eventFilter(QObject *target, QEvent *event);
+              //       void DrawMe();
+              void initSliderLabel(int i, bool ctrlMode, int ctrlTypeName);
+              void initScan(int scan, int countElem);
+              void rescanCtrlDev();
+              void stuff();
+
+              // void setPeak ( int i, int j, bool status );
+              void update();
+
+              void setVol(const int id, bool mode, int &setVolL, int &setVolR,
+                  int &setVolM, int &devNum);
+              void setvolL(int id);
+              void setvolR(int id);
+              void setvolM(int id);
+              void aboutCardInfo();
+
+              void muteL(int id);
+              void muteR(int id);
+              void muteLR(int id);
+              void muteM(int id);
+              void muteControl(int id, bool L, bool R, bool M);
+              void reverse(int id);
+              void setCheckedControl(int id);
+              void setEnumControl(int id);
+              void saveConfig();
+              void setRecCtrl(int id);
+              void splitChanel(int id);
+
+signals          :
+          void setvolI ( int );
+
+        };
+      }
     }
   }
 }
-
-class Peak;
-
-class SSMix: public QMainWindow {
-  Q_OBJECT
-
-  public:
-    SSMix();
-    ~SSMix();
-    void init();
-    QWidget * retW(void);
-
-  protected:
-    // 		void contextMenuEvent(QContextMenuEvent *event);
-    // 		void paintEvent ( QPaintEvent * );
-    QMap <int, QToolButton *> ImgButton;
-  private:
-    void createActions();
-    void createMenus();
-
-    SilentMedia::SoundSystem::OSS::Mixer * ossmix;
-    //		libssoss::DSP *ossdsp;
-    // 		SScc *sscc;
-    Peak *peak;
-    // 		Player *player;
-
-    map <int, string> listOfAvaibleCtrlDev;
-    string ListOfDevice;
-    string DEV_NAME;
-
-    int ctrlNum;
-    int numRecDev;
-    unsigned int ctrlParent;
-    bool recModeAvail;
-    bool recModeStatus;
-    short int ctrlMode;
-    short int ctlStatus;
-    int L;
-    int R;
-    int M;
-    int minCtrlValue;
-    int maxCtrlValue;
-    bool skipDev;
-    string ctrlLabel;
-    int ctrlFlag;
-
-    int coutOfCtrlEl;
-
-    string currentEnumName;
-    int currentEnumNum;
-
-    int currentRecId;
-
-    // 		FILE * ptmpConfigFile;
-    // 		FILE * pConfigFile;
-
-    fstream * ptmpConfigFile;
-    fstream * pConfigFile;
-
-    string currentConfigFile;
-    string configFile;
-    int updateCounter;
-    QMap <int, qint64> iconCacheSum;
-    QMap <int, bool> ctrlStatus;
-    QTimer *timer;
-
-    QActionGroup *alignmentGroup;
-
-    QLabel *infoLabel;
-
-    QSignalMapper *sliderSignalMapperL;
-    QSignalMapper *sliderSignalMapperR;
-    QSignalMapper *sliderSignalMapperM;
-    QSignalMapper *muteLRActSignalMapper;
-    QSignalMapper *muteLActSignalMapper;
-    QSignalMapper *muteRActSignalMapper;
-    QSignalMapper *muteMActSignalMapper;
-    QSignalMapper *setRecordSrcSignalMapper;
-    QSignalMapper *reverseActSignalMapper;
-    QSignalMapper *splitChanelActSignalMapper;
-    QSignalMapper *setCheckedControlSignalMapper;
-    QSignalMapper *setEnumControlSignalMapper;
-
-    map <int, int> IdtoDevNum;
-    map <int, int> vIdtoCtrlRecNum;
-    map <int, int> mctrlMode;
-    map <int, int> ctrlMinVal;
-    map <int, int> ctrlMaxVal;
-    map <int, string> IdtoPicName;
-
-    //       QMap < int, QPixmap * > img;
-    QMap <int, QIcon *> icon;
-
-    QMap <int, QSlider *> sliderL;
-    QMap <int, QSlider *> sliderR;
-    QMap <int, QSlider *> sliderM;
-
-    //       QMap < int, QLCDNumber * > labelL;
-    //       QMap < int, QLCDNumber * > labelR;
-    //       QMap < int, QLCDNumber * > labelM;
-
-    QMap <int, QLineEdit *> labelL;
-    QMap <int, QLineEdit *> labelR;
-    QMap <int, QLineEdit *> labelM;
-
-    QMap <int, QCheckBox *> muteLCheckBox;
-    QMap <int, QCheckBox *> muteRCheckBox;
-    QMap <int, QCheckBox *> muteMCheckBox;
-
-    QMap <int, QAction *> muteLRAct;
-
-    QMap <int, QAction *> reverseAct;
-    QMap <int, QAction *> splitChanelAct;
-    QMap <int, QAction *> setRecordSrcAct;
-    QMap <int, QComboBox *> enumComboBox;
-    QMap <int, QCheckBox *> onOffCheckbox;
-    //       QMap < int, QToolButton * > ImgButton;
-    QMap <int, QLCDNumber *> lcdL;
-    QMap <int, QLCDNumber *> lcdR;
-    QMap <int, QLCDNumber *> lcdM;
-    QMap <int, QLabel *> mixDevLabel;
-
-    map <int, string> enumListVariant;
-    int ctrlTypeName;
-
-    QLabel *l3;
-
-    QTextEdit *console;
-    QTabWidget *mainTabWidget;
-    QTabWidget *mixerTabWidget;
-    string currentSong;
-
-    QVBoxLayout *mainCtrlLayout;
-    QMap <int, QVBoxLayout *> vImageLayout;
-
-    QMap <int, QVBoxLayout *> vLayoutSliderLCDL;
-    QMap <int, QVBoxLayout *> vLayoutSliderLCDR;
-    QMap <int, QVBoxLayout *> vLayoutSliderLCDM;
-
-    QHBoxLayout *infoLayer;
-    QHBoxLayout *consoleLayer;
-
-    QGroupBox *secondGroupBox;
-    QGroupBox *onoffGroupBox;
-
-    QMap <int, QHBoxLayout *> layoutCtrl;
-    QGridLayout *layoutCtrl2;
-
-    QVBoxLayout *Layout;
-    QVBoxLayout *Layout2;
-    QVBoxLayout *Layout3;
-    QVBoxLayout *Layout4;
-
-    unsigned int parentNum;
-    unsigned int prevParentNum;
-    unsigned int nextParentNum;
-
-    unsigned int currentParent;
-    QMap <int, QHBoxLayout *> currentParentNum;
-
-    vector <int> listOfPeak;
-    map <int, int> maxValList;
-    map <int, int> peakLevelL;
-    map <int, int> peakLevelR;
-
-    QWidget *widget4;
-    QWidget *widget5;
-    QFrame *frame1;
-
-    //       QPainter *painter;
-    //       QPixmap *myPixmap;
-    QImage *image;
-    QPushButton *pb;
-    QLabel *tmpL;
-    QLabel *l;
-    QPixmap *qp;
-
-    // map < int, int > ctrlChanelMode;
-    private slots:
-    void setIconStatus ( int i, bool status );
-    // bool eventFilter(QObject *target, QEvent *event);
-    //       void DrawMe();
-    void initSliderLabel(int i, bool ctrlMode, int ctrlTypeName);
-    void initScan(int scan, int countElem);
-    void rescanCtrlDev();
-    void stuff();
-
-    // void setPeak ( int i, int j, bool status );
-    void update();
-
-    void setVol(const int id, bool mode, int &setVolL, int &setVolR,
-        int &setVolM, int &devNum);
-    void setvolL(int id);
-    void setvolR(int id);
-    void setvolM(int id);
-    void aboutCardInfo();
-
-    void muteL(int id);
-    void muteR(int id);
-    void muteLR(int id);
-    void muteM(int id);
-    void muteControl(int id, bool L, bool R, bool M);
-    void reverse(int id);
-    void setCheckedControl(int id);
-    void setEnumControl(int id);
-    void saveConfig();
-    void setRecCtrl(int id);
-    void splitChanel(int id);
-
-signals:
-void setvolI ( int );
-
-};
+}
 
 #endif
