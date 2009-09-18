@@ -89,7 +89,7 @@ namespace RoteSonne {
   // --------------------------------------------------------------------
 
   void Collection::run() {
-    {
+    { // <--- WTF??
       this -> flush();
       this -> scanFiles(this -> scanPath);
       this -> prepareQuery();
