@@ -127,6 +127,15 @@ namespace RoteSonne {
         // --------------------------------------------------------------------
 
         void MainWindow_UI::findChilds() {
+          QWidget * ssss
+              = this -> widget -> findChild <QWidget *> ("Mixer");
+
+          QPushButton * qpb = new QPushButton();
+          QHBoxLayout *layout = new QHBoxLayout;
+          layout -> addWidget(qpb);
+
+          ssss ->setLayout(layout);
+
           // play list
           this -> playListComponent
               = this -> widget -> findChild <QTableView *> ("trackList");

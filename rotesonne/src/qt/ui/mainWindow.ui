@@ -185,7 +185,7 @@
              <item>
               <widget class="QTabWidget" name="tabWidget_2">
                <property name="currentIndex">
-                <number>0</number>
+                <number>3</number>
                </property>
                <property name="movable">
                 <bool>false</bool>
@@ -575,6 +575,11 @@
                 <attribute name="title">
                  <string>Mixer</string>
                 </attribute>
+                <layout class="QHBoxLayout" name="horizontalLayout_3">
+                 <item>
+                  <widget class="QWidget" name="Mixer" native="true"/>
+                 </item>
+                </layout>
                </widget>
               </widget>
              </item>
