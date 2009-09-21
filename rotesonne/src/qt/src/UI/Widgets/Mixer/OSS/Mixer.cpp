@@ -32,7 +32,7 @@ namespace RoteSonne {
         namespace OSS {
           Mixer::Mixer() :
                 ossmix(
-                    new SilentMedia::Media::Audio::SoundSystem::OSS::Mixer::Mixer()), /*sscc ( new SScc ),*/
+                    new SilentMedia::Media::Audio::SoundSystem::OSS::Mixer::Mixer()),
                 peak(new Peak), ctrlNum(-1), numRecDev(-1), ctrlParent(-1),
                 recModeAvail(0), recModeStatus(0), ctrlMode(0), ctlStatus(-1),
                 L(-1), R(-1), M(-1), minCtrlValue(-1), maxCtrlValue(-1),
@@ -43,11 +43,11 @@ namespace RoteSonne {
                 "/home/alex/RoteSonne/rotesonne/src/qt/style.cfg");
 
             this -> prepareStyle();
+            this -> init();
           }
 
           Mixer::~Mixer() {
-            for (unsigned short int id = 0; id != coutOfCtrlEl; ++id) {
-              //       if ( img [ id ] ) { delete img [ id ]; }
+            for (int id = 0; id != coutOfCtrlEl; ++id) {
               if (sliderL[id]) {
                 delete sliderL[id];
               }
@@ -90,12 +90,10 @@ namespace RoteSonne {
 
               delete mixDevLabel[id];
 
-              //   delete vImageLayout [ id ];
               delete vLayoutSliderLCDL[id];
               delete vLayoutSliderLCDR[id];
               delete vLayoutSliderLCDM[id];
             }
-            //    delete sscc;
             delete ossmix;
             delete pConfigFile;
             delete ptmpConfigFile;
@@ -104,24 +102,7 @@ namespace RoteSonne {
           void Mixer::init() {
             currentConfigFile = "current.xml";
             configFile = "config.xml";
-            //
-            //  Glib::ustring filepath;
-            //  filepath = configFile;
-            //
-            //   // Parse the entire document in one go:
-            //  try {
-            //   MySaxParser parser;
-            //   parser.set_substitute_entities(true); //
-            //   parser.parse_file(filepath);
-            //  }
-            //  catch(const xmlpp::exception& ex) {
-            //   cout << "libxml++ exception: " << ex.what() << endl;
-            //  }
-            // 	pb = new QPushButton ( "test buton" );
-            // 	l = new QLabel;
-            // 	tmpL = new QLabel/* ( "asdas" )*/;
 
-            timer = new QTimer(this);
             pConfigFile = new fstream;
             ptmpConfigFile = new fstream;
 
@@ -129,34 +110,28 @@ namespace RoteSonne {
                 | fstream::in | fstream::out);
             *ptmpConfigFile << "<mixer>" << endl;
 
-            QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-            QTextCodec::setCodecForTr(codec);
+            timer = new QTimer(this);
 
-            //    sscc -> init ( OS ( GNULinux ) );
+            // initialize mixer
             ossmix -> init("/dev/mixer");
 
+            //FIXME: Can it be move below?
+            // get current update number
             updateCounter = ossmix -> getUpdateCounter();
 
-            ossmix -> returnListOfAvaibleControlDev(listOfAvaibleCtrlDev);
+            // get a list of controls
+            this -> listOfCtrl = ossmix -> getListOfCtrl();
 
-            string listAVD;
-            ossmix -> comaSeparatedListOfControls(listAVD, 'W');
-            cout << "Size: " << listAVD << endl;
+            // get a number of available controls
+            this -> coutOfCtrlEl = this -> listOfCtrl.size();
 
-            // 	layoutCtrl2 = new QHBoxLayout;
             layoutCtrl2 = new QGridLayout;
             layoutCtrl[2] = new QHBoxLayout;
             layoutCtrl[3] = new QHBoxLayout;
             layoutCtrl[4] = new QHBoxLayout;
             layoutCtrl[5] = new QHBoxLayout;
-            //   layoutCtrl [ 6 ] = new QHBoxLayout;
+            //   layoutCtrl [6] = new QHBoxLayout;
             layoutCtrl[7] = new QHBoxLayout;
-
-            //  QTabWidget *tabWidget = new QTabWidget;
-            //  tabWidget->addTab(this, tr("General"));
-            //  MainLayout -> addWidget ( tabWidget );
-
-            coutOfCtrlEl = listOfAvaibleCtrlDev.size();
 
             sliderSignalMapperL = new QSignalMapper;
             sliderSignalMapperR = new QSignalMapper;
@@ -175,27 +150,27 @@ namespace RoteSonne {
             setEnumControlSignalMapper = new QSignalMapper;
 
             peak = new Peak();
-            peak -> resize(240, 120);
+            peak -> resize(400, 200);
 
-            initScan(0, 0);
+            this -> initScan(false, 0);
 
-            connect ( sliderSignalMapperL, SIGNAL ( mapped ( int ) ), this, SLOT ( setvolL ( int ) ) );
-            connect ( sliderSignalMapperR, SIGNAL ( mapped ( int ) ), this, SLOT ( setvolR ( int ) ) );
-            connect ( sliderSignalMapperM, SIGNAL ( mapped ( int ) ), this, SLOT ( setvolM ( int ) ) );
-            connect ( muteLRActSignalMapper, SIGNAL ( mapped ( int ) ), this, SLOT ( muteLR ( int ) ) );
-            connect ( muteLActSignalMapper, SIGNAL ( mapped ( int ) ), this, SLOT ( muteL ( int ) ) );
-            connect ( muteRActSignalMapper, SIGNAL ( mapped ( int ) ), this, SLOT ( muteR ( int ) ) );
-            connect ( muteMActSignalMapper, SIGNAL ( mapped ( int ) ), this, SLOT ( muteM ( int ) ) );
-            connect ( reverseActSignalMapper, SIGNAL ( mapped ( int ) ), this, SLOT ( reverse ( int ) ) );
-            connect ( splitChanelActSignalMapper, SIGNAL ( mapped ( int ) ), this, SLOT ( splitChanel ( int ) ) );
-            connect ( setRecordSrcSignalMapper, SIGNAL ( mapped ( int ) ), this, SLOT ( setRecCtrl ( int ) ) );
-            connect ( setCheckedControlSignalMapper, SIGNAL ( mapped ( int ) ), this, SLOT ( setCheckedControl ( int ) ) );
-            connect ( setEnumControlSignalMapper, SIGNAL ( mapped ( int ) ), this, SLOT ( setEnumControl ( int ) ) );
+            connect (sliderSignalMapperL, SIGNAL (mapped (int)), this, SLOT (setvolL (int)));
+            connect (sliderSignalMapperR, SIGNAL (mapped (int)), this, SLOT (setvolR (int)));
+            connect (sliderSignalMapperM, SIGNAL (mapped (int)), this, SLOT (setvolM (int)));
+            connect (muteLRActSignalMapper, SIGNAL (mapped (int)), this, SLOT (muteLR (int)));
+            connect (muteLActSignalMapper, SIGNAL (mapped (int)), this, SLOT (muteL (int)));
+            connect (muteRActSignalMapper, SIGNAL (mapped (int)), this, SLOT (muteR (int)));
+            connect (muteMActSignalMapper, SIGNAL (mapped (int)), this, SLOT (muteM (int)));
+            connect (reverseActSignalMapper, SIGNAL (mapped (int)), this, SLOT (reverse (int)));
+            connect (splitChanelActSignalMapper, SIGNAL (mapped (int)), this, SLOT (splitChanel (int)));
+            connect (setRecordSrcSignalMapper, SIGNAL (mapped (int)), this, SLOT (setRecCtrl (int)));
+            connect (setCheckedControlSignalMapper, SIGNAL (mapped (int)), this, SLOT (setCheckedControl (int)));
+            connect (setEnumControlSignalMapper, SIGNAL (mapped (int)), this, SLOT (setEnumControl (int)));
 
             connect(timer, SIGNAL(timeout()), this, SLOT(update()));
             timer -> start(50);
 
-            //  tabWidget -> addTab ( new GeneralTab (fileInfo), tr("General"));
+            //  tabWidget -> addTab (new GeneralTab (fileInfo), tr("General"));
 
             QGroupBox *mainGroupBox = new QGroupBox(tr("Main Control"));
             mainGroupBox -> setLayout(layoutCtrl2);
@@ -212,26 +187,16 @@ namespace RoteSonne {
             QGroupBox *GroupBox4 = new QGroupBox(tr("Sound Card Info"));
             GroupBox4 -> setLayout(layoutCtrl[5]);
 
-            //   QGroupBox *GroupBox5 = new QGroupBox ( tr ( "Console Input" ) );
-            //   GroupBox5 -> setLayout ( layoutCtrl [ 6 ] );
-
-            // 	QGroupBox *GroupBox6 = new QGroupBox ( tr ( "Peak Output" ) );
-            // 	GroupBox6 -> setLayout ( layoutCtrl [ 7 ] );
-
-            //                                                             Layout = new QVBoxLayout;
             Layout2 = new QVBoxLayout;
             Layout3 = new QVBoxLayout;
             Layout4 = new QVBoxLayout;
 
-            QWidget *widget2 = new QWidget;
-            QWidget *widget3 = new QWidget;
+            QWidget * widget2 = new QWidget;
+            QWidget * widget3 = new QWidget;
             widget4 = new QWidget;
             widget5 = new QWidget;
 
             Layout2 -> addWidget(mainGroupBox);
-            // 	Layout2 -> addWidget ( GroupBox4 );
-            // 	Layout2 -> addWidget ( peak );
-            // 	peak -> show();
             Layout3 -> addWidget(secondGroupBox);
             Layout3 -> addWidget(onoffGroupBox);
             Layout3 -> addWidget(thirdGroupBox);
@@ -245,46 +210,44 @@ namespace RoteSonne {
             mixerTabWidget -> addTab(peak, QString("Output Peaks"));
           }
 
-          void Mixer::initScan(int action, int countElem) {
-
-            if (action) {
+          void Mixer::initScan(bool rescan, int countElem) {
+            if (rescan) {
               for (int id = 0; id != countElem; ++id) {
-                //          delete img [ id ]; img [ id ] = 0;
                 delete ImgButton[id];
-                ImgButton[id] = 0;
+                ImgButton[id] = NULL;
                 delete muteLRAct[id];
-                muteLRAct[id] = 0;
+                muteLRAct[id] = NULL;
                 delete reverseAct[id];
-                reverseAct[id] = 0;
+                reverseAct[id] = NULL;
                 delete splitChanelAct[id];
-                splitChanelAct[id] = 0;
+                splitChanelAct[id] = NULL;
                 delete setRecordSrcAct[id];
-                setRecordSrcAct[id] = 0;
+                setRecordSrcAct[id] = NULL;
                 delete labelL[id];
-                labelL[id] = 0;
+                labelL[id] = NULL;
                 delete labelR[id];
-                labelR[id] = 0;
+                labelR[id] = NULL;
                 delete labelM[id];
-                labelM[id] = 0;
+                labelM[id] = NULL;
                 delete sliderL[id];
-                sliderL[id] = 0;
+                sliderL[id] = NULL;
                 delete sliderR[id];
-                sliderR[id] = 0;
+                sliderR[id] = NULL;
                 delete sliderM[id];
-                sliderM[id] = 0;
+                sliderM[id] = NULL;
                 delete mixDevLabel[id];
-                mixDevLabel[id] = 0;
+                mixDevLabel[id] = NULL;
                 delete enumComboBox[id];
-                enumComboBox[id] = 0;
+                enumComboBox[id] = NULL;
                 delete onOffCheckbox[id];
-                onOffCheckbox[id] = 0;
+                onOffCheckbox[id] = NULL;
               }
             }
 
             int id = 0;
 
-            for (map<int, string>::iterator it = listOfAvaibleCtrlDev.begin(); it
-                != listOfAvaibleCtrlDev.end(); ++it) {
+            for (map<int, string>::iterator it = listOfCtrl.begin(); it
+                != listOfCtrl.end(); ++it) {
 
               ossmix -> getDevInfo(it -> second, ctrlLabel, ctrlNum,
                   ctrlParent, numRecDev, recModeAvail, recModeStatus, ctrlMode,
@@ -307,15 +270,10 @@ namespace RoteSonne {
                     << "</control>" << endl;
 
                 IdtoDevNum[id] = ctrlNum;
-                cout << id << " : " << ctrlNum << endl;
                 vIdtoCtrlRecNum[id] = numRecDev;
                 mctrlMode[id] = ctrlMode;
                 ctrlMinVal[id] = minCtrlValue;
                 ctrlMaxVal[id] = maxCtrlValue;
-
-                //   cout << "MIXT: " << ctrlTypeName << endl;
-                //   cout << "label: " << ctrlLabel << endl;
-                //   cout << "ctrlMode: " << ctrlMode << endl << endl;
 
                 if (recModeStatus) {
                   currentRecId = id;
@@ -353,37 +311,23 @@ namespace RoteSonne {
                   }
 
                   IdtoPicName[id] = loadImg;
-                  // ImgButton [ id ] должен быть инициализирован раньше, так, как используется в ф-ции setIconStatus ( int id, bool status );
+                  // ImgButton [id] должен быть инициализирован раньше, так, как используется в ф-ции setIconStatus (int id, bool status);
                   ImgButton[id] = new QToolButton;
                   icon[id] = new QIcon;
 
                   if (ctrlMode) {
                     if (L == minCtrlValue && R == minCtrlValue) {
-                      // Ставим в true а не в false чтобы поменять ( поставить ) иконку.
+                      // Ставим в true а не в false чтобы поменять (поставить) иконку.
                       ctrlStatus[id] = true;
                       setIconStatus(id, false);
-                      // Так как установка статуса иконки выставляется впервые, записываем в ctrlStatus [ id ] статус.
-                      // В дальнейшем, мы будем проверять его, не изменился ли он в setIconStatus ( int id, bool status ),
+                      // Так как установка статуса иконки выставляется впервые, записываем в ctrlStatus [id] статус.
+                      // В дальнейшем, мы будем проверять его, не изменился ли он в setIconStatus (int id, bool status),
                       // чтобы лишний раз не менять значение иконки активные / неактивный стан.
-                      //                   ctrlStatus [ id ] = false;
+                      // ctrlStatus [id] = false;
                     } else if (L != minCtrlValue || R != minCtrlValue) {
                       ctrlStatus[id] = false;
                       setIconStatus(id, true);
-                    } /*else {*/
-                    //                   loadImg = "account_offline_overlay.png";
-                    //                   IdtoPicName [ id ] = loadImg;
-                    //                   cout << sscc -> P ( Color ( red ) ) << "[ QSSMix ] [ ERROR: ] [ Value of `" << ctrlLabel << "` control = " << L << " : " << R << " ] " << sscc -> P ( Color ( white ) ) << endl;
-                    // #ifdef QSSMIX_DEBUG
-                    //                   cout << endl << sscc -> P ( Color ( cyan ) ) << "[ QSSMix ] [ DEBUG MODE START: ]" << endl;
-                    //                   cout << "\t" << "Control name: " << ctrlLabel << endl;
-                    //                   cout << "\t" << "Control type: " << ctrlTypeName << endl;
-                    //                   cout << "\t" << "Control number: " << ctrlNum << endl;
-                    //                   cout << "\t" << "Record mode availability: " << recModeAvail << endl;
-                    //                   cout << "\t" << "Record mode status: " << recModeStatus << endl;
-                    //                   cout << "\t" << "MONO / STEREO: " << ctrlMode << endl;
-                    //                   cout << "[ QSSMix ] [ DEBUG MODE END. ]" << sscc -> P ( Color ( white ) ) << endl << endl;
-                    // #endif
-                    //                }
+                    }
                   } else if (!ctrlMode) {
                     if (M == minCtrlValue) {
                       ctrlStatus[id] = true;
@@ -391,21 +335,7 @@ namespace RoteSonne {
                     } else if (M != minCtrlValue) {
                       ctrlStatus[id] = false;
                       setIconStatus(id, true);
-                    }/* else {
-                     loadImg = "account_offline_overlay.png";
-                     IdtoPicName [ id ] = loadImg;
-                     cout << sscc -> P ( Color ( red ) ) << "[ QSSMix ] [ ERROR: ] [ Value of `" << ctrlLabel << "` control = " << M << " ]" << sscc -> P ( Color ( white ) ) << endl;
-                     #ifdef QSSMIX_DEBUG
-                     cout << endl << sscc -> P ( Color ( cyan ) ) << "[ QSSMix ] [ DEBUG MODE START: ]" << endl;
-                     cout << "\t" << "Control name: " << ctrlLabel << endl;
-                     cout << "\t" << "Control type: " << ctrlTypeName << endl;
-                     cout << "\t" << "Control number: " << ctrlNum << endl;
-                     cout << "\t" << "Record mode availability: " << recModeAvail << endl;
-                     cout << "\t" << "Record mode status: " << recModeStatus << endl;
-                     cout << "\t" << "MONO / STEREO: " << ctrlMode << endl;
-                     cout << "[ QSSMix ] [ DEBUG MODE END. ]" << sscc -> P ( Color ( white ) ) << endl << endl;
-                     #endif
-                     }*/
+                    }
                   }
 
                   ImgButton[id] -> setIcon(*icon[id]);
@@ -415,7 +345,7 @@ namespace RoteSonne {
                   ImgButton[id] -> setFocusPolicy(Qt::NoFocus);
 
                   if (recModeStatus) {
-                    // Устанавливаем ImgButton [ i ] красного цвета, если контролер является источком записи
+                    // Устанавливаем ImgButton [i] красного цвета, если контролер является источком записи
                     ImgButton[id] -> setPalette(QColor(238, 7, 7, 150));
                   }
 
@@ -468,15 +398,15 @@ namespace RoteSonne {
                     setRecordSrcAct[id] = new QAction(QIcon(
                         ":/images/mixer/rec.png"), tr("&Set record source"),
                         this);
-                    // 						setRecordSrcAct [ id ] -> setCheckable ( true );
+                    //       setRecordSrcAct [id] -> setCheckable (true);
                     ImgButton[id] -> addAction(setRecordSrcAct[id]);
                   }
 
                   if (ctrlMode) {
-                    connect ( muteLCheckBox [ id ] , SIGNAL ( stateChanged ( int ) ), muteLActSignalMapper, SLOT ( map ( ) ) );
+                    connect (muteLCheckBox [id] , SIGNAL (stateChanged (int)), muteLActSignalMapper, SLOT (map ()));
                     muteLActSignalMapper -> setMapping(muteLCheckBox[id], id);
 
-                    connect ( muteRCheckBox [ id ] , SIGNAL ( stateChanged ( int ) ), muteRActSignalMapper, SLOT ( map ( ) ) );
+                    connect (muteRCheckBox [id] , SIGNAL (stateChanged (int)), muteRActSignalMapper, SLOT (map ()));
                     muteRActSignalMapper -> setMapping(muteRCheckBox[id], id);
 
                     connect(reverseAct[id], SIGNAL(triggered()),
@@ -489,7 +419,7 @@ namespace RoteSonne {
                         splitChanelAct[id], id);
 
                   } else if (!ctrlMode) {
-                    connect ( muteMCheckBox [ id ] , SIGNAL ( stateChanged ( int ) ), muteMActSignalMapper, SLOT ( map ( ) ) );
+                    connect (muteMCheckBox [id] , SIGNAL (stateChanged (int)), muteMActSignalMapper, SLOT (map ()));
                     muteMActSignalMapper -> setMapping(muteMCheckBox[id], id);
                   }
 
@@ -502,27 +432,27 @@ namespace RoteSonne {
 
                   initSliderLabel(id, ctrlMode, ctrlTypeName);
 
-                  mixDevLabel[id] = new QLabel;
-                  mixDevLabel[id] -> setText((ctrlLabel).c_str());
+//                  mixDevLabel[id] = new QLabel;
+//                  mixDevLabel[id] -> setText((ctrlLabel).c_str());
 
                   if (ctrlMode) {
-                    connect ( sliderL [ id ], SIGNAL ( valueChanged ( int ) ), sliderR [ id ], SLOT ( setValue ( int ) ) );
+                    connect (sliderL [id], SIGNAL (valueChanged (int)), sliderR [id], SLOT (setValue (int)));
 
-                    connect ( sliderL [ id ], SIGNAL ( valueChanged ( int ) ), sliderSignalMapperL, SLOT ( map ( ) ) );
+                    connect (sliderL [id], SIGNAL (valueChanged (int)), sliderSignalMapperL, SLOT (map ()));
                     sliderSignalMapperL -> setMapping(sliderL[id], id);
 
-                    connect ( sliderR [ id ], SIGNAL ( valueChanged ( int ) ), sliderL [ id ], SLOT ( setValue ( int ) ) );
+                    connect (sliderR [id], SIGNAL (valueChanged (int)), sliderL [id], SLOT (setValue (int)));
 
-                    connect ( sliderR [ id ], SIGNAL ( valueChanged ( int ) ), sliderSignalMapperR, SLOT ( map ( ) ) );
+                    connect (sliderR [id], SIGNAL (valueChanged (int)), sliderSignalMapperR, SLOT (map ()));
                     sliderSignalMapperR -> setMapping(sliderR[id], id);
                   }
 
                   if (!ctrlMode) {
-                    connect ( sliderM [ id ], SIGNAL ( valueChanged ( int ) ), sliderSignalMapperM, SLOT ( map ( ) ) );
+                    connect (sliderM [id], SIGNAL (valueChanged (int)), sliderSignalMapperM, SLOT (map ()));
                     sliderSignalMapperM -> setMapping(sliderM[id], id);
                   }
 
-                  mainCtrlLayout = new QVBoxLayout;
+                  this -> mainCtrlLayout = new QVBoxLayout();
                   vImageLayout[id] = new QVBoxLayout;
                   vImageLayout[id] -> addWidget(ImgButton[id]);
                   vImageLayout[id] -> setAlignment(Qt::AlignHCenter);
@@ -550,11 +480,11 @@ namespace RoteSonne {
                     hLayoutSliderLCD -> addLayout(vLayoutSliderLCDM[id]);
                   }
 
-                  mainCtrlLayout -> addLayout(vImageLayout[id]);
-                  mainCtrlLayout -> addLayout(hLayoutSliderLCD);
+                  this -> mainCtrlLayout -> addLayout(vImageLayout[id]);
+                  this -> mainCtrlLayout -> addLayout(hLayoutSliderLCD);
 
                   QVBoxLayout *tmpLayout = new QVBoxLayout;
-                  tmpLayout -> addLayout(mainCtrlLayout);
+                  tmpLayout -> addLayout(this -> mainCtrlLayout);
 
                   QGroupBox *tmpGroupBox = new QGroupBox(ctrlLabel.c_str());
                   tmpGroupBox -> setLayout(tmpLayout);
@@ -570,7 +500,7 @@ namespace RoteSonne {
 
                   if ((ctrlTypeName == MIXT_STEREOSLIDER16) || (ctrlTypeName
                       == MIXT_MONOSLIDER16)) {
-                    // 						cout << "16 " << id << endl;
+                    //       cout << "16 " << id << endl;
                     layoutCtrl[4] -> addLayout(tmpLayout2);
                   } else {
                     if (id > 7) {
@@ -602,7 +532,7 @@ namespace RoteSonne {
                       }
                       enumComboBox[id] -> setCurrentIndex(currentEnumNum);
 
-                      connect ( enumComboBox [ id ] , SIGNAL ( currentIndexChanged ( int ) ), setEnumControlSignalMapper, SLOT ( map ( ) ) );
+                      connect (enumComboBox [id] , SIGNAL (currentIndexChanged (int)), setEnumControlSignalMapper, SLOT (map ()));
                       setEnumControlSignalMapper -> setMapping(
                           enumComboBox[id], id);
                       secondLayout -> addWidget(enumComboBox[id]);
@@ -616,7 +546,7 @@ namespace RoteSonne {
 
                       onOffCheckbox[id] -> setChecked(currentEnumNum);
 
-                      connect ( onOffCheckbox [ id ] , SIGNAL ( stateChanged ( int ) ), setCheckedControlSignalMapper, SLOT ( map ( ) ) );
+                      connect (onOffCheckbox [id] , SIGNAL (stateChanged (int)), setCheckedControlSignalMapper, SLOT (map ()));
                       setCheckedControlSignalMapper -> setMapping(
                           onOffCheckbox[id], id);
 
@@ -642,67 +572,37 @@ namespace RoteSonne {
               }
             }
 
-            // l -> setPixmap ( *( peak -> returnPeakImage ( ) ) );
-
             *ptmpConfigFile << "</mixer>";
             *ptmpConfigFile << endl;
             ptmpConfigFile -> close();
 
             ////////////////////////
-            QLabel *l1 = new QLabel;
-            QLabel *l2 = new QLabel;
-            l3 = new QLabel;
-
-            //    l1 -> setText ( ( ossmix -> getChipsetName ( ) ).c_str ( ) );
-            //    l2 -> setText ( QString ( "%1 v%2 %3 License. %1 API v%4" ).arg ( ( ossmix -> getProductName ( ) ).c_str ( ) ).arg ( ( ossmix -> getProductVersion ( ) ).c_str ( ) )
-            //         .arg ( ( ossmix -> getProductLicense ( ) ).c_str ( ) ).arg ( ossmix -> getProductAPI ( ), 0, 16 ) );
-            //    l1 -> setAlignment ( Qt::AlignHCenter | Qt::AlignVCenter );
-            //    l2 -> setAlignment ( Qt::AlignHCenter | Qt::AlignVCenter );
-
-            QPushButton *sndCardButton = new QPushButton(this);
-            sndCardButton -> setIcon(QIcon(":/images/mixer/audio-card.png"));
-            sndCardButton -> setIconSize(QSize(64, 64));
-
-            infoLayer = new QHBoxLayout;
-            infoLayer -> addWidget(sndCardButton, 1);
-            infoLayer -> addWidget(l1, 1);
-            infoLayer -> addWidget(l2, 3);
-            infoLayer -> addWidget(l3, 2);
-
-            layoutCtrl[5] -> addLayout(infoLayer);
-
-            connect(sndCardButton, SIGNAL(clicked()), this, SLOT(
-                aboutCardInfo()));
-            ///////////////////////////
-
-            //   console = new QTextEdit;
-            // //   console -> setBackgroundRole ( QPalette::Background );
-            // //   QTextEdit::focusInEvent(e);
-            // //   keyPressEvent(e);
-            //   console -> installEventFilter(this);
-            //   console -> setText ( QString ( "qssmix $ " ) );
-            // //   console -> key (  );
+            //            QLabel *l1 = new QLabel;
+            //            QLabel *l2 = new QLabel;
+            //            l3 = new QLabel;
             //
-            // //   connect ( console, SIGNAL ( textChanged (  ) ), this, SLOT ( eventFilter (  ) ) );
+            //            //    l1 -> setText ((ossmix -> getChipsetName ()).c_str ());
+            //            //    l2 -> setText (QString ("%1 v%2 %3 License. %1 API v%4").arg ((ossmix -> getProductName ()).c_str ()).arg ((ossmix -> getProductVersion ()).c_str ())
+            //            //         .arg ((ossmix -> getProductLicense ()).c_str ()).arg (ossmix -> getProductAPI (), 0, 16));
+            //            //    l1 -> setAlignment (Qt::AlignHCenter | Qt::AlignVCenter);
+            //            //    l2 -> setAlignment (Qt::AlignHCenter | Qt::AlignVCenter);
             //
-            //   consoleLayer = new QHBoxLayout;
-            //   consoleLayer -> addWidget ( console );
+            //            QPushButton *sndCardButton = new QPushButton(this);
+            //            sndCardButton -> setIcon(QIcon(":/images/mixer/audio-card.png"));
+            //            sndCardButton -> setIconSize(QSize(64, 64));
             //
-            //   layoutCtrl [ 6 ] -> addLayout ( consoleLayer );
+            //            infoLayer = new QHBoxLayout;
+            //            infoLayer -> addWidget(sndCardButton, 1);
+            //            infoLayer -> addWidget(l1, 1);
+            //            infoLayer -> addWidget(l2, 3);
+            //            infoLayer -> addWidget(l3, 2);
+            //
+            //            layoutCtrl[5] -> addLayout(infoLayer);
+            //
+            //            connect(sndCardButton, SIGNAL(clicked()), this, SLOT(
+            //                aboutCardInfo()));
+
           }
-
-          //  bool Mixer::eventFilter(QObject *target, QEvent *event) {
-          //    if (event->type() == QEvent::KeyPress) {
-          //     QKeyEvent *keyEvent = (QKeyEvent *)event;
-          //     if ((keyEvent->key() == Qt::Key_Enter) || (keyEvent->key() == Qt::Key_Return)) {
-          //      console -> setText ( QString ( "sdg " ) );
-          //      console -> installEventFilter(this);
-          //      console -> setText ( QString ( "qssmix $ " ) );
-          //         }
-          //    }
-          //   return QWidget::eventFilter(target, event);
-          //  }
-
 
           void Mixer::setIconStatus(int id, bool status) {
             if (ctrlStatus[id] != status) {
@@ -715,14 +615,6 @@ namespace RoteSonne {
               ImgButton[id] -> setIcon(*icon[id]);
             }
           }
-
-          // void Mixer::contextMenuEvent ( QContextMenuEvent *event ) {
-          //    QMenu menu ( this );
-          //    menu.addAction ( cutAct );
-          //    menu.addAction ( copyAct );
-          //    menu.addAction ( pasteAct );
-          //    menu.exec ( event->globalPos() );
-          // }
 
           void Mixer::initSliderLabel(int id, bool ctrlMode, int ctrlTypeName) {
             if (ctrlMode) {
@@ -862,21 +754,9 @@ namespace RoteSonne {
             }
           }
 
-          void Mixer::stuff() {
-            //    for ( int i = 80; i != 0; --i ) {
-            //       ossmix -> setDevVol ( 2, i, i, -1 );
-            //       cout << i << endl;
-            //    }
-            //    for ( int i = 0; i != 80; ++i ) {
-            //       ossmix -> setDevVol ( 2, i, i, -1 );
-            //       cout << i << endl;
-            //    }
-          }
-
           void Mixer::update() {
-            //	ossdsp -> getSong ( currentSong );
-            l3 -> setText(QString("Current song: %1").arg(currentSong.c_str()));
-            l3 -> setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+//            l3 -> setText(QString("Current song: %1").arg(currentSong.c_str()));
+//            l3 -> setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
             int L = -1;
             int R = -1;
@@ -902,25 +782,13 @@ namespace RoteSonne {
               peakLevelR[i] = numLedR;
             }
             peak -> drawPeak(peakLevelL, peakLevelR);
-            // 	vLayoutSliderLCDL [ 35 ] -> update();
-            // 	*qp = ( *( peak -> returnPeakImage ( ) ) );
-
-            // 	QWidget *w = new QWidget;
-            // 	w -> render ( peak -> returnPeakImage ( ) );
-            // 	l -> setUpdatesEnabled(true);
-
-            // 	l -> setWindowModified ( true );
-
-
-            // peak -> update();
-            // 	l -> repaint();
 
             if (ossmix -> getUpdateCounter() > updateCounter) {
               updateCounter = ossmix -> getUpdateCounter();
 
               int id = 0;
-              for (map<int, string>::iterator it = listOfAvaibleCtrlDev.begin(); it
-                  != listOfAvaibleCtrlDev.end(); ++it) {
+              for (map<int, string>::iterator it = listOfCtrl.begin(); it
+                  != listOfCtrl.end(); ++it) {
                 ossmix -> getDevInfo(it->second, ctrlLabel, ctrlNum,
                     ctrlParent, numRecDev, recModeAvail, recModeStatus,
                     ctrlMode, ctlStatus, L, R, M, minCtrlValue, maxCtrlValue,
@@ -1034,7 +902,6 @@ namespace RoteSonne {
                 labelR[id] -> setStyleSheet(this -> CSS_ON_LABEL);
               }
             } else if (L && !R) {
-              ;
               target = muteLCheckBox;
               if (target[id] -> isChecked()) {
                 labelL[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
@@ -1084,11 +951,11 @@ namespace RoteSonne {
 
           void Mixer::splitChanel(int id) {
             if (splitChanelAct[id] ->isChecked()) {
-disconnect            ( sliderL [ id ], SIGNAL ( valueChanged ( int ) ), sliderR [ id ], SLOT ( setValue ( int ) ) );
-            disconnect ( sliderR [ id ], SIGNAL ( valueChanged ( int ) ), sliderL [ id], SLOT ( setValue ( int ) ) );
+disconnect            (sliderL [id], SIGNAL (valueChanged (int)), sliderR [id], SLOT (setValue (int)));
+            disconnect (sliderR [id], SIGNAL (valueChanged (int)), sliderL [id], SLOT (setValue (int)));
           } else {
-            connect ( sliderL [ id ], SIGNAL ( valueChanged ( int ) ), sliderR [ id ], SLOT ( setValue ( int ) ) );
-            connect ( sliderR [ id ], SIGNAL ( valueChanged ( int ) ), sliderL [ id], SLOT ( setValue ( int ) ) );
+            connect (sliderL [id], SIGNAL (valueChanged (int)), sliderR [id], SLOT (setValue (int)));
+            connect (sliderR [id], SIGNAL (valueChanged (int)), sliderL [id], SLOT (setValue (int)));
           }
         }
 
@@ -1115,23 +982,23 @@ disconnect            ( sliderL [ id ], SIGNAL ( valueChanged ( int ) ), sliderR
         }
 
         void Mixer::aboutCardInfo() {
-          //    QMessageBox msgBox;
-          //    msgBox.setIconPixmap ( QPixmap ( ":/images/mixer/audio-card.png" ) );
-          //    msgBox.addButton ( QMessageBox::Ok );
-          //    msgBox.setWindowTitle ( tr ( "Информация о звуковой карте %1" ).arg ( ossmix -> getSndCardName ( ).c_str ( ) ) );
-          //    msgBox.setText ( tr (
-          //                      "<i> Звуковая карта: </i> %1"
-          //          "<p><i> Звуковой чипсет: </i> %2"
-          //          "<p><i> Устройство в системе: </i> %3"
-          //          "<p><i> Минимальная частота дискретизации: </i> %4 Hz"
-          //          "<p><i> Максимальная частота дискретизации: </i> %5 Hz"
-          //          "<p><i> Минимальное количество каналов: </i> %6"
-          //          "<p><i> Максимальное количество каналов: </i> %7"
-          //          "<p><i> Идентификатор карты: </i> %8"
-          //                         ).arg ( ossmix -> getSndCardName ( ).c_str ( ) ).arg ( ossmix -> getChipsetName ( ).c_str ( ) )
-          //         .arg ( ossmix -> getDevNode ( ).c_str ( ) ).arg ( ossmix -> getMinSampleRate ( ) )
-          //         .arg ( ossmix -> getMaxSampleRate ( ) ).arg ( ossmix -> getMinCh ( ) ).arg ( ossmix -> getMaxCh ( ) ).arg ( ossmix -> getIdentSndCard ( ).c_str ( ) ) );
-          //    msgBox.exec ( );
+          //          QMessageBox msgBox;
+          //          msgBox.setIconPixmap (QPixmap (":/images/mixer/audio-card.png"));
+          //          msgBox.addButton (QMessageBox::Ok);
+          //          msgBox.setWindowTitle (tr ("Информация о звуковой карте %1").arg (ossmix -> getSndCardName ().c_str ()));
+          //          msgBox.setText (tr (
+          //                  "<i> Звуковая карта: </i> %1"
+          //                  "<p><i> Звуковой чипсет: </i> %2"
+          //                  "<p><i> Устройство в системе: </i> %3"
+          //                  "<p><i> Минимальная частота дискретизации: </i> %4 Hz"
+          //                  "<p><i> Максимальная частота дискретизации: </i> %5 Hz"
+          //                  "<p><i> Минимальное количество каналов: </i> %6"
+          //                  "<p><i> Максимальное количество каналов: </i> %7"
+          //                  "<p><i> Идентификатор карты: </i> %8"
+          //              ).arg (ossmix -> getSndCardName ().c_str ()).arg (ossmix -> getChipsetName ().c_str ())
+          //              .arg (ossmix -> getDevNode ().c_str ()).arg (ossmix -> getMinSampleRate ())
+          //              .arg (ossmix -> getMaxSampleRate ()).arg (ossmix -> getMinCh ()).arg (ossmix -> getMaxCh ()).arg (ossmix -> getIdentSndCard ().c_str ()));
+          //          msgBox.exec ();
         }
 
         void Mixer::saveConfig() {
@@ -1141,7 +1008,7 @@ disconnect            ( sliderL [ id ], SIGNAL ( valueChanged ( int ) ), sliderR
         }
 
         void Mixer::rescanCtrlDev() {
-          initScan(1, coutOfCtrlEl);
+          initScan(true, this -> coutOfCtrlEl);
         }
 
         QWidget * Mixer::retW(void) {

@@ -44,22 +44,18 @@ namespace RoteSonne {
         namespace OSS {
           class Mixer: public QMainWindow {
             Q_OBJECT
-
             public:
-            Mixer();
+              Mixer();
               ~Mixer();
-              void init();
               QWidget * retW(void);
-
-            protected:
-              // 		void contextMenuEvent(QContextMenuEvent *event);
-              // 		void paintEvent ( QPaintEvent * );
-              QMap<int, QToolButton *> ImgButton;
             private:
+              void init();
+              void prepareStyle();
               void createActions();
               void createMenus();
-              void prepareStyle();
+              void initScan(bool rescan, int countElem);
 
+              // stylize
               QString CSS_RED_SLIDER;
               QString CSS_BLACK_SLIDER;
               QString CSS_ON_LABEL;
@@ -70,12 +66,12 @@ namespace RoteSonne {
               libconfig::Config cfg;
               SilentMedia::Media::Audio::SoundSystem::OSS::Mixer::Mixer
                   * ossmix;
-              //		libssoss::DSP *ossdsp;
-              // 		SScc *sscc;
               Peak *peak;
-              // 		Player *player;
 
-              map<int, string> listOfAvaibleCtrlDev;
+              QVBoxLayout * mainCtrlLayout;
+
+              QMap<int, QToolButton *> ImgButton;
+              map<int, string> listOfCtrl;
               string ListOfDevice;
               string DEV_NAME;
 
@@ -101,9 +97,6 @@ namespace RoteSonne {
               int currentEnumNum;
 
               int currentRecId;
-
-              // 		FILE * ptmpConfigFile;
-              // 		FILE * pConfigFile;
 
               fstream * ptmpConfigFile;
               fstream * pConfigFile;
@@ -139,16 +132,11 @@ namespace RoteSonne {
               map<int, int> ctrlMaxVal;
               map<int, string> IdtoPicName;
 
-              //       QMap < int, QPixmap * > img;
               QMap<int, QIcon *> icon;
 
               QMap<int, QSlider *> sliderL;
               QMap<int, QSlider *> sliderR;
               QMap<int, QSlider *> sliderM;
-
-              //       QMap < int, QLCDNumber * > labelL;
-              //       QMap < int, QLCDNumber * > labelR;
-              //       QMap < int, QLCDNumber * > labelM;
 
               QMap<int, QLineEdit *> labelL;
               QMap<int, QLineEdit *> labelR;
@@ -165,7 +153,6 @@ namespace RoteSonne {
               QMap<int, QAction *> setRecordSrcAct;
               QMap<int, QComboBox *> enumComboBox;
               QMap<int, QCheckBox *> onOffCheckbox;
-              //       QMap < int, QToolButton * > ImgButton;
               QMap<int, QLCDNumber *> lcdL;
               QMap<int, QLCDNumber *> lcdR;
               QMap<int, QLCDNumber *> lcdM;
@@ -181,7 +168,6 @@ namespace RoteSonne {
               QTabWidget *mixerTabWidget;
               string currentSong;
 
-              QVBoxLayout *mainCtrlLayout;
               QMap<int, QVBoxLayout *> vImageLayout;
 
               QMap<int, QVBoxLayout *> vLayoutSliderLCDL;
@@ -218,25 +204,17 @@ namespace RoteSonne {
               QWidget *widget5;
               QFrame *frame1;
 
-              //       QPainter *painter;
-              //       QPixmap *myPixmap;
               QImage *image;
               QPushButton *pb;
               QLabel *tmpL;
               QLabel *l;
               QPixmap *qp;
 
-              // map < int, int > ctrlChanelMode;
               private slots:
               void setIconStatus ( int i, bool status );
-              // bool eventFilter(QObject *target, QEvent *event);
-              //       void DrawMe();
               void initSliderLabel(int i, bool ctrlMode, int ctrlTypeName);
-              void initScan(int scan, int countElem);
               void rescanCtrlDev();
-              void stuff();
 
-              // void setPeak ( int i, int j, bool status );
               void update();
 
               void setVol(const int id, bool mode, int &setVolL, int &setVolR,
