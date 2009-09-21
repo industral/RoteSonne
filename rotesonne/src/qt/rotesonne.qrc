@@ -22,5 +22,29 @@
     <file>../images/system-run.png</file>
     <file>../images/media-podcast.png</file>
     <file>../images/nocover.png</file>
+    
+    <file>../images/mixer/designer.png</file>
+    <file>../images/mixer/audio-input-microphone.png</file>
+    <file>../images/mixer/media-optical-audio.png</file>
+    <file>../images/mixer/audio-headset.png</file>
+    <file>../images/mixer/speaker.png</file>
+    <file>../images/mixer/account_offline_overlay.png</file>
+    <file>../images/mixer/media-podcast.png</file>
+    <file>../images/mixer/camera-web.png</file>
+    <file>../images/mixer/audio-input-line.png</file>
+    <file>../images/mixer/account_offline_overlay.png</file>
+    <file>../images/mixer/slider-bg.png</file>
+    <file>../images/mixer/slider-black.png</file>
+    <file>../images/mixer/slider-red.png</file>
+    <file>../images/mixer/on/record.png</file>
+    <file>../images/mixer/off/record.png</file>
+    <file>../images/mixer/qssmix.png</file>
+    <file>../images/mixer/mute.png</file>
+    <file>../images/mixer/xfce4_xicon.png</file>
+    <file>../images/mixer/xfce4_xicon.png</file>
+    <file>../images/mixer/rec.png</file>
+    <file>../images/mixer/audio-card.png</file>
+    <file>../images/mixer/oss.png</file>
+    <file>../images/mixer/qt.png</file>
   </qresource>
 </RCC>

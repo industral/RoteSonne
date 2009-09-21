@@ -58,7 +58,16 @@ namespace RoteSonne {
             private:
               void createActions();
               void createMenus();
+              void prepareStyle();
 
+              QString CSS_RED_SLIDER;
+              QString CSS_BLACK_SLIDER;
+              QString CSS_ON_LABEL;
+              QString CSS_OFF_LABEL;
+              QString CSS_MUTE_CHECKBOX;
+              QString CSS_UNMUTE_CHECKBOX;
+
+              libconfig::Config cfg;
               SilentMedia::Media::Audio::SoundSystem::OSS::Mixer::Mixer
                   * ossmix;
               //		libssoss::DSP *ossdsp;

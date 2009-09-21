@@ -30,127 +30,19 @@ namespace RoteSonne {
     namespace Widgets {
       namespace Mixer {
         namespace OSS {
-          string
-              _redSlider_ =
-                  "QSlider::groove { \
-      background: url(:/img/slider.png); \
-      background-position: bottom center; \
-      background-attachment: fixed; \
-      background-repeat: repeat-y;}\
-      QSlider::handle { \
-      image: url(:/img/Slider-red.png);}";
-
-          string _ledGreenEnable_ = "background-color: rgb(0, 192, 0);"
-            "border: 1px inset #201F1F;";
-
-          string _ledGreenDisable_ = "background-color: rgb(0, 48, 0);"
-            "border: 1px inset #201F1F;";
-
-          string _ledYellowEnable_ = "background-color: rgb(255, 255, 0);"
-            "border: 1px inset #201F1F;";
-
-          string _ledYellowDisable_ = "background-color: rgb(64, 64, 0);"
-            "border: 1px inset #201F1F;";
-
-          string _ledBlueEnable_ = "background-color: rgb(51, 51, 255);"
-            "border: 1px inset #201F1F;";
-
-          string _ledBlueDisable_ = "background-color: rgb(13, 13, 64);"
-            "border: 1px inset #201F1F;";
-
-          string _ledBrownEnable_ = "background-color: rgb(128, 0, 0);"
-            "border: 1px inset #201F1F;";
-
-          string _ledBrownDisable_ = "background-color: rgb(32, 0, 0);"
-            "border: 1px inset #201F1F;";
-
-          string _ledRedEnable_ = "background-color: rgb(255, 0, 0);"
-            "border: 1px inset #201F1F;";
-
-          string _ledRedDisable_ = "background-color: rgb(64, 0, 0);"
-            "border: 1px inset #201F1F;";
-
-          //  "background-color: #1D7BE7;"
-          // #201F1F #16DC24 #1ABAFF
-
-#define _onLabel_ \
-"background-color: #1ABAFF;" \
-"border: 1px inset #201F1F;" \
-"font: bold;"
-          //////////////////////
-#define _offLabel_ \
-"background-color: #B5B5B5;" \
-"border: 1px inset #201F1F;" \
-"font: bold;"
-          //////////////////////
-#define _blackSlider_ \
-"QSlider::groove {" \
-"background: url(:/img/slider.png);"\
-"background-position: bottom center;"\
-"background-attachment: fixed;"\
-"background-repeat: repeat-y;}"\
-\
-"QSlider::handle {" \
-"image: url(:/img/Slider.png);}"
-          ////////////////////
-#define _muteCheckBox_ \
-"QCheckBox {" \
-"spacing: 5px;" \
-"}" \
-\
-"QCheckBox::indicator {" \
-"width: 17px;" \
-"height: 17px;" \
-"}" \
-\
-"QCheckBox::indicator:checked {" \
-"image: url(:/img/off/record.png);" \
-"}" \
-\
-"QCheckBox::indicator:unchecked {" \
-"image: url(:/img/on/record.png);" \
-"}"
-
-#define _onoffCheckBox_ \
-"QCheckBox {" \
-"spacing: 5px;" \
-"}" \
-\
-"QCheckBox::indicator {" \
-"width: 17px;" \
-"height: 17px;" \
-"}" \
-\
-"QCheckBox::indicator:checked {" \
-"image: url(:/img/on/record.png);" \
-"}" \
-\
-"QCheckBox::indicator:unchecked {" \
-"image: url(:/img/off/record.png);" \
-"}"
-          //////////////////////
-#define _onoff2CheckBox_ \
-"QCheckBox {" \
-"spacing: 5px;" \
-"}" \
-\
-"QCheckBox::indicator {" \
-"width: 13px;" \
-"height: 13px;" \
-"}" \
-\
-"QCheckBox::indicator:checked {" \
-"image: url(:/img/check.png);" \
-"}"
-
           Mixer::Mixer() :
-          ossmix(
-              new SilentMedia::Media::Audio::SoundSystem::OSS::Mixer::Mixer()), /*sscc ( new SScc ),*/
-          peak(new Peak), ctrlNum(-1), numRecDev(-1), ctrlParent(-1),
-          recModeAvail(0), recModeStatus(0), ctrlMode(0), ctlStatus(-1),
-          L(-1), R(-1), M(-1), minCtrlValue(-1), maxCtrlValue(-1),
-          skipDev(0), ctrlFlag(-1), currentEnumNum(-1),
-          updateCounter(-1), currentParent(-1) {
+                ossmix(
+                    new SilentMedia::Media::Audio::SoundSystem::OSS::Mixer::Mixer()), /*sscc ( new SScc ),*/
+                peak(new Peak), ctrlNum(-1), numRecDev(-1), ctrlParent(-1),
+                recModeAvail(0), recModeStatus(0), ctrlMode(0), ctlStatus(-1),
+                L(-1), R(-1), M(-1), minCtrlValue(-1), maxCtrlValue(-1),
+                skipDev(0), ctrlFlag(-1), currentEnumNum(-1),
+                updateCounter(-1), currentParent(-1) {
+
+            this -> cfg.readFile(
+                "/home/alex/RoteSonne/rotesonne/src/qt/style.cfg");
+
+            this -> prepareStyle();
           }
 
           Mixer::~Mixer() {
@@ -264,7 +156,7 @@ namespace RoteSonne {
             //  tabWidget->addTab(this, tr("General"));
             //  MainLayout -> addWidget ( tabWidget );
 
-            coutOfCtrlEl = listOfAvaibleCtrlDev . size();
+            coutOfCtrlEl = listOfAvaibleCtrlDev.size();
 
             sliderSignalMapperL = new QSignalMapper;
             sliderSignalMapperR = new QSignalMapper;
@@ -440,24 +332,24 @@ namespace RoteSonne {
                   string loadImg;
 
                   if (ctrlLabel == "mic") {
-                    loadImg = ":/img/audio-input-microphone.png";
+                    loadImg = ":/images/mixer/audio-input-microphone.png";
                   } else if (ctrlLabel == "cd") {
-                    loadImg = ":/img/media-optical-audio.png";
+                    loadImg = ":/images/mixer/media-optical-audio.png";
                   } else if (ctrlLabel == "phone") {
-                    loadImg = ":/img/audio-headset.png";
+                    loadImg = ":/images/mixer/audio-headset.png";
                   } else if (ctrlFlag & MIXF_MAINVOL) {
-                    loadImg = ":/img/speaker.png";
+                    loadImg = ":/images/mixer/speaker.png";
                   } else if ((ctrlTypeName == MIXT_STEREOSLIDER16)
                       || (ctrlTypeName == MIXT_MONOSLIDER16)) {
-                    loadImg = ":/img/account_offline_overlay.png";
+                    loadImg = ":/images/mixer/account_offline_overlay.png";
                   } else if (ctrlFlag & MIXF_PCMVOL) {
-                    loadImg = ":/img/media-podcast.png";
+                    loadImg = ":/images/mixer/media-podcast.png";
                   } else if (ctrlLabel == "video") {
-                    loadImg = ":/img/camera-web.png";
+                    loadImg = ":/images/mixer/camera-web.png";
                   } else if (ctrlFlag & MIXF_RECVOL) {
-                    loadImg = ":/img/media-record.png";
+                    loadImg = ":/images/mixer/media-record.png";
                   } else {
-                    loadImg = ":/img/audio-input-line.png";
+                    loadImg = ":/images/mixer/audio-input-line.png";
                   }
 
                   IdtoPicName[id] = loadImg;
@@ -528,13 +420,14 @@ namespace RoteSonne {
                   }
 
                   if (ctrlMode) {
-                    muteLRAct[id] = new QAction(QIcon(":/img/mute.png"), tr(
-                        "&Mute"), this);
-                    reverseAct[id] = new QAction(
-                        QIcon(":/img/xfce4_xicon.png"), tr("&Reverse chanels"),
-                        this);
+                    muteLRAct[id] = new QAction(
+                        QIcon(":/images/mixer/mute.png"), tr("&Mute"), this);
+                    reverseAct[id] = new QAction(QIcon(
+                        ":/images/mixer/xfce4_xicon.png"), tr(
+                        "&Reverse chanels"), this);
                     splitChanelAct[id] = new QAction(QIcon(
-                        ":/img/xfce4_xicon.png"), tr("&Split chanels"), this);
+                        ":/images/mixer/xfce4_xicon.png"),
+                        tr("&Split chanels"), this);
 
                     muteLRAct[id] -> setCheckable(true);
                     reverseAct[id] -> setCheckable(true);
@@ -551,7 +444,7 @@ namespace RoteSonne {
                       muteLCheckBox[id] -> setDisabled(true);
                     }
                     muteLCheckBox[id] -> setFocusPolicy(Qt::NoFocus);
-                    muteLCheckBox[id] -> setStyleSheet(_muteCheckBox_);
+                    muteLCheckBox[id] -> setStyleSheet(CSS_MUTE_CHECKBOX);
 
                     muteRCheckBox[id] = new QCheckBox(this);
                     if (R == minCtrlValue) {
@@ -559,7 +452,7 @@ namespace RoteSonne {
                       muteRCheckBox[id] -> setDisabled(true);
                     }
                     muteRCheckBox[id] -> setFocusPolicy(Qt::NoFocus);
-                    muteRCheckBox[id] -> setStyleSheet(_muteCheckBox_);
+                    muteRCheckBox[id] -> setStyleSheet(CSS_MUTE_CHECKBOX);
 
                   } else if (!ctrlMode) {
                     muteMCheckBox[id] = new QCheckBox(this);
@@ -568,12 +461,13 @@ namespace RoteSonne {
                       muteMCheckBox[id] -> setDisabled(true);
                     }
                     muteMCheckBox[id] -> setFocusPolicy(Qt::NoFocus);
-                    muteMCheckBox[id] -> setStyleSheet(_muteCheckBox_);
+                    muteMCheckBox[id] -> setStyleSheet(CSS_MUTE_CHECKBOX);
                   }
 
                   if (recModeAvail) {
-                    setRecordSrcAct[id] = new QAction(QIcon(":/img/rec.png"),
-                        tr("&Set record source"), this);
+                    setRecordSrcAct[id] = new QAction(QIcon(
+                        ":/images/mixer/rec.png"), tr("&Set record source"),
+                        this);
                     // 						setRecordSrcAct [ id ] -> setCheckable ( true );
                     ImgButton[id] -> addAction(setRecordSrcAct[id]);
                   }
@@ -609,7 +503,7 @@ namespace RoteSonne {
                   initSliderLabel(id, ctrlMode, ctrlTypeName);
 
                   mixDevLabel[id] = new QLabel;
-                  mixDevLabel[id] -> setText((ctrlLabel) . c_str());
+                  mixDevLabel[id] -> setText((ctrlLabel).c_str());
 
                   if (ctrlMode) {
                     connect ( sliderL [ id ], SIGNAL ( valueChanged ( int ) ), sliderR [ id ], SLOT ( setValue ( int ) ) );
@@ -662,7 +556,7 @@ namespace RoteSonne {
                   QVBoxLayout *tmpLayout = new QVBoxLayout;
                   tmpLayout -> addLayout(mainCtrlLayout);
 
-                  QGroupBox *tmpGroupBox = new QGroupBox(ctrlLabel . c_str());
+                  QGroupBox *tmpGroupBox = new QGroupBox(ctrlLabel.c_str());
                   tmpGroupBox -> setLayout(tmpLayout);
 
                   QVBoxLayout *tmpLayout2 = new QVBoxLayout;
@@ -715,9 +609,9 @@ namespace RoteSonne {
                     }
 
                     if (ctrlTypeName == MIXT_ONOFF) {
-                      onOffCheckbox[id] = new QCheckBox((ctrlLabel) . c_str(),
+                      onOffCheckbox[id] = new QCheckBox((ctrlLabel).c_str(),
                           this);
-                      onOffCheckbox[id] -> setStyleSheet(_onoffCheckBox_);
+                      onOffCheckbox[id] -> setStyleSheet(CSS_UNMUTE_CHECKBOX);
                       onOffCheckbox[id] -> setFocusPolicy(Qt::NoFocus);
 
                       onOffCheckbox[id] -> setChecked(currentEnumNum);
@@ -739,7 +633,7 @@ namespace RoteSonne {
                 else if ((ctrlTypeName == MIXT_STEREOVU) || (ctrlTypeName
                     == MIXT_STEREOPEAK)) {
                   if (!skipDev) {
-                    listOfPeak . push_back(ctrlNum);
+                    listOfPeak.push_back(ctrlNum);
                     maxValList[ctrlNum] = maxCtrlValue;
                   }
                 }
@@ -759,14 +653,14 @@ namespace RoteSonne {
             QLabel *l2 = new QLabel;
             l3 = new QLabel;
 
-            //    l1 -> setText ( ( ossmix -> getChipsetName ( ) ) . c_str ( ) );
-            //    l2 -> setText ( QString ( "%1 v%2 %3 License. %1 API v%4" ) . arg ( ( ossmix -> getProductName ( ) ) . c_str ( ) ) . arg ( ( ossmix -> getProductVersion ( ) ) . c_str ( ) )
-            //          . arg ( ( ossmix -> getProductLicense ( ) ) . c_str ( ) ) . arg ( ossmix -> getProductAPI ( ), 0, 16 ) );
+            //    l1 -> setText ( ( ossmix -> getChipsetName ( ) ).c_str ( ) );
+            //    l2 -> setText ( QString ( "%1 v%2 %3 License. %1 API v%4" ).arg ( ( ossmix -> getProductName ( ) ).c_str ( ) ).arg ( ( ossmix -> getProductVersion ( ) ).c_str ( ) )
+            //         .arg ( ( ossmix -> getProductLicense ( ) ).c_str ( ) ).arg ( ossmix -> getProductAPI ( ), 0, 16 ) );
             //    l1 -> setAlignment ( Qt::AlignHCenter | Qt::AlignVCenter );
             //    l2 -> setAlignment ( Qt::AlignHCenter | Qt::AlignVCenter );
 
             QPushButton *sndCardButton = new QPushButton(this);
-            sndCardButton -> setIcon(QIcon(":/img/audio-card.png"));
+            sndCardButton -> setIcon(QIcon(":/images/mixer/audio-card.png"));
             sndCardButton -> setIconSize(QSize(64, 64));
 
             infoLayer = new QHBoxLayout;
@@ -814,9 +708,9 @@ namespace RoteSonne {
             if (ctrlStatus[id] != status) {
               ctrlStatus[id] = status;
               status ? icon[id] -> addPixmap(
-                  (QIcon((IdtoPicName[id]) . c_str())) . pixmap(QSize(32, 32),
+                  (QIcon((IdtoPicName[id]).c_str())).pixmap(QSize(32, 32),
                       QIcon::Normal, QIcon::On)) : icon[id] -> addPixmap(
-                  (QIcon((IdtoPicName[id]) . c_str())) . pixmap(QSize(32, 32),
+                  (QIcon((IdtoPicName[id]).c_str())).pixmap(QSize(32, 32),
                       QIcon::Disabled, QIcon::On));
               ImgButton[id] -> setIcon(*icon[id]);
             }
@@ -837,18 +731,18 @@ namespace RoteSonne {
               labelL[id] -> setFixedWidth(30);
               labelL[id] -> setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
               if (L != minCtrlValue) {
-                labelL[id] -> setStyleSheet(_onLabel_);
+                labelL[id] -> setStyleSheet(this -> CSS_ON_LABEL);
               } else {
-                labelL[id] -> setStyleSheet(_offLabel_);
+                labelL[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
               }
               labelR[id] = new QLineEdit(QString::number(R));
               labelR[id] -> setDisabled(true);
               labelR[id] -> setFixedWidth(30);
               labelR[id] -> setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
               if (R != minCtrlValue) {
-                labelR[id] -> setStyleSheet(_onLabel_);
+                labelR[id] -> setStyleSheet(this -> CSS_ON_LABEL);
               } else {
-                labelR[id] -> setStyleSheet(_offLabel_);
+                labelR[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
               }
             } else if (!ctrlMode) {
               labelM[id] = new QLineEdit(QString::number(M));
@@ -856,35 +750,35 @@ namespace RoteSonne {
               labelM[id] -> setFixedWidth(30);
               labelM[id] -> setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
               if (M != minCtrlValue) {
-                labelM[id] -> setStyleSheet(_onLabel_);
+                labelM[id] -> setStyleSheet(this -> CSS_ON_LABEL);
               } else {
-                labelM[id] -> setStyleSheet(_offLabel_);
+                labelM[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
               }
             }
 
-            string sliderStyle;
+            QString sliderStyle;
             if ((ctrlTypeName == MIXT_STEREOSLIDER16) || (ctrlTypeName
                 == MIXT_MONOSLIDER16)) {
-              sliderStyle = _redSlider_;
+              sliderStyle = this -> CSS_RED_SLIDER;
             } else {
-              sliderStyle = _blackSlider_;
+              sliderStyle = this -> CSS_BLACK_SLIDER;
             }
 
             if (ctrlMode) {
               sliderL[id] = new QSlider;
-              sliderL[id] -> setStyleSheet(sliderStyle . c_str());
+              sliderL[id] -> setStyleSheet(sliderStyle);
 
               sliderL[id] -> setRange(minCtrlValue, maxCtrlValue);
               sliderL[id] -> setSliderPosition(L);
 
               sliderR[id] = new QSlider;
-              sliderR[id] -> setStyleSheet(sliderStyle . c_str());
+              sliderR[id] -> setStyleSheet(sliderStyle);
 
               sliderR[id] -> setRange(minCtrlValue, maxCtrlValue);
               sliderR[id] -> setSliderPosition(R);
             } else if (!ctrlMode) {
               sliderM[id] = new QSlider;
-              sliderM[id] -> setStyleSheet(sliderStyle . c_str());
+              sliderM[id] -> setStyleSheet(sliderStyle);
               sliderM[id] -> setRange(minCtrlValue, maxCtrlValue);
               sliderM[id] -> setSliderPosition(M);
             }
@@ -899,8 +793,9 @@ namespace RoteSonne {
 
               if (setVolM != ctrlMinVal[id]) {
                 setIconStatus(id, true);
-                if ((labelM[id] -> styleSheet()) != _onLabel_) {
-                  labelM[id] -> setStyleSheet(_onLabel_);
+                if ((labelM[id] -> styleSheet()).compare(this -> CSS_ON_LABEL)
+                    == 0) {
+                  labelM[id] -> setStyleSheet(this -> CSS_ON_LABEL);
                 }
                 if (muteMCheckBox[id] -> isChecked()) {
                   muteMCheckBox[id] -> setChecked(false);
@@ -910,7 +805,7 @@ namespace RoteSonne {
                 }
               } else if (setVolM == ctrlMinVal[id]) {
                 setIconStatus(id, false);
-                labelM[id] -> setStyleSheet(_offLabel_);
+                labelM[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
                 muteMCheckBox[id] -> setChecked(true);
                 muteMCheckBox[id] -> setDisabled(true);
               }
@@ -919,8 +814,9 @@ namespace RoteSonne {
               setVolR = sliderR[id] -> value();
 
               if (setVolL != ctrlMinVal[id]) {
-                if ((labelL[id] -> styleSheet()) != _onLabel_) {
-                  labelL[id] -> setStyleSheet(_onLabel_);
+                if ((labelL[id] -> styleSheet()).compare(this -> CSS_ON_LABEL)
+                    == 0) {
+                  labelL[id] -> setStyleSheet(this -> CSS_ON_LABEL);
                 }
                 if (muteLCheckBox[id] -> isChecked()) {
                   muteLCheckBox[id] -> setChecked(false);
@@ -929,16 +825,18 @@ namespace RoteSonne {
                   muteLCheckBox[id] -> setDisabled(false);
                 }
               } else if (setVolL == ctrlMinVal[id]) {
-                if ((labelL[id] -> styleSheet()) != _offLabel_) {
-                  labelL[id] -> setStyleSheet(_offLabel_);
+                if ((labelL[id] -> styleSheet()).compare(this -> CSS_OFF_LABEL)
+                    == 0) {
+                  labelL[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
                 }
                 muteLCheckBox[id] -> setChecked(true);
                 muteLCheckBox[id] -> setDisabled(true);
               }
 
               if (setVolR != ctrlMinVal[id]) {
-                if ((labelR[id] -> styleSheet()) != _onLabel_) {
-                  labelR[id] -> setStyleSheet(_onLabel_);
+                if ((labelR[id] -> styleSheet()).compare(this -> CSS_ON_LABEL)
+                    == 0) {
+                  labelR[id] -> setStyleSheet(this -> CSS_ON_LABEL);
                 }
                 if (muteRCheckBox[id] -> isChecked()) {
                   muteRCheckBox[id] -> setChecked(false);
@@ -947,8 +845,9 @@ namespace RoteSonne {
                   muteRCheckBox[id] -> setDisabled(false);
                 }
               } else if (setVolR == ctrlMinVal[id]) {
-                if ((labelR[id] -> styleSheet()) != _offLabel_) {
-                  labelR[id] -> setStyleSheet(_offLabel_);
+                if ((labelR[id] -> styleSheet()).compare(this -> CSS_OFF_LABEL)
+                    == 0) {
+                  labelR[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
                 }
                 muteRCheckBox[id] -> setChecked(true);
                 muteRCheckBox[id] -> setDisabled(true);
@@ -976,15 +875,14 @@ namespace RoteSonne {
 
           void Mixer::update() {
             //	ossdsp -> getSong ( currentSong );
-            l3 -> setText(QString("Current song: %1") . arg(
-                currentSong . c_str()));
+            l3 -> setText(QString("Current song: %1").arg(currentSong.c_str()));
             l3 -> setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
             int L = -1;
             int R = -1;
             int numLedL = -1;
             int numLedR = -1;
-            for (unsigned short int i = 0; i != listOfPeak . size(); ++i) {
+            for (unsigned short int i = 0; i != listOfPeak.size(); ++i) {
               ossmix -> getPeak(listOfPeak[i], L, R);
 
               if (!R || !L) {
@@ -1129,35 +1027,33 @@ namespace RoteSonne {
             if (L && R) {
               //    target = muteLRAct;
               if (target[id] -> isChecked()) {
-
-                labelL[id] -> setStyleSheet(_offLabel_);
-                labelR[id] -> setStyleSheet(_offLabel_);
+                labelL[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
+                labelR[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
               } else {
-
-                labelL[id] -> setStyleSheet(_onLabel_);
-                labelR[id] -> setStyleSheet(_onLabel_);
+                labelL[id] -> setStyleSheet(this -> CSS_ON_LABEL);
+                labelR[id] -> setStyleSheet(this -> CSS_ON_LABEL);
               }
             } else if (L && !R) {
               ;
               target = muteLCheckBox;
               if (target[id] -> isChecked()) {
-                labelL[id] -> setStyleSheet(_offLabel_);
+                labelL[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
               } else {
-                labelL[id] -> setStyleSheet(_onLabel_);
+                labelL[id] -> setStyleSheet(this -> CSS_ON_LABEL);
               }
             } else if (!L && R) {
               target = muteRCheckBox;
               if (target[id] -> isChecked()) {
-                labelR[id] -> setStyleSheet(_offLabel_);
+                labelR[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
               } else {
-                labelR[id] -> setStyleSheet(_onLabel_);
+                labelR[id] -> setStyleSheet(this -> CSS_ON_LABEL);
               }
             } else if (M) {
               target = muteMCheckBox;
               if (target[id] -> isChecked()) {
-                labelM[id] -> setStyleSheet(_offLabel_);
+                labelM[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
               } else {
-                labelM[id] -> setStyleSheet(_onLabel_);
+                labelM[id] -> setStyleSheet(this -> CSS_ON_LABEL);
               }
             }
 
@@ -1196,12 +1092,34 @@ disconnect            ( sliderL [ id ], SIGNAL ( valueChanged ( int ) ), sliderR
           }
         }
 
+        void Mixer::prepareStyle() {
+          string tmpCSS;
+
+          this -> cfg.lookupValue("CSS.CSS_RED_SLIDER", tmpCSS);
+          this -> CSS_RED_SLIDER = tmpCSS.c_str();
+
+          this -> cfg.lookupValue("CSS.CSS_BLACK_SLIDER", tmpCSS);
+          this -> CSS_BLACK_SLIDER = tmpCSS.c_str();
+
+          this -> cfg.lookupValue("CSS.CSS_ON_LABEL", tmpCSS);
+          this -> CSS_ON_LABEL = tmpCSS.c_str();
+
+          this -> cfg.lookupValue("CSS.CSS_OFF_LABEL", tmpCSS);
+          this -> CSS_OFF_LABEL = tmpCSS.c_str();
+
+          this -> cfg.lookupValue("CSS.CSS_MUTE_CHECKBOX", tmpCSS);
+          this -> CSS_MUTE_CHECKBOX = tmpCSS.c_str();
+
+          this -> cfg.lookupValue("CSS.CSS_UNMUTE_CHECKBOX", tmpCSS);
+          this -> CSS_UNMUTE_CHECKBOX = tmpCSS.c_str();
+        }
+
         void Mixer::aboutCardInfo() {
           //    QMessageBox msgBox;
-          //    msgBox . setIconPixmap ( QPixmap ( ":/img/audio-card.png" ) );
-          //    msgBox . addButton ( QMessageBox::Ok );
-          //    msgBox . setWindowTitle ( tr ( "Информация о звуковой карте %1" ) . arg ( ossmix -> getSndCardName ( ) . c_str ( ) ) );
-          //    msgBox . setText ( tr (
+          //    msgBox.setIconPixmap ( QPixmap ( ":/images/mixer/audio-card.png" ) );
+          //    msgBox.addButton ( QMessageBox::Ok );
+          //    msgBox.setWindowTitle ( tr ( "Информация о звуковой карте %1" ).arg ( ossmix -> getSndCardName ( ).c_str ( ) ) );
+          //    msgBox.setText ( tr (
           //                      "<i> Звуковая карта: </i> %1"
           //          "<p><i> Звуковой чипсет: </i> %2"
           //          "<p><i> Устройство в системе: </i> %3"
@@ -1210,10 +1128,10 @@ disconnect            ( sliderL [ id ], SIGNAL ( valueChanged ( int ) ), sliderR
           //          "<p><i> Минимальное количество каналов: </i> %6"
           //          "<p><i> Максимальное количество каналов: </i> %7"
           //          "<p><i> Идентификатор карты: </i> %8"
-          //                         ) . arg ( ossmix -> getSndCardName ( ) . c_str ( ) ) . arg ( ossmix -> getChipsetName ( ) . c_str ( ) )
-          //          . arg ( ossmix -> getDevNode ( ) . c_str ( ) ) . arg ( ossmix -> getMinSampleRate ( ) )
-          //          . arg ( ossmix -> getMaxSampleRate ( ) ) . arg ( ossmix -> getMinCh ( ) ) . arg ( ossmix -> getMaxCh ( ) ) . arg ( ossmix -> getIdentSndCard ( ) . c_str ( ) ) );
-          //    msgBox . exec ( );
+          //                         ).arg ( ossmix -> getSndCardName ( ).c_str ( ) ).arg ( ossmix -> getChipsetName ( ).c_str ( ) )
+          //         .arg ( ossmix -> getDevNode ( ).c_str ( ) ).arg ( ossmix -> getMinSampleRate ( ) )
+          //         .arg ( ossmix -> getMaxSampleRate ( ) ).arg ( ossmix -> getMinCh ( ) ).arg ( ossmix -> getMaxCh ( ) ).arg ( ossmix -> getIdentSndCard ( ).c_str ( ) ) );
+          //    msgBox.exec ( );
         }
 
         void Mixer::saveConfig() {

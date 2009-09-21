@@ -39,5 +39,5 @@ SOURCES     = src/UI/LoadUI.cpp \
               src/Collection.cpp \
               src/Configuration.cpp
               
-LIBS += -lsml -lvorbisfile -lFLAC++ -lwavpack -lao -lboost_thread-mt -lboost_filesystem-mt -lasound -lxspf
+LIBS += -lsml -lvorbisfile -lFLAC++ -lwavpack -lao -lboost_thread-mt -lboost_filesystem-mt -lasound -lxspf -lconfig++
 INCLUDEPATH = src
