@@ -73,21 +73,17 @@ namespace RoteSonne {
               QMap<int, QToolButton *> ImgButton;
               map<int, string> listOfCtrl;
               string ListOfDevice;
-              string DEV_NAME;
 
-              int ctrlNum;
               int numRecDev;
-              unsigned int ctrlParent;
               bool recModeAvail;
               bool recModeStatus;
-              short int ctrlMode;
-              short int ctlStatus;
+              bool stereo;
+              bool on;
               int L;
               int R;
               int M;
               int minCtrlValue;
               int maxCtrlValue;
-              bool skipDev;
               string ctrlLabel;
               int ctrlFlag;
 

@@ -45,6 +45,8 @@ int main(int argc, char **argv) {
   QTextCodec::setCodecForCStrings(codec);
 
   QApplication app(argc, argv);
+  // force use cleanlooks style, as GTK+ has wrong rendering
+  app.setStyle(new QCleanlooksStyle());
 
   MainWindow_UI * mainWindow = new MainWindow_UI();
   mainWindow -> init();
