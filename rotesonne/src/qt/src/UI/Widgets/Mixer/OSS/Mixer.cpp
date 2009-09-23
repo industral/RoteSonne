@@ -33,10 +33,7 @@ namespace RoteSonne {
           Mixer::Mixer() :
                 ossmix(
                     new SilentMedia::Media::Audio::SoundSystem::OSS::Mixer::Mixer()),
-                peak(new Peak), numRecDev(-1), recModeAvail(0),
-                recModeStatus(0), stereo(0), on(-1), L(-1), R(-1), M(-1),
-                minCtrlValue(-1), maxCtrlValue(-1), ctrlFlag(-1),
-                currentEnumNum(-1), updateCounter(-1), currentParent(-1) {
+                peak(new Peak), updateCounter(-1), currentParent(-1) {
 
             this -> cfg.readFile(
                 "/home/alex/RoteSonne/rotesonne/src/qt/style.cfg");
@@ -46,73 +43,14 @@ namespace RoteSonne {
           }
 
           Mixer::~Mixer() {
-            for (int id = 0; id != coutOfCtrlEl; ++id) {
-              if (sliderL[id]) {
-                delete sliderL[id];
-              }
-              if (sliderR[id]) {
-                delete sliderR[id];
-              }
-              if (sliderM[id]) {
-                delete sliderM[id];
-              }
-              if (muteLRAct[id]) {
-                delete muteLRAct[id];
-              }
-              if (reverseAct[id]) {
-                delete reverseAct[id];
-              }
-              if (splitChanelAct[id]) {
-                delete splitChanelAct[id];
-              }
-              if (setRecordSrcAct[id]) {
-                delete setRecordSrcAct[id];
-              }
-              if (enumComboBox[id]) {
-                delete enumComboBox[id];
-              }
-              if (onOffCheckbox[id]) {
-                delete onOffCheckbox[id];
-              }
-              if (ImgButton[id]) {
-                delete ImgButton[id];
-              }
-              if (labelL[id]) {
-                delete labelL[id];
-              }
-              if (labelR[id]) {
-                delete labelR[id];
-              }
-              if (labelM[id]) {
-                delete labelM[id];
-              }
-
-              delete mixDevLabel[id];
-
-              delete vLayoutSliderLCDL[id];
-              delete vLayoutSliderLCDR[id];
-              delete vLayoutSliderLCDM[id];
-            }
             delete ossmix;
-            delete pConfigFile;
-            delete ptmpConfigFile;
           }
 
           void Mixer::init() {
-            currentConfigFile = "current.xml";
-            configFile = "config.xml";
-
-            pConfigFile = new fstream;
-            ptmpConfigFile = new fstream;
-
-            ptmpConfigFile -> open(currentConfigFile.c_str(), fstream::trunc
-                | fstream::in | fstream::out);
-            *ptmpConfigFile << "<mixer>" << endl;
-
             timer = new QTimer(this);
 
             // initialize mixer
-            ossmix -> init("/dev/mixer");
+            ossmix -> init();
 
             //FIXME: Can it be move below?
             // get current update number
@@ -120,9 +58,6 @@ namespace RoteSonne {
 
             // get a list of controls
             this -> listOfCtrl = ossmix -> getListOfCtrl();
-
-            // get a number of available controls
-            this -> coutOfCtrlEl = this -> listOfCtrl.size();
 
             layoutCtrl2 = new QGridLayout;
             layoutCtrl[2] = new QHBoxLayout;
@@ -151,7 +86,7 @@ namespace RoteSonne {
             peak = new Peak();
             peak -> resize(400, 200);
 
-            this -> initScan(false, 0);
+            this -> initScan();
 
             connect (sliderSignalMapperL, SIGNAL (mapped (int)), this, SLOT (setvolL (int)));
             connect (sliderSignalMapperR, SIGNAL (mapped (int)), this, SLOT (setvolR (int)));
@@ -209,98 +144,52 @@ namespace RoteSonne {
             mixerTabWidget -> addTab(peak, QString("Output Peaks"));
           }
 
-          void Mixer::initScan(bool rescan, int countElem) {
-            if (rescan) {
-              for (int id = 0; id != countElem; ++id) {
-                delete ImgButton[id];
-                ImgButton[id] = NULL;
-                delete muteLRAct[id];
-                muteLRAct[id] = NULL;
-                delete reverseAct[id];
-                reverseAct[id] = NULL;
-                delete splitChanelAct[id];
-                splitChanelAct[id] = NULL;
-                delete setRecordSrcAct[id];
-                setRecordSrcAct[id] = NULL;
-                delete labelL[id];
-                labelL[id] = NULL;
-                delete labelR[id];
-                labelR[id] = NULL;
-                delete labelM[id];
-                labelM[id] = NULL;
-                delete sliderL[id];
-                sliderL[id] = NULL;
-                delete sliderR[id];
-                sliderR[id] = NULL;
-                delete sliderM[id];
-                sliderM[id] = NULL;
-                delete mixDevLabel[id];
-                mixDevLabel[id] = NULL;
-                delete enumComboBox[id];
-                enumComboBox[id] = NULL;
-                delete onOffCheckbox[id];
-                onOffCheckbox[id] = NULL;
-              }
-            }
-
+          void Mixer::initScan() {
             int id = 0;
 
             for (map<int, string>::iterator it = listOfCtrl.begin(); it
                 != listOfCtrl.end(); ++it) {
-              ossmix -> getCtrlInfo(it -> first, ctrlLabel, numRecDev,
-                  recModeAvail, recModeStatus, stereo, on, L, R, M,
-                  minCtrlValue, maxCtrlValue, enumListVariant, currentEnumName,
-                  currentEnumNum, ctrlTypeName, ctrlFlag);
 
-              *ptmpConfigFile << "\t" << "<control id='" << it -> first << "'>"
-                  << endl << "\t\t" << "<name>" << ctrlLabel << "</name>"
-                  << endl << "\t\t" << "<type>" << ctrlTypeName << "</type>"
-                  << endl << "\t\t" << "<chanels>" << "merge" << "</chanels>"
-                  << endl << "\t\t" << "<record>" << recModeStatus
-                  << "</record>" << endl << "\t\t" << "<mute>" << endl
-                  << "\t\t\t" << "<L>" << "0" << "</L>" << endl << "\t\t\t"
-                  << "<R>" << "0" << "</R>" << endl << "\t\t" << "</mute>"
-                  << endl << "\t\t" << "<value>" << endl << "\t\t\t" << "<L>"
-                  << L << "</L>" << endl << "\t\t\t" << "<R>" << R << "</R>"
-                  << endl << "\t\t" << "</value>" << endl << "\t"
-                  << "</control>" << endl;
+              cout << it -> first << endl;
+              this -> ctrlInfoObj = ossmix -> getCtrlInfo(it -> first);
 
-              IdtoDevNum[id] = it -> first;
-              vIdtoCtrlRecNum[id] = numRecDev;
-              mctrlMode[id] = stereo;
-              ctrlMinVal[id] = minCtrlValue;
-              ctrlMaxVal[id] = maxCtrlValue;
+              //TODO: try to remove this!
+              idToCtrlNum[id] = it -> first;
+              idToCtrlRecNum[id] = ctrlInfoObj.numRecDev;
+              mctrlMode[id] = ctrlInfoObj.stereo;
+              ctrlMinVal[id] = ctrlInfoObj.minCtrlValue;
+              ctrlMaxVal[id] = ctrlInfoObj.maxCtrlValue;
 
-              if (recModeStatus) {
+              if (ctrlInfoObj.recModeStatus) {
                 currentRecId = id;
               }
               // MIXT_HEXVALUE MIXT_VALUE
-              //BEGIN MIXT_STEREOSLIDER && MIXT_STEREODB && MIXT_MONOSLIDER && MIXT_MONODB && MIXT_MONOVU && MIXT_SLIDER && MIXT_STEREOSLIDER16 && MIXT_MONOSLIDER16
-              if ((ctrlTypeName == MIXT_STEREOSLIDER) || (ctrlTypeName
-                  == MIXT_STEREODB) || (ctrlTypeName == MIXT_MONOSLIDER)
-                  || (ctrlTypeName == MIXT_MONODB) || (ctrlTypeName
-                  == MIXT_MONOVU) || (ctrlTypeName == MIXT_SLIDER)
-                  || (ctrlTypeName == MIXT_STEREOSLIDER16) || (ctrlTypeName
-                  == MIXT_MONOSLIDER16)) {
+              //BEGIN MIXT_STEREOSLIDER && MIXT_MONOSLIDER  && MIXT_MONOVU && MIXT_SLIDER && MIXT_STEREOSLIDER16 && MIXT_MONOSLIDER16
+              if ((ctrlInfoObj.ctrlTypeName == MIXT_STEREOSLIDER)
+                  || (ctrlInfoObj.ctrlTypeName == MIXT_MONOSLIDER)
+                  || (ctrlInfoObj.ctrlTypeName == MIXT_MONOVU)
+                  || (ctrlInfoObj.ctrlTypeName == MIXT_SLIDER)
+                  || (ctrlInfoObj.ctrlTypeName == MIXT_STEREOSLIDER16)
+                  || (ctrlInfoObj.ctrlTypeName == MIXT_MONOSLIDER16)) {
 
                 string loadImg;
 
-                if (ctrlLabel == "mic") {
+                if (ctrlInfoObj.ctrlLabel == "mic") {
                   loadImg = ":/images/mixer/audio-input-microphone.png";
-                } else if (ctrlLabel == "cd") {
+                } else if (ctrlInfoObj.ctrlLabel == "cd") {
                   loadImg = ":/images/mixer/media-optical-audio.png";
-                } else if (ctrlLabel == "phone") {
+                } else if (ctrlInfoObj.ctrlLabel == "phone") {
                   loadImg = ":/images/mixer/audio-headset.png";
-                } else if (ctrlFlag & MIXF_MAINVOL) {
+                } else if (ctrlInfoObj.ctrlFlag & MIXF_MAINVOL) {
                   loadImg = ":/images/mixer/speaker.png";
-                } else if ((ctrlTypeName == MIXT_STEREOSLIDER16)
-                    || (ctrlTypeName == MIXT_MONOSLIDER16)) {
+                } else if ((ctrlInfoObj.ctrlTypeName == MIXT_STEREOSLIDER16)
+                    || (ctrlInfoObj.ctrlTypeName == MIXT_MONOSLIDER16)) {
                   loadImg = ":/images/mixer/account_offline_overlay.png";
-                } else if (ctrlFlag & MIXF_PCMVOL) {
+                } else if (ctrlInfoObj.ctrlFlag & MIXF_PCMVOL) {
                   loadImg = ":/images/mixer/media-podcast.png";
-                } else if (ctrlLabel == "video") {
+                } else if (ctrlInfoObj.ctrlLabel == "video") {
                   loadImg = ":/images/mixer/camera-web.png";
-                } else if (ctrlFlag & MIXF_RECVOL) {
+                } else if (ctrlInfoObj.ctrlFlag & MIXF_RECVOL) {
                   loadImg = ":/images/mixer/media-record.png";
                 } else {
                   loadImg = ":/images/mixer/audio-input-line.png";
@@ -311,8 +200,9 @@ namespace RoteSonne {
                 ImgButton[id] = new QToolButton;
                 icon[id] = new QIcon;
 
-                if (stereo) {
-                  if (L == minCtrlValue && R == minCtrlValue) {
+                if (ctrlInfoObj.stereo) {
+                  if (ctrlInfoObj.L == ctrlInfoObj.minCtrlValue
+                      && ctrlInfoObj.R == ctrlInfoObj.minCtrlValue) {
                     // Ставим в true а не в false чтобы поменять (поставить) иконку.
                     ctrlStatus[id] = true;
                     setIconStatus(id, false);
@@ -320,15 +210,16 @@ namespace RoteSonne {
                     // В дальнейшем, мы будем проверять его, не изменился ли он в setIconStatus (int id, bool status),
                     // чтобы лишний раз не менять значение иконки активные / неактивный стан.
                     // ctrlStatus [id] = false;
-                  } else if (L != minCtrlValue || R != minCtrlValue) {
+                  } else if (ctrlInfoObj.L != ctrlInfoObj.minCtrlValue
+                      || ctrlInfoObj.R != ctrlInfoObj.minCtrlValue) {
                     ctrlStatus[id] = false;
                     setIconStatus(id, true);
                   }
-                } else if (!stereo) {
-                  if (M == minCtrlValue) {
+                } else if (!ctrlInfoObj.stereo) {
+                  if (ctrlInfoObj.M == ctrlInfoObj.minCtrlValue) {
                     ctrlStatus[id] = true;
                     setIconStatus(id, false);
-                  } else if (M != minCtrlValue) {
+                  } else if (ctrlInfoObj.M != ctrlInfoObj.minCtrlValue) {
                     ctrlStatus[id] = false;
                     setIconStatus(id, true);
                   }
@@ -340,12 +231,12 @@ namespace RoteSonne {
                 ImgButton[id] -> setPopupMode(QToolButton::InstantPopup);
                 ImgButton[id] -> setFocusPolicy(Qt::NoFocus);
 
-                if (recModeStatus) {
+                if (ctrlInfoObj.recModeStatus) {
                   // Устанавливаем ImgButton [i] красного цвета, если контролер является источком записи
                   ImgButton[id] -> setPalette(QColor(238, 7, 7, 150));
                 }
 
-                if (stereo) {
+                if (ctrlInfoObj.stereo) {
                   muteLRAct[id] = new QAction(QIcon(":/images/mixer/mute.png"),
                       tr("&Mute"), this);
                   reverseAct[id] = new QAction(QIcon(
@@ -365,7 +256,7 @@ namespace RoteSonne {
                   ImgButton[id] -> addAction(splitChanelAct[id]);
 
                   muteLCheckBox[id] = new QCheckBox(this);
-                  if (L == minCtrlValue) {
+                  if (ctrlInfoObj.L == ctrlInfoObj.minCtrlValue) {
                     muteLCheckBox[id] -> setChecked(true);
                     muteLCheckBox[id] -> setDisabled(true);
                   }
@@ -373,16 +264,16 @@ namespace RoteSonne {
                   muteLCheckBox[id] -> setStyleSheet(CSS_MUTE_CHECKBOX);
 
                   muteRCheckBox[id] = new QCheckBox(this);
-                  if (R == minCtrlValue) {
+                  if (ctrlInfoObj.R == ctrlInfoObj.minCtrlValue) {
                     muteRCheckBox[id] -> setChecked(true);
                     muteRCheckBox[id] -> setDisabled(true);
                   }
                   muteRCheckBox[id] -> setFocusPolicy(Qt::NoFocus);
                   muteRCheckBox[id] -> setStyleSheet(CSS_MUTE_CHECKBOX);
 
-                } else if (!stereo) {
+                } else if (!ctrlInfoObj.stereo) {
                   muteMCheckBox[id] = new QCheckBox(this);
-                  if (M == minCtrlValue) {
+                  if (ctrlInfoObj.M == ctrlInfoObj.minCtrlValue) {
                     muteMCheckBox[id] -> setChecked(true);
                     muteMCheckBox[id] -> setDisabled(true);
                   }
@@ -390,7 +281,7 @@ namespace RoteSonne {
                   muteMCheckBox[id] -> setStyleSheet(CSS_MUTE_CHECKBOX);
                 }
 
-                if (recModeAvail) {
+                if (ctrlInfoObj.recModeAvail) {
                   setRecordSrcAct[id]
                       = new QAction(QIcon(":/images/mixer/rec.png"), tr(
                           "&Set record source"), this);
@@ -398,7 +289,7 @@ namespace RoteSonne {
                   ImgButton[id] -> addAction(setRecordSrcAct[id]);
                 }
 
-                if (stereo) {
+                if (ctrlInfoObj.stereo) {
                   connect (muteLCheckBox [id] , SIGNAL (stateChanged (int)), muteLActSignalMapper, SLOT (map ()));
                   muteLActSignalMapper -> setMapping(muteLCheckBox[id], id);
 
@@ -414,24 +305,25 @@ namespace RoteSonne {
                   splitChanelActSignalMapper -> setMapping(splitChanelAct[id],
                       id);
 
-                } else if (!stereo) {
+                } else if (!ctrlInfoObj.stereo) {
                   connect (muteMCheckBox [id] , SIGNAL (stateChanged (int)), muteMActSignalMapper, SLOT (map ()));
                   muteMActSignalMapper -> setMapping(muteMCheckBox[id], id);
                 }
 
-                if (recModeAvail) {
+                if (ctrlInfoObj.recModeAvail) {
                   connect(setRecordSrcAct[id], SIGNAL(triggered()),
                       setRecordSrcSignalMapper, SLOT(map()));
                   setRecordSrcSignalMapper -> setMapping(setRecordSrcAct[id],
                       id);
                 }
 
-                initSliderLabel(id, stereo, ctrlTypeName);
+                initSliderLabel(id, ctrlInfoObj.stereo,
+                    ctrlInfoObj.recModeAvail);
 
                 //                  mixDevLabel[id] = new QLabel;
-                //                  mixDevLabel[id] -> setText((ctrlLabel).c_str());
+                //                  mixDevLabel[id] -> setText((ctrlInfoObj.ctrlLabel).c_str());
 
-                if (stereo) {
+                if (ctrlInfoObj.stereo) {
                   connect (sliderL [id], SIGNAL (valueChanged (int)), sliderR [id], SLOT (setValue (int)));
 
                   connect (sliderL [id], SIGNAL (valueChanged (int)), sliderSignalMapperL, SLOT (map ()));
@@ -443,7 +335,7 @@ namespace RoteSonne {
                   sliderSignalMapperR -> setMapping(sliderR[id], id);
                 }
 
-                if (!stereo) {
+                if (!ctrlInfoObj.stereo) {
                   connect (sliderM [id], SIGNAL (valueChanged (int)), sliderSignalMapperM, SLOT (map ()));
                   sliderSignalMapperM -> setMapping(sliderM[id], id);
                 }
@@ -459,7 +351,7 @@ namespace RoteSonne {
 
                 QHBoxLayout *hLayoutSliderLCD = new QHBoxLayout;
 
-                if (stereo) {
+                if (ctrlInfoObj.stereo) {
                   vLayoutSliderLCDL[id] -> addWidget(labelL[id]);
                   vLayoutSliderLCDL[id] -> addWidget(sliderL[id]);
                   vLayoutSliderLCDL[id] -> addWidget(muteLCheckBox[id]);
@@ -469,7 +361,7 @@ namespace RoteSonne {
 
                   hLayoutSliderLCD -> addLayout(vLayoutSliderLCDL[id]);
                   hLayoutSliderLCD -> addLayout(vLayoutSliderLCDR[id]);
-                } else if (!stereo) {
+                } else if (!ctrlInfoObj.stereo) {
                   vLayoutSliderLCDM[id] -> addWidget(labelM[id]);
                   vLayoutSliderLCDM[id] -> addWidget(sliderM[id]);
                   vLayoutSliderLCDM[id] -> addWidget(muteMCheckBox[id]);
@@ -482,7 +374,8 @@ namespace RoteSonne {
                 QVBoxLayout *tmpLayout = new QVBoxLayout;
                 tmpLayout -> addLayout(this -> mainCtrlLayout);
 
-                QGroupBox *tmpGroupBox = new QGroupBox(ctrlLabel.c_str());
+                QGroupBox *tmpGroupBox = new QGroupBox(
+                    ctrlInfoObj.ctrlLabel.c_str());
                 tmpGroupBox -> setLayout(tmpLayout);
 
                 QVBoxLayout *tmpLayout2 = new QVBoxLayout;
@@ -494,8 +387,8 @@ namespace RoteSonne {
                   il = 0;
                 }
 
-                if ((ctrlTypeName == MIXT_STEREOSLIDER16) || (ctrlTypeName
-                    == MIXT_MONOSLIDER16)) {
+                if ((ctrlInfoObj.ctrlTypeName == MIXT_STEREOSLIDER16)
+                    || (ctrlInfoObj.ctrlTypeName == MIXT_MONOSLIDER16)) {
                   //       cout << "16 " << id << endl;
                   layoutCtrl[4] -> addLayout(tmpLayout2);
                 } else {
@@ -508,35 +401,41 @@ namespace RoteSonne {
                 }
               }
 
-              //END MIXT_STEREOSLIDER && MIXT_STEREODB && MIXT_MONOSLIDER && MIXT_MONODB && MIXT_MONOVU && MIXT_SLIDER && MIXT_STEREOSLIDER16 && MIXT_MONOSLIDER16
+              //END MIXT_STEREOSLIDER && MIXT_MONOSLIDER && MIXT_MONOVU && MIXT_SLIDER && MIXT_STEREOSLIDER16 && MIXT_MONOSLIDER16
 
               //BEGIN MIXT_ENUM && MIXT_ONOFF
-              else if ((ctrlTypeName == MIXT_ENUM) || (ctrlTypeName
-                  == MIXT_ONOFF)) {
+              else if ((ctrlInfoObj.ctrlTypeName == MIXT_ENUM)
+                  || (ctrlInfoObj.ctrlTypeName == MIXT_ONOFF)) {
 
                 QHBoxLayout *secondLayout = new QHBoxLayout;
                 QHBoxLayout *thirdLayout = new QHBoxLayout;
 
-                if (ctrlTypeName == MIXT_ENUM) {
+                //TODO:change to map!
+                if (ctrlInfoObj.ctrlTypeName == MIXT_ENUM) {
                   enumComboBox[id] = new QComboBox;
 
-                  for (unsigned short int j = 0; j != enumListVariant.size(); ++j) {
-                    enumComboBox[id] -> addItem(QString(
-                        enumListVariant[j].c_str()));
+                  for (int j = 0; j != ctrlInfoObj.enumListVariant.size(); ++j) {
+                    QString item = ctrlInfoObj.enumListVariant[j].c_str();
+                    if (!item.isEmpty()) {
+                      enumComboBox[id] -> addItem(item);
+                    }
                   }
-                  enumComboBox[id] -> setCurrentIndex(currentEnumNum);
+
+                  enumComboBox[id] -> setCurrentIndex(
+                      ctrlInfoObj.currentEnumNum);
 
                   connect (enumComboBox [id] , SIGNAL (currentIndexChanged (int)), setEnumControlSignalMapper, SLOT (map ()));
                   setEnumControlSignalMapper -> setMapping(enumComboBox[id], id);
                   secondLayout -> addWidget(enumComboBox[id]);
                 }
 
-                if (ctrlTypeName == MIXT_ONOFF) {
-                  onOffCheckbox[id] = new QCheckBox((ctrlLabel).c_str(), this);
+                if (ctrlInfoObj.ctrlTypeName == MIXT_ONOFF) {
+                  onOffCheckbox[id] = new QCheckBox(
+                      (ctrlInfoObj.ctrlLabel).c_str(), this);
                   onOffCheckbox[id] -> setStyleSheet(CSS_UNMUTE_CHECKBOX);
                   onOffCheckbox[id] -> setFocusPolicy(Qt::NoFocus);
 
-                  onOffCheckbox[id] -> setChecked(currentEnumNum);
+                  onOffCheckbox[id] -> setChecked(ctrlInfoObj.currentEnumNum);
 
                   connect (onOffCheckbox [id] , SIGNAL (stateChanged (int)), setCheckedControlSignalMapper, SLOT (map ()));
                   setCheckedControlSignalMapper -> setMapping(
@@ -550,18 +449,14 @@ namespace RoteSonne {
               //END MIXT_ENUM && MIXT_ONOFF
 
               //BEGIN MIXT_STEREOVU && MIXT_STEREOPEAK
-              else if ((ctrlTypeName == MIXT_STEREOVU) || (ctrlTypeName
-                  == MIXT_STEREOPEAK)) {
+              else if ((ctrlInfoObj.ctrlTypeName == MIXT_STEREOVU)
+                  || (ctrlInfoObj.ctrlTypeName == MIXT_STEREOPEAK)) {
                 listOfPeak.push_back(it -> first);
-                maxValList[it -> first] = maxCtrlValue;
+                maxValList[it -> first] = ctrlInfoObj.maxCtrlValue;
               }
               //END MIXT_STEREOVU && MIXT_STEREOPEAK
               id++;
             }
-
-            *ptmpConfigFile << "</mixer>";
-            *ptmpConfigFile << endl;
-            ptmpConfigFile -> close();
 
             ////////////////////////
             //            QLabel *l1 = new QLabel;
@@ -605,30 +500,30 @@ namespace RoteSonne {
 
           void Mixer::initSliderLabel(int id, bool stereo, int ctrlTypeName) {
             if (stereo) {
-              labelL[id] = new QLineEdit(QString::number(L));
+              labelL[id] = new QLineEdit(QString::number(ctrlInfoObj.L));
               labelL[id] -> setDisabled(true);
               labelL[id] -> setFixedWidth(30);
               labelL[id] -> setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-              if (L != minCtrlValue) {
+              if (ctrlInfoObj.L != ctrlInfoObj.minCtrlValue) {
                 labelL[id] -> setStyleSheet(this -> CSS_ON_LABEL);
               } else {
                 labelL[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
               }
-              labelR[id] = new QLineEdit(QString::number(R));
+              labelR[id] = new QLineEdit(QString::number(ctrlInfoObj.R));
               labelR[id] -> setDisabled(true);
               labelR[id] -> setFixedWidth(30);
               labelR[id] -> setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-              if (R != minCtrlValue) {
+              if (ctrlInfoObj.R != ctrlInfoObj.minCtrlValue) {
                 labelR[id] -> setStyleSheet(this -> CSS_ON_LABEL);
               } else {
                 labelR[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
               }
             } else if (!stereo) {
-              labelM[id] = new QLineEdit(QString::number(M));
+              labelM[id] = new QLineEdit(QString::number(ctrlInfoObj.M));
               labelM[id] -> setDisabled(true);
               labelM[id] -> setFixedWidth(30);
               labelM[id] -> setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-              if (M != minCtrlValue) {
+              if (ctrlInfoObj.M != ctrlInfoObj.minCtrlValue) {
                 labelM[id] -> setStyleSheet(this -> CSS_ON_LABEL);
               } else {
                 labelM[id] -> setStyleSheet(this -> CSS_OFF_LABEL);
@@ -647,25 +542,28 @@ namespace RoteSonne {
               sliderL[id] = new QSlider;
               sliderL[id] -> setStyleSheet(sliderStyle);
 
-              sliderL[id] -> setRange(minCtrlValue, maxCtrlValue);
-              sliderL[id] -> setSliderPosition(L);
+              sliderL[id] -> setRange(ctrlInfoObj.minCtrlValue,
+                  ctrlInfoObj.maxCtrlValue);
+              sliderL[id] -> setSliderPosition(ctrlInfoObj.L);
 
               sliderR[id] = new QSlider;
               sliderR[id] -> setStyleSheet(sliderStyle);
 
-              sliderR[id] -> setRange(minCtrlValue, maxCtrlValue);
-              sliderR[id] -> setSliderPosition(R);
+              sliderR[id] -> setRange(ctrlInfoObj.minCtrlValue,
+                  ctrlInfoObj.maxCtrlValue);
+              sliderR[id] -> setSliderPosition(ctrlInfoObj.R);
             } else if (!stereo) {
               sliderM[id] = new QSlider;
               sliderM[id] -> setStyleSheet(sliderStyle);
-              sliderM[id] -> setRange(minCtrlValue, maxCtrlValue);
-              sliderM[id] -> setSliderPosition(M);
+              sliderM[id] -> setRange(ctrlInfoObj.minCtrlValue,
+                  ctrlInfoObj.maxCtrlValue);
+              sliderM[id] -> setSliderPosition(ctrlInfoObj.M);
             }
           }
 
           void Mixer::setVol(const int id, bool mode, int &setVolL,
               int &setVolR, int &setVolM, int &devNum) {
-            devNum = IdtoDevNum[id];
+            devNum = idToCtrlNum[id];
 
             if (!mode) {
               setVolM = sliderM[id] -> value();
@@ -742,25 +640,25 @@ namespace RoteSonne {
           }
 
           void Mixer::update() {
-            //            int L = -1;
-            //            int R = -1;
+            //            int ctrlInfoObj.L = -1;
+            //            int ctrlInfoObj.R = -1;
             //            int numLedL = -1;
             //            int numLedR = -1;
             //            for (unsigned short int i = 0; i != listOfPeak.size(); ++i) {
-            //              ossmix -> getPeak(listOfPeak[i], L, R);
+            //              ossmix -> getPeak(listOfPeak[i], ctrlInfoObj.L, ctrlInfoObj.R);
             //
-            //              if (!R || !L) {
-            //                if (!L) {
+            //              if (!ctrlInfoObj.R || !ctrlInfoObj.L) {
+            //                if (!ctrlInfoObj.L) {
             //                  numLedL = 0;
             //                }
-            //                if (!R) {
+            //                if (!ctrlInfoObj.R) {
             //                  numLedR = 0;
             //                }
             //              } else {
             //                numLedL = (9 / (maxValList[listOfPeak[i]]
-            //                    / static_cast<double> (L)));
+            //                    / static_cast<double> (ctrlInfoObj.L)));
             //                numLedR = (9 / (maxValList[listOfPeak[i]]
-            //                    / static_cast<double> (R)));
+            //                    / static_cast<double> (ctrlInfoObj.R)));
             //              }
             //              peakLevelL[i] = numLedL;
             //              peakLevelR[i] = numLedR;
@@ -773,35 +671,34 @@ namespace RoteSonne {
             //              int id = 0;
             //              for (map<int, string>::iterator it = listOfCtrl.begin(); it
             //                  != listOfCtrl.end(); ++it) {
-            //                ossmix -> getCtrlInfo(it->first, ctrlLabel,
-            //                     numRecDev, recModeAvail, recModeStatus,
-            //                    stereo, on, L, R, M, minCtrlValue, maxCtrlValue,
-            //                    skipDev, enumListVariant, currentEnumName, currentEnumNum,
-            //                    ctrlTypeName, ctrlFlag);
+            //                ossmix -> getCtrlInfo(it->first, ctrlInfoObj.ctrlLabel,
+            //                     ctrlInfoObj.numRecDev, recModeAvail, ctrlInfoObj.recModeStatus,
+            //                    ctrlInfoObj.stereo, on, ctrlInfoObj.L, ctrlInfoObj.R, ctrlInfoObj.M, ctrlInfoObj.minCtrlValue, ctrlInfoObj.maxCtrlValue,
+            //                    skipDev, enumListVariant, currentEnumName, ctrlInfoObj.currentEnumNum,
+            //                    ctrlInfoObj.recModeAvail, ctrlInfoObj.ctrlFlag);
             //
             //                if (!skipDev) {
-            //                  if ((ctrlTypeName == MIXT_STEREOSLIDER) || (ctrlTypeName
-            //                      == MIXT_STEREODB) || (ctrlTypeName == MIXT_MONOSLIDER)
-            //                      || (ctrlTypeName == MIXT_MONODB) || (ctrlTypeName
-            //                      == MIXT_MONOVU) || (ctrlTypeName == MIXT_SLIDER)) {
+            //                  if ((ctrlInfoObj.ctrlTypeName == MIXT_STEREOSLIDER) || (ctrlInfoObj.ctrlTypeName == MIXT_MONOSLIDER)
+            //                      || (ctrlInfoObj.ctrlTypeName
+            //                      == MIXT_MONOVU) || (ctrlInfoObj.ctrlTypeName == MIXT_SLIDER)) {
             //
-            //                    if (stereo) {
-            //                      sliderL[id] -> setSliderPosition(L);
-            //                      sliderR[id] -> setSliderPosition(R);
+            //                    if (ctrlInfoObj.stereo) {
+            //                      sliderL[id] -> setSliderPosition(ctrlInfoObj.L);
+            //                      sliderR[id] -> setSliderPosition(ctrlInfoObj.R);
             //                    } else {
-            //                      sliderM[id] -> setSliderPosition(M);
+            //                      sliderM[id] -> setSliderPosition(ctrlInfoObj.M);
             //                    }
-            //                  } else if (ctrlTypeName == MIXT_ENUM) {
-            //                    enumComboBox[id] -> setCurrentIndex(currentEnumNum);
-            //                  } else if (ctrlTypeName == MIXT_ONOFF) {
-            //                    onOffCheckbox[id] -> setChecked(currentEnumNum);
-            //                  } else if ((ctrlTypeName == MIXT_STEREOSLIDER16)
-            //                      || (ctrlTypeName == MIXT_MONOSLIDER16)) {
-            //                    if (stereo) {
-            //                      sliderL[id] -> setSliderPosition(L);
-            //                      sliderR[id] -> setSliderPosition(R);
+            //                  } else if (ctrlInfoObj.ctrlTypeName == MIXT_ENUM) {
+            //                    enumComboBox[id] -> setCurrentIndex(ctrlInfoObj.currentEnumNum);
+            //                  } else if (ctrlInfoObj.ctrlTypeName == MIXT_ONOFF) {
+            //                    onOffCheckbox[id] -> setChecked(ctrlInfoObj.currentEnumNum);
+            //                  } else if ((ctrlInfoObj.ctrlTypeName == MIXT_STEREOSLIDER16)
+            //                      || (ctrlInfoObj.ctrlTypeName == MIXT_MONOSLIDER16)) {
+            //                    if (ctrlInfoObj.stereo) {
+            //                      sliderL[id] -> setSliderPosition(ctrlInfoObj.L);
+            //                      sliderR[id] -> setSliderPosition(ctrlInfoObj.R);
             //                    } else {
-            //                      sliderM[id] -> setSliderPosition(M);
+            //                      sliderM[id] -> setSliderPosition(ctrlInfoObj.M);
             //                    }
             //                  }
             //                  ++id;
@@ -866,13 +763,13 @@ namespace RoteSonne {
           }
 
           void Mixer::reverse(int id) {
-            int devNum = IdtoDevNum[id];
+            int devNum = idToCtrlNum[id];
             int setVol = sliderR[id] -> value();
             ossmix -> setDevVol(devNum, -1, setVol, -1);
           }
 
           void Mixer::muteControl(int id, bool L, bool R, bool M) {
-            int devNum = IdtoDevNum[id];
+            int devNum = idToCtrlNum[id];
 
             QMap<int, QCheckBox *> target;
 
@@ -916,17 +813,17 @@ namespace RoteSonne {
           }
 
           void Mixer::setCheckedControl(int id) {
-            int devNum = IdtoDevNum[id];
+            int devNum = idToCtrlNum[id];
             ossmix -> changeDevState(devNum, onOffCheckbox[id] -> checkState());
           }
 
           void Mixer::setEnumControl(int id) {
-            int devNum = IdtoDevNum[id];
+            int devNum = idToCtrlNum[id];
             ossmix -> changeDevState(devNum, enumComboBox[id] -> currentIndex());
           }
 
           void Mixer::setRecCtrl(int id) {
-            int devNum = vIdtoCtrlRecNum[id];
+            int devNum = idToCtrlRecNum[id];
             ossmix -> changeDevState(devNum, 1);
             ImgButton[id] -> setPalette(QColor(238, 7, 7, 150));
             ImgButton[currentRecId] -> setPalette(QColor(127, 127, 127, 150));
@@ -986,16 +883,9 @@ disconnect            (sliderL [id], SIGNAL (valueChanged (int)), sliderR [id], 
         }
 
         void Mixer::saveConfig() {
-          ifstream infile(currentConfigFile.c_str(), ios_base::binary);
-          ofstream outfile(configFile.c_str(), ios_base::binary);
-          outfile << infile.rdbuf();
         }
 
-        void Mixer::rescanCtrlDev() {
-          initScan(true, this -> coutOfCtrlEl);
-        }
-
-        QWidget * Mixer::retW(void) {
+        QWidget * Mixer::retW() {
           return this -> mixerTabWidget;
         }
       }

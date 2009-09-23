@@ -34,7 +34,6 @@
 
 using namespace std;
 
-//class SilentMedia::Media::Audio::SoundSystem::OSS::Mixer::Mixer;
 class Peak;
 
 namespace RoteSonne {
@@ -53,7 +52,7 @@ namespace RoteSonne {
               void prepareStyle();
               void createActions();
               void createMenus();
-              void initScan(bool rescan, int countElem);
+              void initScan();
 
               // stylize
               QString CSS_RED_SLIDER;
@@ -66,6 +65,9 @@ namespace RoteSonne {
               libconfig::Config cfg;
               SilentMedia::Media::Audio::SoundSystem::OSS::Mixer::Mixer
                   * ossmix;
+              SilentMedia::Media::Audio::SoundSystem::OSS::Mixer::ctrlInfo
+                  ctrlInfoObj;
+
               Peak *peak;
 
               QVBoxLayout * mainCtrlLayout;
@@ -74,31 +76,9 @@ namespace RoteSonne {
               map<int, string> listOfCtrl;
               string ListOfDevice;
 
-              int numRecDev;
-              bool recModeAvail;
-              bool recModeStatus;
-              bool stereo;
-              bool on;
-              int L;
-              int R;
-              int M;
-              int minCtrlValue;
-              int maxCtrlValue;
-              string ctrlLabel;
-              int ctrlFlag;
-
               int coutOfCtrlEl;
-
-              string currentEnumName;
-              int currentEnumNum;
-
               int currentRecId;
 
-              fstream * ptmpConfigFile;
-              fstream * pConfigFile;
-
-              string currentConfigFile;
-              string configFile;
               int updateCounter;
               QMap<int, qint64> iconCacheSum;
               QMap<int, bool> ctrlStatus;
@@ -121,8 +101,8 @@ namespace RoteSonne {
               QSignalMapper *setCheckedControlSignalMapper;
               QSignalMapper *setEnumControlSignalMapper;
 
-              map<int, int> IdtoDevNum;
-              map<int, int> vIdtoCtrlRecNum;
+              map<int, int> idToCtrlNum;
+              map<int, int> idToCtrlRecNum;
               map<int, int> mctrlMode;
               map<int, int> ctrlMinVal;
               map<int, int> ctrlMaxVal;
@@ -153,9 +133,6 @@ namespace RoteSonne {
               QMap<int, QLCDNumber *> lcdR;
               QMap<int, QLCDNumber *> lcdM;
               QMap<int, QLabel *> mixDevLabel;
-
-              map<int, string> enumListVariant;
-              int ctrlTypeName;
 
               QLabel *l3;
 
@@ -209,7 +186,6 @@ namespace RoteSonne {
               private slots:
               void setIconStatus ( int i, bool status );
               void initSliderLabel(int i, bool ctrlMode, int ctrlTypeName);
-              void rescanCtrlDev();
 
               void update();
 
