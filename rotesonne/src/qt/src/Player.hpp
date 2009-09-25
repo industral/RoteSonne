@@ -48,8 +48,7 @@ namespace RoteSonne {
        */
       ~Player();
 
-      void setAudioDriver(const string &driver);
-      void setAudioDriver();
+      void setAudioDriver(const string soundDriver, const string driver);
 
       PlayerStatus getPlayerStatus();
       void setPlayerStatus(PlayerStatus status);

@@ -72,7 +72,7 @@ namespace RoteSonne {
           this -> timer = new QTimer(this);
 
           this -> player = new Player();
-          this -> player -> setAudioDriver();
+          this -> player -> setAudioDriver("OSS", "/dev/dsp");
 
           // in start player is in STOP status
           this -> player -> setPlayerStatus(Player::Stop);

@@ -150,7 +150,6 @@ namespace RoteSonne {
             for (map<int, string>::iterator it = listOfCtrl.begin(); it
                 != listOfCtrl.end(); ++it) {
 
-              cout << it -> first << endl;
               this -> ctrlInfoObj = ossmix -> getCtrlInfo(it -> first);
 
               //TODO: try to remove this!
@@ -389,7 +388,6 @@ namespace RoteSonne {
 
                 if ((ctrlInfoObj.ctrlTypeName == MIXT_STEREOSLIDER16)
                     || (ctrlInfoObj.ctrlTypeName == MIXT_MONOSLIDER16)) {
-                  //       cout << "16 " << id << endl;
                   layoutCtrl[4] -> addLayout(tmpLayout2);
                 } else {
                   if (id > 7) {
@@ -410,19 +408,28 @@ namespace RoteSonne {
                 QHBoxLayout *secondLayout = new QHBoxLayout;
                 QHBoxLayout *thirdLayout = new QHBoxLayout;
 
-                //TODO:change to map!
                 if (ctrlInfoObj.ctrlTypeName == MIXT_ENUM) {
                   enumComboBox[id] = new QComboBox;
 
-                  for (int j = 0; j != ctrlInfoObj.enumListVariant.size(); ++j) {
-                    QString item = ctrlInfoObj.enumListVariant[j].c_str();
+                  int currentIndex = -1;
+                  int i = 0;
+
+                  for (map<int, string>::iterator it =
+                      ctrlInfoObj.enumListVariant.begin(); it
+                      != ctrlInfoObj.enumListVariant.end(); ++it) {
+                    QString item = it -> second.c_str();
+
+                    if (ctrlInfoObj.currentEnumNum == it -> first) {
+                      currentIndex = i;
+                    }
+
                     if (!item.isEmpty()) {
                       enumComboBox[id] -> addItem(item);
                     }
+                    ++i;
                   }
 
-                  enumComboBox[id] -> setCurrentIndex(
-                      ctrlInfoObj.currentEnumNum);
+                  enumComboBox[id] -> setCurrentIndex(currentIndex);
 
                   connect (enumComboBox [id] , SIGNAL (currentIndexChanged (int)), setEnumControlSignalMapper, SLOT (map ()));
                   setEnumControlSignalMapper -> setMapping(enumComboBox[id], id);
@@ -806,9 +813,9 @@ namespace RoteSonne {
             }
 
             if (target[id] -> isChecked()) {
-              ossmix -> onOffDev(devNum, 0, L, R, M);
+              ossmix -> toggleCtrl(devNum, 0, L, R, M);
             } else {
-              ossmix -> onOffDev(devNum, 1, L, R, M);
+              ossmix -> toggleCtrl(devNum, 1, L, R, M);
             }
           }
 
