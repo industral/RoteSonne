@@ -33,8 +33,8 @@ namespace RoteSonne {
   Player::~Player() {
   }
 
-  void Player::setAudioDriver(const string soundDriver, const string driver) {
-    init(soundDriver, driver);
+  bool Player::setAudioDriver(const string soundDriver, const string driver) {
+    return (init(soundDriver, driver));
   }
 
   // Player status

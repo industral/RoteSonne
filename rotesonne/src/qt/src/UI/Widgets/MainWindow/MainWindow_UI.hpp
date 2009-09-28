@@ -48,6 +48,9 @@
 // include Mixer
 #include <libsml/all.hpp>
 
+// include popup window
+#include <UI/Window.hpp>
+
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {

@@ -72,7 +72,18 @@ namespace RoteSonne {
           this -> timer = new QTimer(this);
 
           this -> player = new Player();
-          this -> player -> setAudioDriver("OSS", "/dev/dsp");
+
+          const QString soundDriver = "ALSA";
+          const QString soundDevice = "default";
+
+          if (this -> player -> setAudioDriver(soundDriver.toStdString(),
+              soundDevice.toStdString()) == false) {
+            const QString message = QString(
+                "Failed to initialized Audio System with %1 driver").arg(
+                soundDriver);
+            Window::getPopup("Failed to initialize audio system", message);
+            exit(1);
+          }
 
           // in start player is in STOP status
           this -> player -> setPlayerStatus(Player::Stop);

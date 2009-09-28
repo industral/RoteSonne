@@ -23,44 +23,21 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#ifndef _ROTESONNE_PLAYER_HPP_
-#define _ROTESONNE_PLAYER_HPP_
-
-#include <libsml/all.hpp>
-
-using namespace SilentMedia::Media;
+#include "Window.hpp"
 
 namespace RoteSonne {
-  class Player: public Audio::Audio {
-    public:
+  namespace UI {
+    Window::Window() {
+    }
 
-      enum PlayerStatus {
-        Stop, Play, Pause
-      };
+    Window::~Window() {
+    }
 
-      /**
-       * Default constructor.
-       */
-      Player();
+    //TODO: add type critical status, add butons
+    int Window::getPopup(const QString title, const QString text) {
+      int ret = QMessageBox::critical(NULL, title, text, QMessageBox::Ok);
+      return ret;
+    }
 
-      /**
-       * Default destructor.
-       */
-      ~Player();
-
-      bool setAudioDriver(const string soundDriver, const string driver);
-
-      PlayerStatus getPlayerStatus();
-      void setPlayerStatus(PlayerStatus status);
-
-      // Info
-      string getFileSizeString(const string &fileId);
-      string getSampleRateInfoString(const string &fileId);
-      string getBitRateString(const string &fileId);
-      string getTotalTime(const string &fileId);
-    private:
-      PlayerStatus playerStatus;
-  };
+  }
 }
-
-#endif

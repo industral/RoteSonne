@@ -18,10 +18,12 @@ HEADERS     = src/UI/Widgets/MainWindow/MainWindow_UI.hpp \
               #src/UI/Widgets/Mixer/OSS/Peak.hpp \
               src/Collection.hpp \
               src/StartUp.hpp \
+              src/UI/Window.hpp \
               src/Configuration.hpp \
               src/include.hpp
 
 SOURCES     = src/UI/LoadUI.cpp \
+              src/UI/Window.cpp \
               src/Player.cpp \
               src/UI/Widgets/MainWindow/MainWindow_UI.cpp \
               src/UI/Widgets/MainWindow/Main/Widgets/TrackInfo_UI.cpp \
