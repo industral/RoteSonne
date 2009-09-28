@@ -127,8 +127,9 @@ namespace RoteSonne {
         // --------------------------------------------------------------------
 
         void MainWindow_UI::findChilds() {
+#ifdef OSS
           QWidget * ssss
-              = this -> widget -> findChild <QWidget *> ("Mixer");
+          = this -> widget -> findChild <QWidget *> ("Mixer");
 
           RoteSonne::UI::Widgets::Mixer::OSS::Mixer * mixer = new RoteSonne::UI::Widgets::Mixer::OSS::Mixer();
           QWidget * mixerWidget = mixer -> retW();
@@ -136,6 +137,7 @@ namespace RoteSonne {
           layout -> addWidget(mixerWidget);
 
           ssss ->setLayout(layout);
+#endif
 
           // play list
           this -> playListComponent
@@ -161,7 +163,7 @@ namespace RoteSonne {
         string MainWindow_UI::getRandomID(const string &fileName) {
           boost::mt19937 rng;
           rng.seed(static_cast <unsigned> (std::time(0)));
-          boost::uniform_int <> distribution(1, LONG_MAX);
+          boost::uniform_int <> distribution(1, INT_MAX);
           boost::variate_generator <boost::mt19937&, boost::uniform_int <> >
               die(rng, distribution);
 
@@ -212,175 +214,175 @@ namespace RoteSonne {
           this -> artistList -> setPlayList();
           this -> albumList -> setPlayList();
 
-          connect(this -> playListComponent,
-              SIGNAL (doubleClicked (const QModelIndex & )), this,
-              SLOT (play(const QModelIndex & )));
-          connect(this -> playListComponent,
-              SIGNAL (pressed(const QModelIndex &)), this,
-              SLOT (initLocation(const QModelIndex &)));
-          connect(this -> playListComponent,
-              SIGNAL (pressed(const QModelIndex &)), this,
-              SLOT (showInfo(const QModelIndex &)));
-          connect(this -> playListComponent,
-              SIGNAL (pressed(const QModelIndex &)), this,
-              SLOT (activateEmelents(const QModelIndex &)));
+connect        (this -> playListComponent,
+            SIGNAL (doubleClicked (const QModelIndex & )), this,
+            SLOT (play(const QModelIndex & )));
+        connect(this -> playListComponent,
+            SIGNAL (pressed(const QModelIndex &)), this,
+            SLOT (initLocation(const QModelIndex &)));
+        connect(this -> playListComponent,
+            SIGNAL (pressed(const QModelIndex &)), this,
+            SLOT (showInfo(const QModelIndex &)));
+        connect(this -> playListComponent,
+            SIGNAL (pressed(const QModelIndex &)), this,
+            SLOT (activateEmelents(const QModelIndex &)));
+      }
+
+      void MainWindow_UI::dropPlayList() {
+        this -> trackList -> dropPlayList();
+      }
+
+      // --------------------------------------------------------------------
+      // Slots
+      // --------------------------------------------------------------------
+
+      void MainWindow_UI::aboutQt() {
+        QApplication::aboutQt();
+      }
+
+      void MainWindow_UI::about() {
+        QWidget *widget = LoadUI::loadUI(":/forms/ui/aboutRoteSonne.ui");
+        widget -> show();
+      }
+
+      void MainWindow_UI::collectionPreferences() {
+        RoteSonne::UI::Widgets::Collection::Collection_UI * collection =
+        new RoteSonne::UI::Widgets::Collection::Collection_UI(this -> playListComponent);
+        collection -> show();
+      }
+
+      void MainWindow_UI::play(const QModelIndex &index) {
+        // change play/pause icon
+        if (((this -> player -> getPlayerStatus()) == Player::Stop)
+            || ((this -> player -> getPlayerStatus()) == Player::Pause)) {
+          // change icon
+          this -> playPauseButton -> setIcon(QIcon(
+                  ":/images/media-playback-pause.png"));
         }
 
-        void MainWindow_UI::dropPlayList() {
-          this -> trackList -> dropPlayList();
-        }
+        if (this -> player -> getPlayerStatus() == Player::Pause) {
+          this -> player -> play(this -> playingFileId, true);
+          // change Play status
+          this -> player -> setPlayerStatus(Player::Play);
+        } else {
 
-        // --------------------------------------------------------------------
-        // Slots
-        // --------------------------------------------------------------------
-
-        void MainWindow_UI::aboutQt() {
-          QApplication::aboutQt();
-        }
-
-        void MainWindow_UI::about() {
-          QWidget *widget = LoadUI::loadUI(":/forms/ui/aboutRoteSonne.ui");
-          widget -> show();
-        }
-
-        void MainWindow_UI::collectionPreferences() {
-          RoteSonne::UI::Widgets::Collection::Collection_UI * collection =
-              new RoteSonne::UI::Widgets::Collection::Collection_UI(this -> playListComponent);
-          collection -> show();
-        }
-
-        void MainWindow_UI::play(const QModelIndex &index) {
-          // change play/pause icon
-          if (((this -> player -> getPlayerStatus()) == Player::Stop)
-              || ((this -> player -> getPlayerStatus()) == Player::Pause)) {
-            // change icon
-            this -> playPauseButton -> setIcon(QIcon(
-                ":/images/media-playback-pause.png"));
+          // check if previous song is playing
+          if (this -> player -> getPlayerStatus() == Player::Play) {
+            this -> player -> stop(this -> playingFileId);
           }
 
-          if (this -> player -> getPlayerStatus() == Player::Pause) {
-            this -> player -> play(this -> playingFileId, true);
-            // change Play status
-            this -> player -> setPlayerStatus(Player::Play);
-          } else {
-
-            // check if previous song is playing
-            if (this -> player -> getPlayerStatus() == Player::Play) {
-              this -> player -> stop(this -> playingFileId);
-            }
-
-            // get file name
-            string fileName =
-                index.sibling(index.row(), 1).data().toString().toStdString();
-
-            // generate new fileId
-            this -> fileId = this -> getRandomID(fileName);
-
-            if (this -> player -> open(fileName, this -> fileId)) {
-              // change Play status
-              this -> player -> setPlayerStatus(Player::Play);
-
-              // set playing fileId
-              this -> playingFileId = this -> fileId;
-
-              // begin play
-              this -> player -> play(this -> playingFileId);
-              this -> beginUpdateSlider();
-            }
-          }
-        }
-
-        void MainWindow_UI::pause(const QModelIndex &index) {
-          //      string fileName = index.sibling (index.row(), 1).data().toString().toStdString();
-          this -> player -> pause(this -> playingFileId);
-          // change play status
-          this -> player -> setPlayerStatus(Player::Pause);
-        }
-
-        void MainWindow_UI::playPauseToggle() {
-          // toggle status play/pause button
-          /*
-           * In first time when we start player, play/pause button is disabled.
-           * We should select a song from list to activate play/pause button.
-           * When we click on play/pause button, it toggle play status and change
-           * icon to pause. After clicking one more time, it again toggle play
-           * status and change icon to play.
-           */
-          if (((this -> player -> getPlayerStatus()) == Player::Stop)
-              || ((this -> player -> getPlayerStatus()) == Player::Pause)) {
-            // change icon
-            this -> playPauseButton -> setIcon(QIcon(
-                ":/images/media-playback-pause.png"));
-            // play
-            this -> play(this -> index);
-          } else if ((this -> player -> getPlayerStatus()) == Player::Play) {
-            // change icon
-            this -> playPauseButton -> setIcon(QIcon(
-                ":/images/media-playback-start.png"));
-            // pause
-            this -> pause(this -> index);
-          }
-        }
-
-        void MainWindow_UI::showInfo(const QModelIndex & index) {
+          // get file name
           string fileName =
-              index.sibling(index.row(), 1).data().toString().toStdString();
+          index.sibling(index.row(), 1).data().toString().toStdString();
+
+          // generate new fileId
           this -> fileId = this -> getRandomID(fileName);
 
-          // before doing something we should check if it open success
           if (this -> player -> open(fileName, this -> fileId)) {
-            // show information
-            this -> trackinfo -> showInfo(this -> fileId, this -> player);
+            // change Play status
+            this -> player -> setPlayerStatus(Player::Play);
 
-            this -> player -> close(this -> fileId);
+            // set playing fileId
+            this -> playingFileId = this -> fileId;
 
-            // show cover
-            this -> cover -> setCover(fileName);
+            // begin play
+            this -> player -> play(this -> playingFileId);
+            this -> beginUpdateSlider();
           }
         }
-
-        void MainWindow_UI::initLocation(const QModelIndex & index) {
-          this -> index = index;
-        }
-
-        void MainWindow_UI::activateEmelents(const QModelIndex & index) {
-          this -> playPauseButton -> setEnabled(true);
-          this -> playerSlider -> setEnabled(true);
-          //      disconnect ( this -> playListComponent, SIGNAL (pressed(const QModelIndex &)), this, SLOT (activateEmelents(const QModelIndex &)));
-        }
-
-        void MainWindow_UI::updateSliderPosition() {
-          // write slider position
-          this -> sliderPosition = this -> player -> getSeek(
-              this -> playingFileId);
-
-          // set slider position
-          this -> setSliderPosition();
-        }
-
-        void MainWindow_UI::writeSliderPosition(int position) {
-          this -> sliderPosition = position;
-          cout << "Set position to: " << this -> sliderPosition << endl;
-        }
-
-        void MainWindow_UI::beginUpdateSlider() {
-          this -> timer -> start(100);
-        }
-
-        void MainWindow_UI::stopUpdateSlider() {
-          this -> timer -> stop();
-        }
-
-        void MainWindow_UI::setSliderPosition() {
-          this -> playerSlider -> setSliderPosition(this -> sliderPosition);
-        }
-
-        void MainWindow_UI::setSeek() {
-          this -> player -> setSeek(this -> playingFileId,
-              this -> sliderPosition);
-        }
-
       }
+
+      void MainWindow_UI::pause(const QModelIndex &index) {
+        //      string fileName = index.sibling (index.row(), 1).data().toString().toStdString();
+        this -> player -> pause(this -> playingFileId);
+        // change play status
+        this -> player -> setPlayerStatus(Player::Pause);
+      }
+
+      void MainWindow_UI::playPauseToggle() {
+        // toggle status play/pause button
+        /*
+         * In first time when we start player, play/pause button is disabled.
+         * We should select a song from list to activate play/pause button.
+         * When we click on play/pause button, it toggle play status and change
+         * icon to pause. After clicking one more time, it again toggle play
+         * status and change icon to play.
+         */
+        if (((this -> player -> getPlayerStatus()) == Player::Stop)
+            || ((this -> player -> getPlayerStatus()) == Player::Pause)) {
+          // change icon
+          this -> playPauseButton -> setIcon(QIcon(
+                  ":/images/media-playback-pause.png"));
+          // play
+          this -> play(this -> index);
+        } else if ((this -> player -> getPlayerStatus()) == Player::Play) {
+          // change icon
+          this -> playPauseButton -> setIcon(QIcon(
+                  ":/images/media-playback-start.png"));
+          // pause
+          this -> pause(this -> index);
+        }
+      }
+
+      void MainWindow_UI::showInfo(const QModelIndex & index) {
+        string fileName =
+        index.sibling(index.row(), 1).data().toString().toStdString();
+        this -> fileId = this -> getRandomID(fileName);
+
+        // before doing something we should check if it open success
+        if (this -> player -> open(fileName, this -> fileId)) {
+          // show information
+          this -> trackinfo -> showInfo(this -> fileId, this -> player);
+
+          this -> player -> close(this -> fileId);
+
+          // show cover
+          this -> cover -> setCover(fileName);
+        }
+      }
+
+      void MainWindow_UI::initLocation(const QModelIndex & index) {
+        this -> index = index;
+      }
+
+      void MainWindow_UI::activateEmelents(const QModelIndex & index) {
+        this -> playPauseButton -> setEnabled(true);
+        this -> playerSlider -> setEnabled(true);
+        //      disconnect ( this -> playListComponent, SIGNAL (pressed(const QModelIndex &)), this, SLOT (activateEmelents(const QModelIndex &)));
+      }
+
+      void MainWindow_UI::updateSliderPosition() {
+        // write slider position
+        this -> sliderPosition = this -> player -> getSeek(
+            this -> playingFileId);
+
+        // set slider position
+        this -> setSliderPosition();
+      }
+
+      void MainWindow_UI::writeSliderPosition(int position) {
+        this -> sliderPosition = position;
+        cout << "Set position to: " << this -> sliderPosition << endl;
+      }
+
+      void MainWindow_UI::beginUpdateSlider() {
+        this -> timer -> start(100);
+      }
+
+      void MainWindow_UI::stopUpdateSlider() {
+        this -> timer -> stop();
+      }
+
+      void MainWindow_UI::setSliderPosition() {
+        this -> playerSlider -> setSliderPosition(this -> sliderPosition);
+      }
+
+      void MainWindow_UI::setSeek() {
+        this -> player -> setSeek(this -> playingFileId,
+            this -> sliderPosition);
+      }
+
     }
   }
+}
 }

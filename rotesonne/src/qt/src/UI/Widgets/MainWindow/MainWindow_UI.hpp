@@ -46,7 +46,7 @@
 #include <UI/Widgets/Collection/Collection_UI.hpp>
 
 // include Mixer
-#include <UI/Widgets/Mixer/OSS/Mixer.hpp>
+#include <libsml/all.hpp>
 
 namespace RoteSonne {
   namespace UI {
