@@ -74,7 +74,7 @@ namespace RoteSonne {
           this -> player = new Player();
 
           const QString soundDriver = "ALSA";
-          const QString soundDevice = "default";
+          const QString soundDevice = "";
 
           if (this -> player -> setAudioDriver(soundDriver.toStdString(),
               soundDevice.toStdString()) == false) {
