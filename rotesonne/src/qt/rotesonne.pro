@@ -1,7 +1,4 @@
-QMAKE_CXXFLAGS += -ggdb -Wall -W
-QMAKE_CFLAGS += -ggdb -Wall -W
-
-CONFIG      += uitools
+CONFIG      += uitools qt warn_on DEBUG_MODE #RELEASE_MODE
 QT          += sql
 RESOURCES   = rotesonne.qrc
 
@@ -40,6 +37,28 @@ SOURCES     = src/UI/LoadUI.cpp \
               src/StartUp.cpp \
               src/Collection.cpp \
               src/Configuration.cpp
-              
-LIBS += -lsml -lvorbisfile -lFLAC++ -lwavpack -lao -lboost_thread-mt -lboost_filesystem-mt -lasound -lxspf -lconfig++
+
+Libraries = sml vorbisfile FLAC++ wavpack ao asound xspf boost_thread-mt \
+  boost_filesystem-mt config++
+
+StaticLibraries = sml vorbisfile FLAC++ FLAC vorbis ogg wavpack ao asound xspf \
+  boost_thread-mt boost_system-mt boost_filesystem-mt config++ uriparser \
+  
+
+CONFIG(DEBUG_MODE) {
+  QMAKE_CXXFLAGS += -ggdb -Wall -W
+  QMAKE_CFLAGS += -ggdb -Wall -W
+
+  for(lib, Libraries) {
+    LIBS += -l$$lib
+  }
+} else {
+  QMAKE_CXXFLAGS += -O3
+  QMAKE_CFLAGS += -O3
+  
+  for(lib, StaticLibraries) {
+    LIBS += "/usr/lib/lib$$lib".a
+  }
+}
+
 INCLUDEPATH = src
