@@ -5,6 +5,8 @@
     <file>ui/Collection.ui</file>
   </qresource>
   <qresource>
+    <file>../images/rotesonner_logo.png</file>
+    <file>../images/rotesonner_logo_small.png</file>
     <file>../images/application-exit.png</file>
     <file>../images/edit-delete.png</file>
     <file>../images/go-next.png</file>
@@ -22,6 +24,7 @@
     <file>../images/system-run.png</file>
     <file>../images/media-podcast.png</file>
     <file>../images/nocover.png</file>
+    <file>../images/qt.png</file>
     
     <file>../images/mixer/designer.png</file>
     <file>../images/mixer/audio-input-microphone.png</file>
@@ -45,6 +48,5 @@
     <file>../images/mixer/rec.png</file>
     <file>../images/mixer/audio-card.png</file>
     <file>../images/mixer/oss.png</file>
-    <file>../images/mixer/qt.png</file>
   </qresource>
 </RCC>
