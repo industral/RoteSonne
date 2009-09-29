@@ -171,19 +171,6 @@ namespace RoteSonne {
               "nextButton");
         }
 
-        string MainWindow_UI::getRandomID(const string &fileName) {
-          boost::mt19937 rng;
-          rng.seed(static_cast <unsigned> (std::time(0)));
-          boost::uniform_int <> distribution(1, INT_MAX);
-          boost::variate_generator <boost::mt19937&, boost::uniform_int <> >
-              die(rng, distribution);
-
-          stringstream out;
-          out << fileName << die();
-
-          return out.str();
-        }
-
         void MainWindow_UI::addHandlers() {
           // add "About Qt" handler
           connect(this -> widget -> findChild <QAction *> ("actionAbout_Qt"),
@@ -287,7 +274,7 @@ connect        (this -> playListComponent,
           index.sibling(index.row(), 1).data().toString().toStdString();
 
           // generate new fileId
-          this -> fileId = this -> getRandomID(fileName);
+          this -> fileId = SilentMedia::Utils::Random::getRandomId(fileName);
 
           if (this -> player -> open(fileName, this -> fileId)) {
             // change Play status
@@ -338,7 +325,7 @@ connect        (this -> playListComponent,
       void MainWindow_UI::showInfo(const QModelIndex & index) {
         string fileName =
         index.sibling(index.row(), 1).data().toString().toStdString();
-        this -> fileId = this -> getRandomID(fileName);
+        this -> fileId = SilentMedia::Utils::Random::getRandomId(fileName);
 
         // before doing something we should check if it open success
         if (this -> player -> open(fileName, this -> fileId)) {

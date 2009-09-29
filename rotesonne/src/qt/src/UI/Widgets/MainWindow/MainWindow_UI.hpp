@@ -150,8 +150,6 @@ namespace RoteSonne {
             void addHandlers();
             void setPlayList();
             void dropPlayList();
-
-            string getRandomID(const string& fileName);
         };
       }
     }

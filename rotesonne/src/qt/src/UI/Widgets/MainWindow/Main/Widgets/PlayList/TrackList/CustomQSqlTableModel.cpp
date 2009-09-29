@@ -43,17 +43,17 @@ namespace RoteSonne {
                   int role) const {
                 QVariant value = QSqlQueryModel::data(index, role);
 
-                if (value.isValid() && role == Qt::DisplayRole) {
-                  if (index.column() == 2) {
-                    return value.toString().prepend("#");
-                  } else if (index.column() == 2) {
-                    return value.toString().toUpper();
-                  }
-                }
-
-                if (role == Qt::TextColorRole && index.column() == 3) {
-                  return qVariantFromValue(QColor(Qt::blue));
-                }
+//                if (value.isValid() && role == Qt::DisplayRole) {
+//                  if (index.column() == 2) {
+//                    return value.toString().prepend("#");
+//                  } else if (index.column() == 2) {
+//                    return value.toString().toUpper();
+//                  }
+//                }
+//
+//                if (role == Qt::TextColorRole && index.column() == 3) {
+//                  return qVariantFromValue(QColor(Qt::blue));
+//                }
 
                 return value;
               }
