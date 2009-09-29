@@ -39,7 +39,7 @@ SOURCES     = src/UI/LoadUI.cpp \
               src/Configuration.cpp
 
 Libraries = sml vorbisfile FLAC++ wavpack ao asound xspf boost_thread-mt \
-  boost_filesystem-mt config++
+  boost_filesystem-mt config++ uriparser
 
 StaticLibraries = sml vorbisfile FLAC++ FLAC vorbis ogg wavpack ao asound xspf \
   boost_thread-mt boost_system-mt boost_filesystem-mt config++ uriparser \
