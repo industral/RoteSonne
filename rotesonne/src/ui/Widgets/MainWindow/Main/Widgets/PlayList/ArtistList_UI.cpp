@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -63,8 +63,7 @@ namespace RoteSonne {
 
             void ArtistList_UI::setPlayList() {
               // select all available artist
-              this -> query = this -> db.exec(
-                  "SELECT DISTINCT artist FROM collection");
+              this -> query = this -> db.exec("SELECT DISTINCT artist FROM collection");
 
               // add first item as "All Artists"
               this -> artistListComponent -> addItem("All Artists");
@@ -101,57 +100,58 @@ namespace RoteSonne {
 
             void ArtistList_UI::findChilds() {
               // track list
-              this -> artistListComponent = this -> widget -> findChild <
-                  QListWidget * > ("artistList");
+              this -> artistListComponent = this -> widget -> findChild<QListWidget *> ("artistList");
             }
 
             void ArtistList_UI::addHandlers() {
-connect            (this -> artistListComponent, SIGNAL(itemClicked(
-                        QListWidgetItem * )), this, SLOT(setFilter(
-                        QListWidgetItem * )));
-          }
-
-          // --------------------------------------------------------------------
-          // Private slots
-          // --------------------------------------------------------------------
-
-          bool ArtistList_UI::setFilter(QListWidgetItem * item) {
-            QString artist = item -> text();
-            QString filter = ""; // default filter value
-
-            if (!artist.compare("Unknown Artist")) {
-              artist = "";
+              connect(this -> artistListComponent, SIGNAL(currentItemChanged(
+                      QListWidgetItem *, QListWidgetItem * )), this, SLOT(setFilter(
+                      QListWidgetItem *, QListWidgetItem * )));
             }
 
-            // update current artist variable
-            this -> setCurrentArtist(artist);
+            // --------------------------------------------------------------------
+            // Private slots
+            // --------------------------------------------------------------------
 
-            // if it not All Artists
-            if (artist.compare("All Artists")) {
-              filter = "artist=\"" + artist + "\" ORDER BY album, tracknum";
+            bool ArtistList_UI::setFilter(QListWidgetItem * current, QListWidgetItem * previous) {
+              if (current != NULL && previous != NULL) {
+                QString artist = current -> text();
+                QString filter = ""; // default filter value
+
+                if (!artist.compare("Unknown Artist")) {
+                  artist = "";
+                }
+
+                // update current artist variable
+                this -> setCurrentArtist(artist);
+
+                // if it not All Artists
+                if (artist.compare("All Artists")) {
+                  filter = "artist=\"" + artist + "\" ORDER BY album, tracknum";
+                }
+
+                // drop track list
+                this -> trackList -> dropPlayList();
+
+                // drop album list
+                this -> albumList -> dropPlayList();
+
+                // set filter
+                this -> trackList -> setFilter(filter);
+
+                // set track list
+                this -> trackList -> setPlayList();
+
+                // set album list
+                this -> albumList -> setPlayList();
+
+                return true;
+              }
             }
 
-            // drop track list
-            this -> trackList -> dropPlayList();
-
-            // drop album list
-            this -> albumList -> dropPlayList();
-
-            // set filter
-            this -> trackList -> setFilter(filter);
-
-            // set track list
-            this -> trackList -> setPlayList();
-
-            // set album list
-            this -> albumList -> setPlayList();
-
-            return true;
           }
-
         }
       }
     }
   }
-}
 }

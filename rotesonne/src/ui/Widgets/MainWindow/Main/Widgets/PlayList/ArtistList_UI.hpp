@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -39,10 +39,9 @@ namespace RoteSonne {
         namespace Widgets {
           namespace PlayList {
             class AlbumList_UI;
-            class ArtistList_UI: public QWidget,
-                virtual public AbstractPlayList {
-                Q_OBJECT
-                public:
+            class ArtistList_UI: public QWidget, virtual public AbstractPlayList {
+              Q_OBJECT
+              public:
                 static ArtistList_UI * Instance();
 
                 /**
@@ -79,14 +78,14 @@ namespace RoteSonne {
                 void findChilds();
                 void addHandlers();
 
-private            slots:
-            bool setFilter(QListWidgetItem * item);
-          };
+              private slots:
+                bool setFilter(QListWidgetItem * current, QListWidgetItem * previous);
+            };
+          }
         }
       }
     }
   }
-}
 }
 
 #endif

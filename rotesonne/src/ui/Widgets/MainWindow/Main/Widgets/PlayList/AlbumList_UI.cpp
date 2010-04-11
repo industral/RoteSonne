@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -65,8 +65,7 @@ namespace RoteSonne {
             void AlbumList_UI::setPlayList() {
               QString currentArtist = this -> artistList -> getCurrentArtist();
               QString query = "SELECT album FROM collection";
-              QString whereClause = QString(" WHERE artist=\"%1\"").arg(
-                  currentArtist);
+              QString whereClause = QString(" WHERE artist=\"%1\"").arg(currentArtist);
 
               if (!currentArtist.isEmpty()) {
                 query += whereClause;
@@ -114,75 +113,79 @@ namespace RoteSonne {
 
             void AlbumList_UI::findChilds() {
               // track list
-              this -> albumListComponent = this -> widget -> findChild <
-                  QListWidget *> ("albumList");
+              this -> albumListComponent = this -> widget -> findChild<QListWidget *> ("albumList");
             }
 
             void AlbumList_UI::addHandlers() {
-connect            (this -> albumListComponent, SIGNAL(itemClicked(
-                        QListWidgetItem * )), this, SLOT(setFilter(
-                        QListWidgetItem * )));
-          }
-
-          void AlbumList_UI::setCover(const QString &artist, const QString &album) {
-            //TODO: rewrite query
-            QString query;
-
-            if (!album.size()) {
-              query = QString("SELECT fileName FROM collection WHERE artist=\"%1\" LIMIT 0,1").arg(artist);
-            } else {
-              query = QString("SELECT fileName FROM collection WHERE artist=\"%1\" and album=\"%2\" LIMIT 0,1").arg(artist).arg(album);
+              connect(this -> albumListComponent, SIGNAL(currentItemChanged(
+                      QListWidgetItem *, QListWidgetItem * )), this, SLOT(setFilter(
+                      QListWidgetItem *, QListWidgetItem * )));
             }
 
-            // select all available artist
-            QSqlQuery q(this -> db);
+            void AlbumList_UI::setCover(const QString &artist, const QString &album) {
+              //TODO: rewrite query
+              QString query;
 
-            q.exec(query);
-            QString track;
+              if (!album.size()) {
+                query = QString("SELECT fileName FROM collection WHERE artist=\"%1\" LIMIT 0,1").arg(artist);
+              } else {
+                query = QString("SELECT fileName FROM collection WHERE artist=\"%1\" and album=\"%2\" LIMIT 0,1").arg(
+                    artist).arg(album);
+              }
 
-            while (q.next()) {
-              track = q.value(0).toString();
+              // select all available artist
+              QSqlQuery q(this -> db);
+
+              q.exec(query);
+              QString track;
+
+              while (q.next()) {
+                track = q.value(0).toString();
+              }
+
+              this -> cover -> setCover(track.toStdString().c_str());
             }
 
-            this -> cover -> setCover(track.toStdString().c_str());
-          }
+            // --------------------------------------------------------------------
+            // Private slots
+            // --------------------------------------------------------------------
 
-          // --------------------------------------------------------------------
-          // Private slots
-          // --------------------------------------------------------------------
+            bool AlbumList_UI::setFilter(QListWidgetItem * current, QListWidgetItem * previous) {
+              // if focus changes to another window, item will be null
+              if (current != NULL && previous != NULL) {
+                QString album = current -> text();
 
-          bool AlbumList_UI::setFilter(QListWidgetItem * item) {
-            QString album = item -> text();
-            QString artist = this -> artistList -> getCurrentArtist();
+                QString artist = this -> artistList -> getCurrentArtist();
 
-            QString albumFilter = ""; // default filter value
-            QString artistFilter = "";
+                QString albumFilter = ""; // default filter value
+                QString artistFilter = "";
 
-            if (!album.compare("Unknown Album")) {
-              album = "";
+                if (!album.compare("Unknown Album")) {
+                  album = "";
+                }
+
+                artistFilter = QString("artist=\"%1\"").arg(artist);
+                albumFilter = QString(" album=\"%1\" ORDER BY tracknum").arg(album);
+
+                // set cover
+                this -> setCover(artist, album);
+
+                // drop track list
+                this -> trackList -> dropPlayList();
+
+                // set filter
+                this -> trackList -> setFilter(artistFilter + " and " + albumFilter);
+
+                // set track list
+                this -> trackList -> setPlayList();
+
+                return true;
+              }
             }
 
-            artistFilter = QString("artist=\"%1\"").arg(artist);
-            albumFilter = QString(" album=\"%1\" ORDER BY tracknum").arg(album);
-
-            // set cover
-            this -> setCover(artist, album);
-
-            // drop track list
-            this -> trackList -> dropPlayList();
-
-            // set filter
-            this -> trackList -> setFilter(artistFilter + " and " + albumFilter);
-
-            // set track list
-            this -> trackList -> setPlayList();
-
-            return true;
           }
-
         }
       }
     }
   }
-}
 }
