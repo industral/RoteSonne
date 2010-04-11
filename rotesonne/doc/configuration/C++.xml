@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cdtprojectproperties>
+<section name="org.eclipse.cdt.internal.ui.wizards.settingswizards.IncludePaths">
+<language name="C++ Source File">
+<includepath>/usr/include/qt4</includepath>
+<includepath>/RoteSonne/rotesonne/src</includepath>
+<includepath>/usr/include/qt4/QtGui</includepath>
+<includepath>/usr/include/qt4/QtSql</includepath>
+<includepath>/usr/include/qt4/QtCore</includepath>
+<includepath>/usr/include/qt4/QtUiTools</includepath>
+
+</language>
+<language name="C Source File">
+
+</language>
+<language name="Object File">
+
+</language>
+<language name="Assembly Source File">
+
+</language>
+</section>
+</cdtprojectproperties>
