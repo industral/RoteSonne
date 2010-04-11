@@ -39,7 +39,13 @@ namespace RoteSonne {
       namespace MainWindow {
         namespace Widgets {
           namespace PlayList {
+
             class ArtistList_UI;
+
+            namespace TrackList {
+              class TrackList_UI;
+            }
+
             class AlbumList_UI: public QWidget, virtual public AbstractPlayList {
               Q_OBJECT
               public:
@@ -83,6 +89,7 @@ namespace RoteSonne {
 
               private slots:
                 bool setFilter(QListWidgetItem * current, QListWidgetItem * previous);
+                void play(QListWidgetItem * item);
             };
           }
         }

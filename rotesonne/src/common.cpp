@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
   // force use cleanlooks style, as GTK+ has wrong rendering
   app.setStyle(new QCleanlooksStyle());
 
-  MainWindow_UI * mainWindow = new MainWindow_UI();
+  MainWindow_UI * mainWindow = MainWindow_UI::Instance();
   mainWindow -> init();
   QWidget *widget = mainWindow -> getUI();
 

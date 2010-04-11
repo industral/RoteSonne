@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -41,6 +41,7 @@ namespace RoteSonne {
        * Check require files for app, create them if they doesn't exist.
        */
       bool init();
+
     private:
       /**
        * Check for passing path, create it if it not exist.

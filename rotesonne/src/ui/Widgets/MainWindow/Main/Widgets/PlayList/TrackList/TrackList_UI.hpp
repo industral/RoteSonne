@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -34,16 +34,23 @@
 // include Collection
 #include <Collection.hpp>
 
+// include MainWindow
+#include <UI/Widgets/MainWindow/MainWindow_UI.hpp>
+
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {
       namespace MainWindow {
+
+        class MainWindow_UI;
+
         namespace Widgets {
           namespace PlayList {
             namespace TrackList {
-              class TrackList_UI: public QWidget,
-                  virtual public AbstractPlayList {
+
+              class TrackList_UI: public QWidget, virtual public AbstractPlayList {
                 Q_OBJECT
+
                 public:
                   static TrackList_UI * Instance();
 
@@ -57,6 +64,8 @@ namespace RoteSonne {
                   void setPlayList();
                   void setFilter(const QString &filter);
                   void dropPlayList();
+                  QModelIndex & getIndex();
+
                 private:
                   static TrackList_UI * _playListUI;
 
@@ -66,6 +75,7 @@ namespace RoteSonne {
                   TrackList_UI();
 
                   QWidget * widget;
+                  RoteSonne::UI::Widgets::MainWindow::MainWindow_UI * mainWindow;
                   QSqlDatabase db;
                   CustomQSqlTableModel * model;
                   QTableView * trackListComponent;
@@ -73,20 +83,26 @@ namespace RoteSonne {
                   ::RoteSonne::Collection * collectionDb;
 
                   QString filter;
+                  QModelIndex index;
 
                   void findChilds();
                   bool openDbConnection();
                   void closeDbConnection();
                   void addHandlers();
-private              slots:
-              void setView(const QModelIndex & m);
-            };
+
+                private slots:
+                  void play(const QModelIndex &index);
+                  void setView(const QModelIndex & m);
+                  void initLocation(const QModelIndex &index);
+                  void showInfo(const QModelIndex &index);
+                  void activateEmelents(const QModelIndex &index);
+              };
+            }
           }
         }
       }
     }
   }
-}
 }
 
 #endif

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -71,13 +71,9 @@ namespace RoteSonne {
 
   string Player::getTotalTime(const string &fileId) {
     ostringstream out;
-    out
-        << (static_cast < int > (Audio::getTotalTime(fileId))
-            / 60); // min
+    out << (static_cast<int> (Audio::getTotalTime(fileId)) / 60); // min
     out << ":";
-    out
-        << (static_cast < int > (Audio::getTotalTime(fileId))
-            % 60); // sec
+    out << (static_cast<int> (Audio::getTotalTime(fileId)) % 60); // sec
 
     return out.str();
   }

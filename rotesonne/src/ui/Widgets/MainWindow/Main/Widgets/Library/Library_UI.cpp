@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -33,8 +33,7 @@ namespace RoteSonne {
           namespace Library {
 
             const QString XSPF = ".xspf";
-            const QString Library_UI::itemPlayListDefinition = QString(
-                "PLAYLIST");
+            const QString Library_UI::itemPlayListDefinition = QString("PLAYLIST");
             const int Library_UI::itemPlayListNumber = 500;
             const int Library_UI::itemPlayListFilePathNumber = 501;
 
@@ -46,8 +45,7 @@ namespace RoteSonne {
             }
 
             Library_UI::Library_UI(QWidget *widget) :
-              cfg(Configuration::Instance()), pl(
-                  new SilentMedia::Media::PlayList::PlayList) {
+              cfg(Configuration::Instance()), pl(new SilentMedia::Media::PlayList::PlayList) {
               Library_UI();
 
               this -> widget = widget;
@@ -65,42 +63,34 @@ namespace RoteSonne {
             // --------------------------------------------------------------------
 
             void Library_UI::findChilds() {
-              this -> treeWidget
-                  = this -> widget -> findChild <QTreeWidget *> ("treeWidget");
+              this -> treeWidget = this -> widget -> findChild<QTreeWidget *> ("treeWidget");
             }
 
             void Library_UI::defineRoots() {
-              this -> playListQTreeWidgetItem
-                  = this -> treeWidget -> topLevelItem(0) -> child(0) -> child(
-                      0);
+              this -> playListQTreeWidgetItem = this -> treeWidget -> topLevelItem(0) -> child(0) -> child(0);
             }
 
             void Library_UI::setExpand() {
               this -> defineRoots();
 
               // expand root
-              this -> treeWidget -> expandItem(
-                  this -> treeWidget -> topLevelItem(0));
+              this -> treeWidget -> expandItem(this -> treeWidget -> topLevelItem(0));
 
               // expand music
-              this -> treeWidget -> expandItem(
-                  this -> treeWidget -> topLevelItem(0) -> child(0));
+              this -> treeWidget -> expandItem(this -> treeWidget -> topLevelItem(0) -> child(0));
 
               // expand playlist
               this -> treeWidget -> expandItem(this -> playListQTreeWidgetItem);
             }
 
-            bool Library_UI::scanPlayListFiles(
-                const boost::filesystem::path &path) {
+            bool Library_UI::scanPlayListFiles(const boost::filesystem::path &path) {
               if (!exists(path)) {
                 return false;
               }
 
               boost::filesystem::directory_iterator end_itr;
-              for (boost::filesystem::directory_iterator itr(path); itr
-                  != end_itr; ++itr) {
-                string currentPathExt =
-                    boost::filesystem::path(itr->filename()).extension();
+              for (boost::filesystem::directory_iterator itr(path); itr != end_itr; ++itr) {
+                string currentPathExt = boost::filesystem::path(itr->filename()).extension();
 
                 if (is_directory(itr->status())) {
                   scanPlayListFiles(itr->path());
@@ -113,49 +103,41 @@ namespace RoteSonne {
             }
 
             void Library_UI::setPlayList() {
-              const QString playListFolderPath =
-                  this -> cfg -> getPlayListFolderPath();
+              const QString playListFolderPath = this -> cfg -> getPlayListFolderPath();
 
-              this -> scanPlayListFiles(
-                  playListFolderPath.toStdString().c_str());
+              this -> scanPlayListFiles(playListFolderPath.toStdString().c_str());
 
               this -> treeWidget -> setColumnCount(1);
-              QList <QTreeWidgetItem *> items;
+              QList<QTreeWidgetItem *> items;
 
               for (int i = 0; i < this -> playListList.size(); ++i) {
                 const QString playListPath = this -> playListList[i];
-                QString playListName = playListPath.split(
-                    playListFolderPath)[1];
+                QString playListName = playListPath.split(playListFolderPath)[1];
 
                 playListName = playListName.remove(XSPF);
                 playListName = playListName.remove(0, 1); // first slash
 
-                QTreeWidgetItem * i = new QTreeWidgetItem(QStringList(
-                    playListName));
+                QTreeWidgetItem * i = new QTreeWidgetItem(QStringList(playListName));
 
-                i -> setData(itemPlayListNumber, Qt::DisplayRole, QVariant(
-                    itemPlayListDefinition));
-                i -> setData(itemPlayListFilePathNumber, Qt::DisplayRole,
-                    QVariant(playListPath));
+                i -> setData(itemPlayListNumber, Qt::DisplayRole, QVariant(itemPlayListDefinition));
+                i -> setData(itemPlayListFilePathNumber, Qt::DisplayRole, QVariant(playListPath));
 
                 items.append(i);
               }
 
               this -> playListQTreeWidgetItem -> addChildren(items);
 
-              connect(this -> treeWidget,
-                  SIGNAL(itemClicked(QTreeWidgetItem *, int)),
+              connect(this -> treeWidget, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
                   SLOT(eventHandler(QTreeWidgetItem *, int)));
             }
 
             void Library_UI::handlePlayList(QTreeWidgetItem * item, int column) {
-              QString playListFilePath = item -> data(
-                  itemPlayListFilePathNumber, Qt::DisplayRole).toString();
+              QString playListFilePath = item -> data(itemPlayListFilePathNumber, Qt::DisplayRole).toString();
 
               this -> pl -> openPlayList(playListFilePath.toStdString().c_str());
-              list <string> l = this -> pl -> getPlayList();
+              list<string> l = this -> pl -> getPlayList();
 
-              for (list <string>::iterator it = l.begin(); it != l.end(); it++) {
+              for (list<string>::iterator it = l.begin(); it != l.end(); it++) {
                 cout << ::SilentMedia::Utils::String::fromXML(*it) << endl;
               }
 
@@ -167,8 +149,7 @@ namespace RoteSonne {
             // --------------------------------------------------------------------
 
             void Library_UI::eventHandler(QTreeWidgetItem * item, int column) {
-              QString playList = item -> data(itemPlayListNumber,
-                  Qt::DisplayRole).toString();
+              QString playList = item -> data(itemPlayListNumber, Qt::DisplayRole).toString();
 
               if (!playList.compare(itemPlayListDefinition)) {
                 this -> handlePlayList(item, column);

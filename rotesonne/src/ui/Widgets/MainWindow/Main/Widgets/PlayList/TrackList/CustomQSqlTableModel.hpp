@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -42,8 +42,7 @@ namespace RoteSonne {
                   ~CustomQSqlTableModel();
 
                   QVariant data(const QModelIndex &index, int role) const;
-                  virtual bool setData(const QModelIndex & index,
-                      const QVariant & value, int role = Qt::EditRole);
+                  virtual bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
                 private:
               };
             }

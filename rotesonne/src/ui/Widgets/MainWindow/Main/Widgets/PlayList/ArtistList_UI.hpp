@@ -38,7 +38,13 @@ namespace RoteSonne {
       namespace MainWindow {
         namespace Widgets {
           namespace PlayList {
+
             class AlbumList_UI;
+
+            namespace TrackList {
+              class TrackList_UI;
+            }
+
             class ArtistList_UI: public QWidget, virtual public AbstractPlayList {
               Q_OBJECT
               public:
@@ -55,6 +61,7 @@ namespace RoteSonne {
 
                 QString getCurrentArtist() const;
                 void setCurrentArtist(const QString &artist);
+
               private:
                 static ArtistList_UI * _artistListUI;
 

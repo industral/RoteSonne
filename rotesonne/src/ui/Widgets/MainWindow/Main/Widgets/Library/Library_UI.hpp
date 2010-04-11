@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -69,16 +69,16 @@ namespace RoteSonne {
                 SilentMedia::Media::PlayList::PlayList * pl;
 
                 QTreeWidgetItem * playListQTreeWidgetItem;
-                QList <QString> playListList;
+                QList<QString> playListList;
 
-private            slots:
-            void eventHandler(QTreeWidgetItem *, int);
-          };
+              private slots:
+                void eventHandler(QTreeWidgetItem *, int);
+            };
+          }
         }
       }
     }
   }
-}
 }
 
 #endif

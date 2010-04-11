@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -60,7 +60,7 @@ namespace RoteSonne {
             /**
              * Main constructor. Should be used to create widget instance.
              */
-            Collection_UI(QTableView *playList);
+            Collection_UI();
 
             /**
              * Standard destructor.
@@ -75,7 +75,7 @@ namespace RoteSonne {
              */
             void show();
 
-            private slots:
+          private slots:
             void openDialog();
             void scanCollection();
             void close();
@@ -89,14 +89,9 @@ namespace RoteSonne {
             RoteSonne::Collection *collectionDb;
 
             // lists
-            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList::TrackList_UI
-                * trackList;
-            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::ArtistList_UI
-                * artistList;
-            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::AlbumList_UI
-                * albumList;
-
-            QTableView *playList;
+            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList::TrackList_UI * trackList;
+            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::ArtistList_UI * artistList;
+            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::AlbumList_UI * albumList;
 
             // Collection widget
             QWidget * widget;

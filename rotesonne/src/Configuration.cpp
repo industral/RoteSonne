@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -66,11 +66,9 @@ namespace RoteSonne {
 
     QString userHomeDir = QDir::homePath();
 
-    const QString homeDirApplication = QString("%1/%2").arg(userHomeDir).arg(
-        applicationFolder);
+    const QString homeDirApplication = QString("%1/%2").arg(userHomeDir).arg(applicationFolder);
 
-    const QString playListFolderPath =
-        QString("%1/%2").arg(homeDirApplication).arg(playListFolder);
+    const QString playListFolderPath = QString("%1/%2").arg(homeDirApplication).arg(playListFolder);
 
     this -> homeDirApplication = homeDirApplication;
     this -> playListFolderPath = playListFolderPath;

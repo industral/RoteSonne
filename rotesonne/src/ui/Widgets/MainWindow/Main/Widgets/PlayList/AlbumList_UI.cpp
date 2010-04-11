@@ -117,9 +117,11 @@ namespace RoteSonne {
             }
 
             void AlbumList_UI::addHandlers() {
-              connect(this -> albumListComponent, SIGNAL(currentItemChanged(
-                      QListWidgetItem *, QListWidgetItem * )), this, SLOT(setFilter(
-                      QListWidgetItem *, QListWidgetItem * )));
+              connect(this -> albumListComponent, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem * )),
+                  this, SLOT(setFilter(QListWidgetItem *, QListWidgetItem * )));
+
+              connect(this -> albumListComponent, SIGNAL(itemDoubleClicked( QListWidgetItem * )), this,
+                  SLOT(play( QListWidgetItem * )));
             }
 
             void AlbumList_UI::setCover(const QString &artist, const QString &album) {
@@ -152,7 +154,7 @@ namespace RoteSonne {
 
             bool AlbumList_UI::setFilter(QListWidgetItem * current, QListWidgetItem * previous) {
               // if focus changes to another window, item will be null
-              if (current != NULL && previous != NULL) {
+              if (current != NULL) {
                 QString album = current -> text();
 
                 QString artist = this -> artistList -> getCurrentArtist();
@@ -181,6 +183,10 @@ namespace RoteSonne {
 
                 return true;
               }
+            }
+
+            void AlbumList_UI::play(QListWidgetItem * item) {
+
             }
 
           }

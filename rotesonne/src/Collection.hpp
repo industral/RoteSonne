@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -53,6 +53,7 @@ namespace RoteSonne {
       bool getStatus() const;
 
       void createDbStructure();
+
     private:
       virtual void run();
 
@@ -77,9 +78,9 @@ namespace RoteSonne {
       Player * player;
       ::SilentMedia::Media::PlayList::XSPF::XSPF * xspf;
 
-      map < string, string > vorbisComm;
-      vector < string > queryList;
-      vector < string > fileList;
+      map<string, string> vorbisComm;
+      vector<string> queryList;
+      vector<string> fileList;
       QStringList filePath;
   };
 }

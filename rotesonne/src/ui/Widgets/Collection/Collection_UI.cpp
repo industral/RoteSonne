@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -34,9 +34,7 @@ namespace RoteSonne {
         // Public methods
         // --------------------------------------------------------------------
 
-        Collection_UI::Collection_UI(QTableView *playList) {
-          this -> playList = playList;
-
+        Collection_UI::Collection_UI() {
           this -> timer = new QTimer(this);
 
           this -> collectionDb = new RoteSonne::Collection();
@@ -44,10 +42,8 @@ namespace RoteSonne {
           // lists
           this -> trackList
               = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList::TrackList_UI::Instance();
-          this -> artistList
-              = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::ArtistList_UI::Instance();
-          this -> albumList
-              = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::AlbumList_UI::Instance();
+          this -> artistList = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::ArtistList_UI::Instance();
+          this -> albumList = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::AlbumList_UI::Instance();
 
           // load UI widget
           //TODO: move to properties
@@ -79,43 +75,33 @@ namespace RoteSonne {
         // --------------------------------------------------------------------
 
         void Collection_UI::findChilds() {
-          this -> closeButton = this -> widget -> findChild <
-              QDialogButtonBox * > ("closeButton");
+          this -> closeButton = this -> widget -> findChild<QDialogButtonBox *> ("closeButton");
 
-          this -> browseButton
-              = this -> widget -> findChild < QPushButton * > ("browseButton");
+          this -> browseButton = this -> widget -> findChild<QPushButton *> ("browseButton");
 
-          this -> scanButton = this -> widget -> findChild < QPushButton * > (
-              "scanButton");
+          this -> scanButton = this -> widget -> findChild<QPushButton *> ("scanButton");
 
-          this -> progressBar
-              = this -> widget -> findChild < QProgressBar * > ("progressBar");
+          this -> progressBar = this -> widget -> findChild<QProgressBar *> ("progressBar");
 
-          this -> collectionPathLineEdit = this -> widget -> findChild <
-              QLineEdit * > ("collectionPathLineEdit");
+          this -> collectionPathLineEdit = this -> widget -> findChild<QLineEdit *> ("collectionPathLineEdit");
         }
 
         void Collection_UI::addHandlers() {
           // add "Close" handle
           // close widget
-          connect(this -> closeButton,
-              SIGNAL(clicked(QAbstractButton*)), widget, SLOT(close()));
+          connect(this -> closeButton, SIGNAL(clicked(QAbstractButton*)), widget, SLOT(close()));
 
           // free resource on close
-          connect(this -> closeButton,
-              SIGNAL(clicked(QAbstractButton*)), this, SLOT(close()));
+          connect(this -> closeButton, SIGNAL(clicked(QAbstractButton*)), this, SLOT(close()));
 
           // add "Browse" handler
-          connect(this -> browseButton, SIGNAL(clicked()), this, SLOT(
-              openDialog()));
+          connect(this -> browseButton, SIGNAL(clicked()), this, SLOT(openDialog()));
 
           // add "Scan" handler
-          connect(this -> scanButton, SIGNAL(clicked()), this, SLOT(
-              scanCollection()));
+          connect(this -> scanButton, SIGNAL(clicked()), this, SLOT(scanCollection()));
 
           // Update process bar position every n seconds
-          connect(this -> timer, SIGNAL(timeout()), this, SLOT(
-              updateProcessBar()));
+          connect(this -> timer, SIGNAL(timeout()), this, SLOT(updateProcessBar()));
         }
 
         //TODO: fix this shit!
@@ -131,9 +117,8 @@ namespace RoteSonne {
         void Collection_UI::openDialog() {
           QFileDialog fileDialog;
 
-          string collectionFolder = ((fileDialog.getExistingDirectory(this, tr(
-              "Select collection folder"), QDir::homePath(),
-              QFileDialog::ShowDirsOnly)).toStdString());
+          string collectionFolder = ((fileDialog.getExistingDirectory(this, tr("Select collection folder"),
+              QDir::homePath(), QFileDialog::ShowDirsOnly)).toStdString());
 
           this -> collectionPathLineEdit -> setText((collectionFolder).c_str());
         }
@@ -143,8 +128,7 @@ namespace RoteSonne {
           this -> artistList -> dropPlayList();
           this -> albumList -> dropPlayList();
 
-          string collectionPath =
-              this -> collectionPathLineEdit -> text().toStdString();
+          string collectionPath = this -> collectionPathLineEdit -> text().toStdString();
 
           this -> collectionDb -> open();
           this -> collectionDb -> startScan(collectionPath);

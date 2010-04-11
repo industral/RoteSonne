@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -56,16 +56,23 @@ namespace RoteSonne {
   namespace UI {
     namespace Widgets {
       namespace MainWindow {
+
+        namespace Widgets {
+          namespace PlayList {
+            namespace TrackList {
+              class TrackList_UI;
+            }
+          }
+        }
+
         /**
          * Main player class.
          */
         class MainWindow_UI: public QMainWindow {
           Q_OBJECT
+
           public:
-            /**
-             * Default constructor.
-             */
-            MainWindow_UI();
+            static MainWindow_UI * Instance();
 
             /**
              * Default destructor.
@@ -79,17 +86,16 @@ namespace RoteSonne {
             QWidget * getUI() const;
 
             void init();
+            void play(const QModelIndex &index);
+            void showInfo(const QModelIndex &index);
+            void activateEmelents(const QModelIndex &index);
 
           private slots:
             void aboutQt();
             void about();
             void collectionPreferences();
             void preferences();
-            void play(const QModelIndex &index);
             void pause(const QModelIndex &index);
-            void showInfo(const QModelIndex &index);
-            void initLocation(const QModelIndex &index);
-            void activateEmelents(const QModelIndex &index);
 
             /**
              * Timer function , update slider position.
@@ -113,28 +119,29 @@ namespace RoteSonne {
             void playPauseToggle();
 
           private:
+            static MainWindow_UI * _mainWindowUI;
+
+            /**
+             * Default constructor.
+             */
+            MainWindow_UI();
+
             QWidget * widget;
             Player * player;
 
             // widgets
-            RoteSonne::UI::Widgets::MainWindow::Widgets::Library::Library_UI
-                * library;
-            RoteSonne::UI::Widgets::MainWindow::Widgets::TrackInfo_UI
-                * trackinfo;
-            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::TrackList::TrackList_UI
-                * trackList;
-            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::ArtistList_UI
-                * artistList;
-            RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::AlbumList_UI
-                * albumList;
-            RoteSonne::UI::Widgets::MainWindow::Widgets::Cover_UI * cover;
+            Widgets::Library::Library_UI * library;
+            Widgets::TrackInfo_UI * trackinfo;
+            Widgets::PlayList::TrackList::TrackList_UI * trackList;
+            Widgets::PlayList::ArtistList_UI * artistList;
+            Widgets::PlayList::AlbumList_UI * albumList;
+            Widgets::Cover_UI * cover;
 
-            QTableView * playListComponent;
             QPushButton * playPauseButton;
             QPushButton * prevButton;
             QPushButton * nextButton;
 
-            QModelIndex index;
+            QTableView * trackListComponent;
 
             QSlider * playerSlider;
             QTimer * timer;
@@ -150,7 +157,7 @@ namespace RoteSonne {
 
             void findChilds();
             void addHandlers();
-            void setPlayList();
+            void setPlayLists();
             void dropPlayList();
         };
       }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -75,10 +75,9 @@ namespace RoteSonne {
 
   //TODO: add error catch
   void Collection::createDbStructure() {
-    const QString
-        CREATE_TABLE =
-            "CREATE TABLE collection (id INTEGER PRIMARY KEY AUTOINCREMENT, fileName VARCHAR (255),"
-              "tracknum INTEGER, title VARCHAR (255), artist VARCHAR (255), album VARCHAR (255));";
+    const QString CREATE_TABLE =
+        "CREATE TABLE collection (id INTEGER PRIMARY KEY AUTOINCREMENT, fileName VARCHAR (255),"
+          "tracknum INTEGER, title VARCHAR (255), artist VARCHAR (255), album VARCHAR (255));";
 
     QSqlQuery q("PRAGMA encoding = 'UTF-8';", this -> db);
     QSqlQuery query(CREATE_TABLE, this -> db);
@@ -111,15 +110,13 @@ namespace RoteSonne {
     boost::filesystem::directory_iterator end_itr;
     for (boost::filesystem::directory_iterator itr(path); itr != end_itr; ++itr) {
       if (status) {
-        string currentPathExt =
-            boost::filesystem::path(itr->filename()).extension();
+        string currentPathExt = boost::filesystem::path(itr->filename()).extension();
 
         if (is_directory(itr->status())) {
           scanFiles(itr->path());
           // TODO: Should be fetch extensions fom file
-        } else if (!currentPathExt.compare(".wav") || !currentPathExt.compare(
-            ".ogg") || !currentPathExt.compare(".flac")
-            || !currentPathExt.compare(".wv")) {
+        } else if (!currentPathExt.compare(".wav") || !currentPathExt.compare(".ogg") || !currentPathExt.compare(
+            ".flac") || !currentPathExt.compare(".wv")) {
 
           this -> fileList.push_back(itr->path().string());
         }
@@ -134,8 +131,7 @@ namespace RoteSonne {
     for (uint i = 0; i < this -> fileList.size(); ++i) {
       if (status) {
 
-        this -> process = 100 / (static_cast <double> (this -> fileList.size())
-            / (i + 1));
+        this -> process = 100 / (static_cast<double> (this -> fileList.size()) / (i + 1));
 
         string fileId = this -> fileList[i];
         string fileName = this -> fileList[i];
@@ -144,12 +140,10 @@ namespace RoteSonne {
         this -> filePath << fileName.c_str();
 
         this -> player -> open(fileName, fileId);
-        map <string, string> vorbisComments =
-            this -> player -> getVorbisComments(fileId);
+        map<string, string> vorbisComments = this -> player -> getVorbisComments(fileId);
 
         QString replacedFileName = this -> replace(fileName);
-        QString replacedTrackNum = this -> replace(
-            vorbisComments["TRACKNUMBER"]);
+        QString replacedTrackNum = this -> replace(vorbisComments["TRACKNUMBER"]);
         QString replacedTitle;
 
         if (!this -> replace(vorbisComments["TITLE"]).isEmpty()) {
@@ -161,12 +155,8 @@ namespace RoteSonne {
         QString replacedArtist = this -> replace(vorbisComments["ARTIST"]);
         QString replacedAlbum = this -> replace(vorbisComments["ALBUM"]);
 
-        QString
-            query =
-                QString(
-                    "INSERT INTO collection VALUES (NULL, \"%1\", \"%2\", \"%3\", \"%4\", \"%5\")").arg(
-                    replacedFileName, replacedTrackNum, replacedTitle,
-                    replacedArtist, replacedAlbum);
+        QString query = QString("INSERT INTO collection VALUES (NULL, \"%1\", \"%2\", \"%3\", \"%4\", \"%5\")").arg(
+            replacedFileName, replacedTrackNum, replacedTitle, replacedArtist, replacedAlbum);
 
         this -> player -> close(fileId);
 
@@ -198,10 +188,9 @@ namespace RoteSonne {
 
     const QString prefix = "file://";
     const QString defaultPlayList = DEFAULT_PLAYLIST + PLAYLIST_EXT;
-    const string playList =
-        (playListFolderPath + "/" + defaultPlayList).toStdString();
+    const string playList = (playListFolderPath + "/" + defaultPlayList).toStdString();
 
-    list <TrackInfo> playListData;
+    list<TrackInfo> playListData;
     //    vector <TrackInfo> trackInfoData;
 
     for (int i = 0; i < this -> filePath.size(); ++i) {
@@ -213,9 +202,7 @@ namespace RoteSonne {
       //      const int trackNum = 4;
 
       QString trackLocation = this -> filePath[i];
-      QString escapeTraclLocation =
-          (QString) ::SilentMedia::Utils::String::toXML(
-              trackLocation.toStdString()).c_str();
+      QString escapeTraclLocation = (QString) ::SilentMedia::Utils::String::toXML(trackLocation.toStdString()).c_str();
       const QString finalTrackLocation = prefix + escapeTraclLocation;
 
       //            trackInfo1.setArtist(artist);

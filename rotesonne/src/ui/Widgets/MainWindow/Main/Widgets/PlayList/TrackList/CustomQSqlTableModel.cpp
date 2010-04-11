@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -39,31 +39,29 @@ namespace RoteSonne {
               CustomQSqlTableModel::~CustomQSqlTableModel() {
               }
 
-              QVariant CustomQSqlTableModel::data(const QModelIndex &index,
-                  int role) const {
+              QVariant CustomQSqlTableModel::data(const QModelIndex &index, int role) const {
                 QVariant value = QSqlQueryModel::data(index, role);
 
-//                if (value.isValid() && role == Qt::DisplayRole) {
-//                  if (index.column() == 2) {
-//                    return value.toString().prepend("#");
-//                  } else if (index.column() == 2) {
-//                    return value.toString().toUpper();
-//                  }
-//                }
-//
-//                if (role == Qt::TextColorRole && index.column() == 3) {
-//                  return qVariantFromValue(QColor(Qt::blue));
-//                }
+                //                if (value.isValid() && role == Qt::DisplayRole) {
+                //                  if (index.column() == 2) {
+                //                    return value.toString().prepend("#");
+                //                  } else if (index.column() == 2) {
+                //                    return value.toString().toUpper();
+                //                  }
+                //                }
+                //
+                //                if (role == Qt::TextColorRole && index.column() == 3) {
+                //                  return qVariantFromValue(QColor(Qt::blue));
+                //                }
 
                 return value;
               }
 
-              bool CustomQSqlTableModel::setData(const QModelIndex & index,
-                  const QVariant & value, int role) {
+              bool CustomQSqlTableModel::setData(const QModelIndex & index, const QVariant & value, int role) {
 
-//                bool lResult = false;
-//                lResult = QSqlTableModel::setData(index, qVariantFromValue(QColor(Qt::red)), Qt::TextColorRole);
-//                return lResult;
+                //                bool lResult = false;
+                //                lResult = QSqlTableModel::setData(index, qVariantFromValue(QColor(Qt::red)), Qt::TextColorRole);
+                //                return lResult;
               }
 
             }

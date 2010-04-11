@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -55,6 +55,8 @@ namespace RoteSonne {
                 this -> widget = widget;
                 this -> findChilds();
                 this -> addHandlers();
+
+                this -> mainWindow = MainWindow_UI::Instance();
               }
 
               void TrackList_UI::setPlayList() {
@@ -64,26 +66,20 @@ namespace RoteSonne {
                 this -> model -> setFilter(this -> filter);
                 this -> model -> select();
 
-                this -> model -> setHeaderData(2, Qt::Horizontal, QObject::tr(
-                    "Track"));
-                this -> model -> setHeaderData(3, Qt::Horizontal, QObject::tr(
-                    "Name"));
-                this -> model -> setHeaderData(4, Qt::Horizontal, QObject::tr(
-                    "Artist"));
-                this -> model -> setHeaderData(5, Qt::Horizontal, QObject::tr(
-                    "Album"));
+                this -> model -> setHeaderData(2, Qt::Horizontal, QObject::tr("Track"));
+                this -> model -> setHeaderData(3, Qt::Horizontal, QObject::tr("Name"));
+                this -> model -> setHeaderData(4, Qt::Horizontal, QObject::tr("Artist"));
+                this -> model -> setHeaderData(5, Qt::Horizontal, QObject::tr("Album"));
 
                 this -> model -> setEditStrategy(QSqlTableModel::OnManualSubmit);
 
                 this -> trackListComponent -> setModel(this -> model);
 
                 // select row at all
-                this -> trackListComponent -> setSelectionBehavior(
-                    QAbstractItemView::SelectRows);
+                this -> trackListComponent -> setSelectionBehavior(QAbstractItemView::SelectRows);
 
                 // deny change row in doubler click
-                this -> trackListComponent -> setEditTriggers(
-                    QAbstractItemView::NoEditTriggers);
+                this -> trackListComponent -> setEditTriggers(QAbstractItemView::NoEditTriggers);
 
                 // odd
                 this -> trackListComponent -> setAlternatingRowColors(true);
@@ -112,6 +108,10 @@ namespace RoteSonne {
                 this -> model = NULL;
               }
 
+              QModelIndex & TrackList_UI::getIndex() {
+                return this -> index;
+              }
+
               // --------------------------------------------------------------------
               // Private methods
               // --------------------------------------------------------------------
@@ -125,23 +125,19 @@ namespace RoteSonne {
 
               void TrackList_UI::findChilds() {
                 // track list
-                this -> trackListComponent = this -> widget -> findChild <
-                    QTableView *> ("trackList");
+                this -> trackListComponent = this -> widget -> findChild<QTableView *> ("trackList");
               }
 
               bool TrackList_UI::openDbConnection() {
                 this -> db = QSqlDatabase::addDatabase("QSQLITE");
 
-                QString playListlocation =
-                    this -> cfg -> getPlayListFolderPath();
+                QString playListlocation = this -> cfg -> getPlayListFolderPath();
 
-                QString defaultCollection = playListlocation + "/"
-                    + DEFAULT_PLAYLIST + DB_EXT;
+                QString defaultCollection = playListlocation + "/" + DEFAULT_PLAYLIST + DB_EXT;
 
                 bool createDb = false;
 
-                const boost::filesystem::path &path =
-                    defaultCollection.toStdString();
+                const boost::filesystem::path &path = defaultCollection.toStdString();
                 if (!exists(path)) {
                   createDb = true;
                 }
@@ -151,8 +147,7 @@ namespace RoteSonne {
                 bool ok = this -> db.open();
 
                 if (!ok) {
-                  qDebug() << "Error: Unable to open database `"
-                      << defaultCollection << "'";
+                  qDebug() << "Error: Unable to open database `" << defaultCollection << "'";
                 }
 
                 if (createDb) {
@@ -176,37 +171,65 @@ namespace RoteSonne {
               }
 
               void TrackList_UI::addHandlers() {
-connect              ( this -> trackListComponent, SIGNAL (doubleClicked(const QModelIndex &)), this, SLOT (setView(const QModelIndex &)));
-            }
+                connect(this -> trackListComponent, SIGNAL (doubleClicked (const QModelIndex & )), this,
+                    SLOT (play(const QModelIndex & )));
+                connect(this -> trackListComponent, SIGNAL (pressed(const QModelIndex &)), this,
+                    SLOT (initLocation(const QModelIndex &)));
+                connect(this -> trackListComponent, SIGNAL (pressed(const QModelIndex &)), this,
+                    SLOT (showInfo(const QModelIndex &)));
+                connect(this -> trackListComponent, SIGNAL (pressed(const QModelIndex &)), this,
+                    SLOT (activateEmelents(const QModelIndex &)));
 
-            //            QVariant TrackList_UI::data(const QModelIndex &index, int role) const {
-            //              //            QVariant value = QSqlQueryModel::data(index, role);
-            //              //            if (value.isValid() && role == Qt::DisplayRole) {
-            //              //              if (index.column() == 3)
-            //              //              return value.toString().prepend("#");
-            //              //              else if (index.column() == 3)
-            //              //              return value.toString().toUpper();
-            //              //            }
-            //              //            if (role == Qt::TextColorRole && index.column() == 3)
-            //              //            return qVariantFromValue(QColor(Qt::blue));
-            //              //            return value;
-            //              qDebug() << "ads";
-            //            }
+                connect(this -> trackListComponent, SIGNAL (doubleClicked(const QModelIndex &)), this,
+                    SLOT (setView(const QModelIndex &)));
+              }
 
-            // --------------------------------------------------------------------
-            // Private slots
-            // --------------------------------------------------------------------
+              //            QVariant TrackList_UI::data(const QModelIndex &index, int role) const {
+              //              //            QVariant value = QSqlQueryModel::data(index, role);
+              //              //            if (value.isValid() && role == Qt::DisplayRole) {
+              //              //              if (index.column() == 3)
+              //              //              return value.toString().prepend("#");
+              //              //              else if (index.column() == 3)
+              //              //              return value.toString().toUpper();
+              //              //            }
+              //              //            if (role == Qt::TextColorRole && index.column() == 3)
+              //              //            return qVariantFromValue(QColor(Qt::blue));
+              //              //            return value;
+              //              qDebug() << "ads";
+              //            }
 
-            void TrackList_UI::setView(const QModelIndex & m) {
-              //            qDebug() << "in view ";
-              //            QFont font = QFont("Arial", 17, QFont::Bold);
-              //            QVariant * v = new QVariant(font);
-              //            //QString s = "asdasd";
-              //            v -> setValue("asd");
-              //            this -> model -> setData(m, &v);
+              // --------------------------------------------------------------------
+              // Private slots
+              // --------------------------------------------------------------------
 
-              this -> model->setData(m, qVariantFromValue(QColor(Qt::red)));
-              //this -> model->setData(m, QString("ads"), Qt::TextSelectableByMouse);
+              void TrackList_UI::setView(const QModelIndex & m) {
+                //            qDebug() << "in view ";
+                //            QFont font = QFont("Arial", 17, QFont::Bold);
+                //            QVariant * v = new QVariant(font);
+                //            //QString s = "asdasd";
+                //            v -> setValue("asd");
+                //            this -> model -> setData(m, &v);
+
+                this -> model->setData(m, qVariantFromValue(QColor(Qt::red)));
+                //this -> model->setData(m, QString("ads"), Qt::TextSelectableByMouse);
+
+              }
+
+              void TrackList_UI::play(const QModelIndex &index) {
+                this -> mainWindow -> play(index);
+              }
+
+              void TrackList_UI::initLocation(const QModelIndex & index) {
+                this -> index = index;
+              }
+
+              void TrackList_UI::showInfo(const QModelIndex &index) {
+                this -> mainWindow -> showInfo(index);
+              }
+
+              void TrackList_UI::activateEmelents(const QModelIndex &index) {
+                this -> mainWindow -> activateEmelents(index);
+              }
 
             }
           }
@@ -214,5 +237,4 @@ connect              ( this -> trackListComponent, SIGNAL (doubleClicked(const Q
       }
     }
   }
-}
 }
