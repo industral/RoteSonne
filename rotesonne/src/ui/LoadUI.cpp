@@ -41,7 +41,8 @@ namespace RoteSonne {
         file.close();
         return widget;
       } else {
-        return NULL;
+        cerr << "Couldn't find specified file: " << uiPath << endl;
+        exit(1);
       }
     }
 

@@ -64,3 +64,6 @@ CONFIG(DEBUG_MODE) {
 }
 
 INCLUDEPATH = src
+OBJECTS_DIR = tmp/objects
+MOC_DIR = tmp/moc
+RCC_DIR =  tmp/rcc

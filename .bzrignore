@@ -1,11 +1,13 @@
 .cproject
 .project
-.checkstyle
+.externalToolBuilders
+.csettings
+
+Debug
+Release
+
+tmp
 
 rotesonne
 Makefile
-moc_*
-qrc_*
-
-rotesonne/doc/api/*
-Debug
+doc/api/*

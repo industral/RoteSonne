@@ -50,7 +50,8 @@ namespace RoteSonne {
               = RoteSonne::UI::Widgets::MainWindow::Widgets::PlayList::AlbumList_UI::Instance();
 
           // load UI widget
-          this -> widget = LoadUI::loadUI(":/forms/ui/Collection.ui");
+          //TODO: move to properties
+          this -> widget = LoadUI::loadUI(":/forms/designer/Collection.ui");
 
           // find all components in widget
           this -> findChilds();

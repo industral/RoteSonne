@@ -36,7 +36,7 @@ namespace RoteSonne {
 
         Preferences_UI::Preferences_UI() {
           // load UI widget
-          this -> widget = LoadUI::loadUI(":/forms/ui/Preferences.ui");
+          this -> widget = LoadUI::loadUI(":/forms/designer/Preferences.ui");
 
           // find all components in widget
           this -> findChilds();

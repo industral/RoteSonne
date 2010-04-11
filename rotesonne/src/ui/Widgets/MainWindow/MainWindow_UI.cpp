@@ -89,7 +89,7 @@ namespace RoteSonne {
           this -> player -> setPlayerStatus(Player::Stop);
 
           // load UI resource file.
-          this -> widget = LoadUI::loadUI(":/forms/ui/mainWindow.ui");
+          this -> widget = LoadUI::loadUI(":/forms/designer/Main.ui");
 
           /* load widgets */
 
@@ -247,7 +247,7 @@ connect        (this -> playListComponent,
       void MainWindow_UI::about() {
         //TODO: move to const
         //TODO: make checks for all widgets!
-        QWidget * widget = LoadUI::loadUI(":/forms/ui/About.ui");
+        QWidget * widget = LoadUI::loadUI(":/forms/designer/About.ui");
         if (widget != NULL) {
           widget -> show();
         } else {

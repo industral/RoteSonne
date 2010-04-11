@@ -33,7 +33,7 @@ namespace RoteSonne {
     /**
      * Util class. Help to load UI resource files. Very simple in use:
      * @code
-     * QWidget * widget = LoadUI::loadUI(":/forms/ui/Collection.ui");
+     * QWidget * widget = LoadUI::loadUI(":/forms/designer/Collection.ui");
      * @endcode
      * Next, you can access any elements in widget:
      * @code
