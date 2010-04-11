@@ -11,6 +11,7 @@ HEADERS     = src/UI/Widgets/MainWindow/MainWindow_UI.hpp \
               src/UI/Widgets/MainWindow/Main/Widgets/PlayList/ArtistList_UI.hpp \
               src/UI/Widgets/MainWindow/Main/Widgets/PlayList/AlbumList_UI.hpp \
               src/UI/Widgets/Collection/Collection_UI.hpp \
+              src/UI/Widgets/Preferences/Preferences_UI.hpp \
               #src/UI/Widgets/Mixer/OSS/Mixer.hpp \
               #src/UI/Widgets/Mixer/OSS/Peak.hpp \
               src/Collection.hpp \
@@ -31,6 +32,7 @@ SOURCES     = src/UI/LoadUI.cpp \
               src/UI/Widgets/MainWindow/Main/Widgets/PlayList/ArtistList_UI.cpp \
               src/UI/Widgets/MainWindow/Main/Widgets/PlayList/AlbumList_UI.cpp \
               src/UI/Widgets/Collection/Collection_UI.cpp \
+              src/UI/Widgets/Preferences/Preferences_UI.cpp \
               #src/UI/Widgets/Mixer/OSS/Mixer.cpp \
               #src/UI/Widgets/Mixer/OSS/Peak.cpp \
               src/common.cpp \

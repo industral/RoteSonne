@@ -1,1 +1,10 @@
+sudo ln -s /data/siegerstein/silentmedia/src/libsml /usr/include
+sudo ln -s /data/siegerstein/silentmedia/libsml.so /usr/lib
+sudo ldconfig
+
+make clean
+qmake
+make
+
 http://www.hyperrealm.com/libconfig/
+

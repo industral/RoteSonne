@@ -42,8 +42,9 @@
 #include "Main/Widgets/PlayList/ArtistList_UI.hpp"
 #include "Main/Widgets/PlayList/AlbumList_UI.hpp"
 
-// include Collection widget
+// include Collection/Preferences widget
 #include <UI/Widgets/Collection/Collection_UI.hpp>
+#include <UI/Widgets/Preferences/Preferences_UI.hpp>
 
 // include Mixer
 #include <libsml/all.hpp>
@@ -83,6 +84,7 @@ namespace RoteSonne {
             void aboutQt();
             void about();
             void collectionPreferences();
+            void preferences();
             void play(const QModelIndex &index);
             void pause(const QModelIndex &index);
             void showInfo(const QModelIndex &index);

@@ -63,7 +63,7 @@ namespace RoteSonne {
             Collection_UI(QTableView *playList);
 
             /**
-             * Standart destructor.
+             * Standard destructor.
              */
             ~Collection_UI();
 

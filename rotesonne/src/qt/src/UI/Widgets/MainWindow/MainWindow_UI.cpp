@@ -73,7 +73,7 @@ namespace RoteSonne {
 
           this -> player = new Player();
 
-          const QString soundDriver = "ALSA";
+          const QString soundDriver = "AO";
           const QString soundDevice = "";
 
           if (this -> player -> setAudioDriver(soundDriver.toStdString(),
@@ -138,6 +138,7 @@ namespace RoteSonne {
         // --------------------------------------------------------------------
 
         void MainWindow_UI::findChilds() {
+          //TODO: move it
 #ifdef OSS
           QWidget * ssss
           = this -> widget -> findChild <QWidget *> ("Mixer");
@@ -176,13 +177,18 @@ namespace RoteSonne {
           connect(this -> widget -> findChild <QAction *> ("actionAbout_Qt"),
               SIGNAL(triggered()), this, SLOT(aboutQt()));
 
-          // add "About" handler
+          // add "About Player" handler
           connect(this -> widget -> findChild <QAction *> ("actionAbout"),
               SIGNAL(triggered()), this, SLOT(about()));
 
           // add "Collection" handler
           connect(this -> widget -> findChild <QAction *> ("actionCollection"),
               SIGNAL(triggered()), this, SLOT(collectionPreferences()));
+
+          // add "Preferences" handler
+          connect(
+              this -> widget -> findChild <QAction *> ("actionPreferences"),
+              SIGNAL(triggered()), this, SLOT(preferences()));
 
           // add "Play/Pause" handler
           connect(this -> playPauseButton, SIGNAL(clicked()), this, SLOT(
@@ -239,14 +245,26 @@ connect        (this -> playListComponent,
       }
 
       void MainWindow_UI::about() {
-        QWidget *widget = LoadUI::loadUI(":/forms/ui/aboutRoteSonne.ui");
-        widget -> show();
+        //TODO: move to const
+        //TODO: make checks for all widgets!
+        QWidget * widget = LoadUI::loadUI(":/forms/ui/About.ui");
+        if (widget != NULL) {
+          widget -> show();
+        } else {
+          cerr << "Failed to open widget" << endl;
+        }
       }
 
       void MainWindow_UI::collectionPreferences() {
         RoteSonne::UI::Widgets::Collection::Collection_UI * collection =
         new RoteSonne::UI::Widgets::Collection::Collection_UI(this -> playListComponent);
         collection -> show();
+      }
+
+      void MainWindow_UI::preferences() {
+        RoteSonne::UI::Widgets::Preferences::Preferences_UI * preferences =
+        new RoteSonne::UI::Widgets::Preferences::Preferences_UI();
+        preferences -> show();
       }
 
       void MainWindow_UI::play(const QModelIndex &index) {

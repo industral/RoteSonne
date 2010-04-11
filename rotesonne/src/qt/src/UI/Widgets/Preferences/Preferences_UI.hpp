@@ -23,27 +23,70 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#include "LoadUI.hpp"
+#ifndef _ROTESONNE_UI_WIDGETS_PREFERENCES_PREFERENCES_HPP_
+#define _ROTESONNE_UI_WIDGETS_PREFERENCES_PREFERENCES_HPP_
+
+#include <include.hpp>
+
+// include UI loader
+#include <UI/LoadUI.hpp>
+
+using namespace std;
 
 namespace RoteSonne {
   namespace UI {
-    LoadUI::LoadUI() {
-    }
+    namespace Widgets {
+      namespace Preferences {
+        /**
+         * Collection preferences/scan widget.
+         * Simple example how to use. To show this widget, need just create object
+         * and call show method:
+         * @code
+         * Preferences_UI *collection = new Preferences_UI(collection);
+         * collection -> show();
+         * @endcode
+         * Thats all.
+         */
+        class Preferences_UI: public QWidget {
+          Q_OBJECT
+          public:
 
-    LoadUI::~LoadUI() {
-    }
+            /**
+             * Main constructor. Should be used to create widget instance.
+             */
+            Preferences_UI();
 
-    QWidget * LoadUI::loadUI(const string& uiPath) {
-      QUiLoader loader;
-      QFile file(uiPath.c_str());
-      if (file.open(QFile::ReadOnly) == true) {
-        QWidget * widget = loader.load(&file, 0);
-        file.close();
-        return widget;
-      } else {
-        return NULL;
+            /**
+             * Standard destructor.
+             */
+            ~Preferences_UI();
+
+            /**
+             * Show widget. Call this function to provide appearing widget.
+             * @code
+             * collection -> show();
+             * @endcode
+             */
+            void show();
+
+            private slots:
+            void accept();
+            void reject();
+
+          private:
+            // self pointer. Need to delete myself.
+            Preferences_UI *self;
+
+            // Preferences widget
+            QWidget * widget;
+            QDialogButtonBox * dialogButtonBox;
+
+            void findChilds();
+            void addHandlers();
+        };
       }
     }
-
   }
 }
+
+#endif
