@@ -1,9 +1,9 @@
 <RCC>
   <qresource prefix="/forms" >
-    <file>ui/mainWindow.ui</file>
-    <file>ui/About.ui</file>
-    <file>ui/Collection.ui</file>
-    <file>ui/Preferences.ui</file>
+    <file>designer/Main.ui</file>
+    <file>designer/About.ui</file>
+    <file>designer/Collection.ui</file>
+    <file>designer/Preferences.ui</file>
   </qresource>
   <qresource>
     <file>../images/rotesonner_logo.png</file>
