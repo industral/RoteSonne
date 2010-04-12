@@ -60,11 +60,13 @@ namespace RoteSonne {
                   ~TrackList_UI();
 
                   void init(QWidget *widget);
-
+                  void playFirstTrack();
                   void setPlayList();
                   void setFilter(const QString &filter);
                   void dropPlayList();
-                  QModelIndex & getIndex();
+                  QModelIndex & getSelectedIndex();
+                  QModelIndex & getPlayedIndex();
+                  void refresh(const QModelIndex & index);
 
                 private:
                   static TrackList_UI * _playListUI;
@@ -77,13 +79,14 @@ namespace RoteSonne {
                   QWidget * widget;
                   RoteSonne::UI::Widgets::MainWindow::MainWindow_UI * mainWindow;
                   QSqlDatabase db;
-                  CustomQSqlTableModel * model;
+                  QSqlTableModel * model;
                   QTableView * trackListComponent;
                   Configuration * cfg;
                   ::RoteSonne::Collection * collectionDb;
 
                   QString filter;
-                  QModelIndex index;
+                  QModelIndex selectedIndex;
+                  QModelIndex playedIndex;
 
                   void findChilds();
                   bool openDbConnection();
@@ -96,6 +99,7 @@ namespace RoteSonne {
                   void initLocation(const QModelIndex &index);
                   void showInfo(const QModelIndex &index);
                   void activateEmelents(const QModelIndex &index);
+                  void setPlayingIndex(const QModelIndex &index);
               };
             }
           }

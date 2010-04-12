@@ -186,7 +186,7 @@ namespace RoteSonne {
             }
 
             void AlbumList_UI::play(QListWidgetItem * item) {
-
+              this -> trackList -> playFirstTrack();
             }
 
           }

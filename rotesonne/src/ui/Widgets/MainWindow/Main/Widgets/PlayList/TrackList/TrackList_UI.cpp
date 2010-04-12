@@ -59,6 +59,15 @@ namespace RoteSonne {
                 this -> mainWindow = MainWindow_UI::Instance();
               }
 
+              void TrackList_UI::playFirstTrack() {
+                // get index for 1st track
+                QModelIndex index = this -> model -> index(0, 0);
+
+                this -> trackListComponent -> selectRow(0);
+
+                this -> mainWindow -> play(index);
+              }
+
               void TrackList_UI::setPlayList() {
                 this -> model = new CustomQSqlTableModel();
 
@@ -96,6 +105,13 @@ namespace RoteSonne {
 
                 // remove vertical stuff
                 this -> trackListComponent -> verticalHeader() -> hide();
+
+                //                this -> trackListComponent -> setItemDelegate(new Delegate);
+              }
+
+              void TrackList_UI::refresh(const QModelIndex & index) {
+//                this -> dropPlayList();
+//                this -> setPlayList();
               }
 
               void TrackList_UI::setFilter(const QString &filter) {
@@ -108,8 +124,13 @@ namespace RoteSonne {
                 this -> model = NULL;
               }
 
-              QModelIndex & TrackList_UI::getIndex() {
-                return this -> index;
+              QModelIndex & TrackList_UI::getSelectedIndex() {
+                return this -> selectedIndex;
+              }
+
+              QModelIndex & TrackList_UI::getPlayedIndex() {
+                //TODO: variable sucks
+                return this -> playedIndex;
               }
 
               // --------------------------------------------------------------------
@@ -172,6 +193,8 @@ namespace RoteSonne {
 
               void TrackList_UI::addHandlers() {
                 connect(this -> trackListComponent, SIGNAL (doubleClicked (const QModelIndex & )), this,
+                    SLOT (setPlayingIndex(const QModelIndex & )));
+                connect(this -> trackListComponent, SIGNAL (doubleClicked (const QModelIndex & )), this,
                     SLOT (play(const QModelIndex & )));
                 connect(this -> trackListComponent, SIGNAL (pressed(const QModelIndex &)), this,
                     SLOT (initLocation(const QModelIndex &)));
@@ -203,14 +226,17 @@ namespace RoteSonne {
               // --------------------------------------------------------------------
 
               void TrackList_UI::setView(const QModelIndex & m) {
-                //            qDebug() << "in view ";
+                //                qDebug() << "in view ";
                 //            QFont font = QFont("Arial", 17, QFont::Bold);
                 //            QVariant * v = new QVariant(font);
                 //            //QString s = "asdasd";
                 //            v -> setValue("asd");
                 //            this -> model -> setData(m, &v);
 
-                this -> model->setData(m, qVariantFromValue(QColor(Qt::red)));
+                //                                this -> model->setData(m, qVariantFromValue(QColor(Qt::red)));
+
+                //                qDebug() << this -> model->setData(m, qVariantFromValue(QColor(Qt::red)), Qt::TextColorRole);
+
                 //this -> model->setData(m, QString("ads"), Qt::TextSelectableByMouse);
 
               }
@@ -220,7 +246,7 @@ namespace RoteSonne {
               }
 
               void TrackList_UI::initLocation(const QModelIndex & index) {
-                this -> index = index;
+                this -> selectedIndex = index;
               }
 
               void TrackList_UI::showInfo(const QModelIndex &index) {
@@ -229,6 +255,10 @@ namespace RoteSonne {
 
               void TrackList_UI::activateEmelents(const QModelIndex &index) {
                 this -> mainWindow -> activateEmelents(index);
+              }
+
+              void TrackList_UI::setPlayingIndex(const QModelIndex &index) {
+                this -> playedIndex = index;
               }
 
             }

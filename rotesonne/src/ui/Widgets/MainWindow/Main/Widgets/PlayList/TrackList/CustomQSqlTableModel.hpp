@@ -28,6 +28,9 @@
 
 #include <include.hpp>
 
+// include TrackList
+#include "TrackList_UI.hpp"
+
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {
@@ -35,6 +38,9 @@ namespace RoteSonne {
         namespace Widgets {
           namespace PlayList {
             namespace TrackList {
+
+              class TrackList_UI;
+
               class CustomQSqlTableModel: virtual public QSqlTableModel {
                 Q_OBJECT
                 public:
@@ -42,8 +48,10 @@ namespace RoteSonne {
                   ~CustomQSqlTableModel();
 
                   QVariant data(const QModelIndex &index, int role) const;
-                  virtual bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
+//                  virtual bool setData(const QModelIndex & index, const QVariant & value, int role);
+
                 private:
+                  TrackList_UI * trackList;
               };
             }
           }

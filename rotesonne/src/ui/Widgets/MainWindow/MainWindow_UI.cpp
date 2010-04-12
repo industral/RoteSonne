@@ -317,12 +317,12 @@ namespace RoteSonne {
             // change icon
             this -> playPauseButton -> setIcon(QIcon(":/images/media-playback-pause.png"));
             // play
-            this -> play(this -> trackList -> getIndex());
+            this -> play(this -> trackList -> getSelectedIndex());
           } else if ((this -> player -> getPlayerStatus()) == Player::Play) {
             // change icon
             this -> playPauseButton -> setIcon(QIcon(":/images/media-playback-start.png"));
             // pause
-            this -> pause(this -> trackList -> getIndex());
+            this -> pause(this -> trackList -> getSelectedIndex());
           }
         }
 
