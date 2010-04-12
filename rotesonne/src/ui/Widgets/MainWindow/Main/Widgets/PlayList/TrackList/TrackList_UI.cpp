@@ -69,7 +69,7 @@ namespace RoteSonne {
               }
 
               void TrackList_UI::setPlayList() {
-                this -> model = new CustomQSqlTableModel();
+                this -> model = new QSqlTableModel();
 
                 this -> model -> setTable("collection");
                 this -> model -> setFilter(this -> filter);
@@ -82,6 +82,7 @@ namespace RoteSonne {
 
                 this -> model -> setEditStrategy(QSqlTableModel::OnManualSubmit);
 
+                this -> trackListComponent -> setItemDelegateForColumn(3, new ItemDelegate);
                 this -> trackListComponent -> setModel(this -> model);
 
                 // select row at all
@@ -105,13 +106,12 @@ namespace RoteSonne {
 
                 // remove vertical stuff
                 this -> trackListComponent -> verticalHeader() -> hide();
-
-                //                this -> trackListComponent -> setItemDelegate(new Delegate);
               }
 
               void TrackList_UI::refresh(const QModelIndex & index) {
-//                this -> dropPlayList();
-//                this -> setPlayList();
+                this -> trackListComponent -> update(index);
+                //                this -> dropPlayList();
+                //                this -> setPlayList();
               }
 
               void TrackList_UI::setFilter(const QString &filter) {
@@ -131,6 +131,10 @@ namespace RoteSonne {
               QModelIndex & TrackList_UI::getPlayedIndex() {
                 //TODO: variable sucks
                 return this -> playedIndex;
+              }
+
+              int TrackList_UI::getRowCount() {
+                return this -> model -> rowCount();
               }
 
               // --------------------------------------------------------------------
@@ -225,7 +229,7 @@ namespace RoteSonne {
               // Private slots
               // --------------------------------------------------------------------
 
-              void TrackList_UI::setView(const QModelIndex & m) {
+              void TrackList_UI::setView(const QModelIndex & index) {
                 //                qDebug() << "in view ";
                 //            QFont font = QFont("Arial", 17, QFont::Bold);
                 //            QVariant * v = new QVariant(font);
@@ -238,6 +242,9 @@ namespace RoteSonne {
                 //                qDebug() << this -> model->setData(m, qVariantFromValue(QColor(Qt::red)), Qt::TextColorRole);
 
                 //this -> model->setData(m, QString("ads"), Qt::TextSelectableByMouse);
+                //                QStyleOptionViewItem viewOption;
+                //                viewOption.font.setBold(true);
+                //                QItemDelegate::paint(painter, viewOption, index);
 
               }
 

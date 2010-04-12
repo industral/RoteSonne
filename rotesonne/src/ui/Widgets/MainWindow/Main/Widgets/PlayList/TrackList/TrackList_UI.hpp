@@ -67,6 +67,7 @@ namespace RoteSonne {
                   QModelIndex & getSelectedIndex();
                   QModelIndex & getPlayedIndex();
                   void refresh(const QModelIndex & index);
+                  int getRowCount();
 
                 private:
                   static TrackList_UI * _playListUI;
@@ -95,7 +96,7 @@ namespace RoteSonne {
 
                 private slots:
                   void play(const QModelIndex &index);
-                  void setView(const QModelIndex & m);
+                  void setView(const QModelIndex & index);
                   void initLocation(const QModelIndex &index);
                   void showInfo(const QModelIndex &index);
                   void activateEmelents(const QModelIndex &index);

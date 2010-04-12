@@ -33,46 +33,22 @@ namespace RoteSonne {
           namespace PlayList {
             namespace TrackList {
 
-              CustomQSqlTableModel::CustomQSqlTableModel() :
-                trackList(NULL) {
+              ItemDelegate::ItemDelegate(QWidget *parent) :
+                QItemDelegate(parent), trackList(NULL) {
                 this -> trackList = TrackList_UI::Instance();
               }
 
-              CustomQSqlTableModel::~CustomQSqlTableModel() {
-              }
+              void ItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
+                QStyleOptionViewItem viewOption(option);
+                QModelIndex curentIndex = this -> trackList -> getPlayedIndex();
 
-              QVariant CustomQSqlTableModel::data(const QModelIndex &index, int role) const {
-                //                qDebug() << "data";
-
-                QModelIndex currentIndex = this -> trackList -> getSelectedIndex();
-                QVariant value = QSqlQueryModel::data(index, role);
-
-                if (value.isValid() && role == Qt::DisplayRole) {
-                  if (index.column() == 2) {
-                    return value.toString().prepend("#");
-                  } else if (index.column() == 2) {
-                    return value.toString().toUpper();
-                  }
+                if (index.column() == 3 && curentIndex == index) {
+                  viewOption.font.setBold(true);
+                  QItemDelegate::paint(painter, viewOption, index);
+                } else {
+                  QItemDelegate::paint(painter, option, index);
                 }
-
-                //                cout  << index.column() << " : " << index.row() << endl;
-
-                if (role == Qt::TextColorRole && index.column() == 3 && currentIndex.row() == index.row()) {
-                  this -> trackList -> refresh(index);
-//                  cout << index.row() << " : " << currentIndex.row() << endl;
-                  return qVariantFromValue(QColor(Qt::blue));
-                }
-
-                return value;
               }
-
-//              bool CustomQSqlTableModel::setData(const QModelIndex & index, const QVariant & value, int role) {
-//                //                qDebug() << "setata";
-//                //                bool lResult = false;
-//                //                lResult = QSqlTableModel::setData(index, qVariantFromValue(QColor(Qt::red)), Qt::TextColorRole);
-//                //                return lResult;
-//              }
-
             }
           }
         }

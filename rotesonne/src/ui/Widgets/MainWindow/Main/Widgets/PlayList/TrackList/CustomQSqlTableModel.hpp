@@ -41,14 +41,11 @@ namespace RoteSonne {
 
               class TrackList_UI;
 
-              class CustomQSqlTableModel: virtual public QSqlTableModel {
+              class ItemDelegate: public QItemDelegate {
                 Q_OBJECT
                 public:
-                  CustomQSqlTableModel();
-                  ~CustomQSqlTableModel();
-
-                  QVariant data(const QModelIndex &index, int role) const;
-//                  virtual bool setData(const QModelIndex & index, const QVariant & value, int role);
+                  ItemDelegate(QWidget *parent = 0);
+                  void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
                 private:
                   TrackList_UI * trackList;

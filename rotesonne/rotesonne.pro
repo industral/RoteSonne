@@ -41,11 +41,10 @@ SOURCES     = src/UI/LoadUI.cpp \
               src/Configuration.cpp
 
 Libraries = sml vorbisfile FLAC++ wavpack ao asound xspf boost_thread-mt \
-  boost_filesystem-mt config++ uriparser
+  boost_filesystem-mt config++ uriparser log4cxx
 
 StaticLibraries = sml vorbisfile FLAC++ FLAC vorbis ogg wavpack ao asound xspf \
-  boost_thread-mt boost_system-mt boost_filesystem-mt config++ uriparser \
-  
+  boost_thread-mt boost_system-mt boost_filesystem-mt config++ uriparser log4cxx
 
 CONFIG(DEBUG_MODE) {
   QMAKE_CXXFLAGS += -ggdb -Wall -W
