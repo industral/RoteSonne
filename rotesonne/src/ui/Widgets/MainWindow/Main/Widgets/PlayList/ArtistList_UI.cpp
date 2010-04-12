@@ -99,7 +99,6 @@ namespace RoteSonne {
               QListWidgetItem * widgetItem = list.at(0);
 
               // emit signal (this will change TrckList widget view)
-              emit
               setFilter(widgetItem, widgetItem);
 
               // set focus explicitly on ArtistList widget

@@ -77,7 +77,7 @@ namespace RoteSonne {
 
           this -> player = new Player();
 
-          const QString soundDriver = "AO";
+          const QString soundDriver = "ALSA";
           const QString soundDevice = "";
 
           if (this -> player -> setAudioDriver(soundDriver.toStdString(), soundDevice.toStdString()) == false) {
@@ -327,9 +327,9 @@ namespace RoteSonne {
           /*
            * In first time when we start player, play/pause button is disabled.
            * We should select a song from list to activate play/pause button.
-           * When we click on play/pause button, it toggle play status and change
-           * icon to pause. After clicking one more time, it again toggle play
-           * status and change icon to play.
+           * When we click on play/pause button, it toggle play status and changes
+           * icon to pause. After clicking one more times, it again toggles play
+           * status and changes icon to play.
            */
           if (((this -> player -> getPlayerStatus()) == Player::Stop) || ((this -> player -> getPlayerStatus())
               == Player::Pause)) {

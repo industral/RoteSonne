@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
 
   QApplication app(argc, argv);
   // force use cleanlooks style, as GTK+ has wrong rendering
-  app.setStyle(new QCleanlooksStyle());
+//  app.setStyle(new QCleanlooksStyle());
 
   MainWindow_UI * mainWindow = MainWindow_UI::Instance();
   mainWindow -> init();
