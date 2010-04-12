@@ -62,6 +62,13 @@ namespace RoteSonne {
                 QString getCurrentArtist() const;
                 void setCurrentArtist(const QString &artist);
 
+                /**
+                 * Set selected artist in ArtistList widget by artist name.
+                 *
+                 * @param artist artist name.
+                 */
+                void selectArtist(const QString & artist);
+
               private:
                 static ArtistList_UI * _artistListUI;
 
@@ -86,7 +93,8 @@ namespace RoteSonne {
                 void addHandlers();
 
               private slots:
-                bool setFilter(QListWidgetItem * current, QListWidgetItem * previous);
+                void setFilter(QListWidgetItem * current, QListWidgetItem * previous);
+                void play(QListWidgetItem * item);
             };
           }
         }

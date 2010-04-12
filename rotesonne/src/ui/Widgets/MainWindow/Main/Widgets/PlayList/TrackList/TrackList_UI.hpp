@@ -29,7 +29,7 @@
 #include <include.hpp>
 
 #include "../AbstractPlayList.hpp"
-#include "CustomQSqlTableModel.hpp"
+#include "ItemDelegate.hpp"
 
 // include Collection
 #include <Collection.hpp>
@@ -48,7 +48,7 @@ namespace RoteSonne {
           namespace PlayList {
             namespace TrackList {
 
-              class TrackList_UI: public QWidget, virtual public AbstractPlayList {
+              class TrackList_UI: public QObject, virtual public AbstractPlayList {
                 Q_OBJECT
 
                 public:
@@ -101,6 +101,11 @@ namespace RoteSonne {
                   void showInfo(const QModelIndex &index);
                   void activateEmelents(const QModelIndex &index);
                   void setPlayingIndex(const QModelIndex &index);
+                  void refreshView();
+
+                signals:
+                  void doubleClicked(const QModelIndex &index);
+                  void pressed(const QModelIndex &index);
               };
             }
           }

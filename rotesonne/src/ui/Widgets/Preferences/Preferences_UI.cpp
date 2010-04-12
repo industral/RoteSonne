@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, Alex Ivasyuv                                            *
+ * Copyright (c) 2009-2010, Alex Ivasyuv                                       *
  * All rights reserved.                                                        *
  *                                                                             *
  * Redistribution and use in source and binary forms, with or without          *
@@ -57,8 +57,7 @@ namespace RoteSonne {
         // --------------------------------------------------------------------
 
         void Preferences_UI::findChilds() {
-          this -> dialogButtonBox = this -> widget -> findChild <
-              QDialogButtonBox *> ("CancelOKButton");
+          this -> dialogButtonBox = this -> widget -> findChild<QDialogButtonBox *> ("CancelOKButton");
 
           //          this -> closeButton = this -> widget -> findChild <
           //              QDialogButtonBox * > ("closeButton");
@@ -77,10 +76,8 @@ namespace RoteSonne {
         }
 
         void Preferences_UI::addHandlers() {
-          connect(this -> dialogButtonBox, SIGNAL(accepted()), this, SLOT(
-              accept()));
-          connect(this -> dialogButtonBox, SIGNAL(rejected()), this, SLOT(
-              reject()));
+          connect(this -> dialogButtonBox, SIGNAL(accepted()), this, SLOT(accept()));
+          connect(this -> dialogButtonBox, SIGNAL(rejected()), this, SLOT(reject()));
 
           //          // add "Close" handle
           //          // close widget

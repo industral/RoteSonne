@@ -7,7 +7,7 @@ HEADERS     = src/UI/Widgets/MainWindow/MainWindow_UI.hpp \
               src/UI/Widgets/MainWindow/Main/Widgets/Cover_UI.hpp \
               src/UI/Widgets/MainWindow/Main/Widgets/Library/Library_UI.hpp \
               src/UI/Widgets/MainWindow/Main/Widgets/PlayList/TrackList/TrackList_UI.hpp \
-              src/UI/Widgets/MainWindow/Main/Widgets/PlayList/TrackList/CustomQSqlTableModel.hpp \
+              src/UI/Widgets/MainWindow/Main/Widgets/PlayList/TrackList/ItemDelegate.hpp \
               src/UI/Widgets/MainWindow/Main/Widgets/PlayList/ArtistList_UI.hpp \
               src/UI/Widgets/MainWindow/Main/Widgets/PlayList/AlbumList_UI.hpp \
               src/UI/Widgets/Collection/Collection_UI.hpp \
@@ -28,7 +28,7 @@ SOURCES     = src/UI/LoadUI.cpp \
               src/UI/Widgets/MainWindow/Main/Widgets/Cover_UI.cpp \
               src/UI/Widgets/MainWindow/Main/Widgets/Library/Library_UI.cpp \
               src/UI/Widgets/MainWindow/Main/Widgets/PlayList/TrackList/TrackList_UI.cpp \
-              src/UI/Widgets/MainWindow/Main/Widgets/PlayList/TrackList/CustomQSqlTableModel.cpp \
+              src/UI/Widgets/MainWindow/Main/Widgets/PlayList/TrackList/ItemDelegate.cpp \
               src/UI/Widgets/MainWindow/Main/Widgets/PlayList/ArtistList_UI.cpp \
               src/UI/Widgets/MainWindow/Main/Widgets/PlayList/AlbumList_UI.cpp \
               src/UI/Widgets/Collection/Collection_UI.cpp \

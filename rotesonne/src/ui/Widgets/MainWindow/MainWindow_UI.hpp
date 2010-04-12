@@ -89,6 +89,7 @@ namespace RoteSonne {
             void play(const QModelIndex &index);
             void showInfo(const QModelIndex &index);
             void activateEmelents(const QModelIndex &index);
+            void setPlayingStatus(const string fileId, const QString message = "");
 
           private slots:
             void aboutQt();

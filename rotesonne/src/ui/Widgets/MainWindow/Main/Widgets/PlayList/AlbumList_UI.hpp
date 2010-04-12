@@ -59,6 +59,7 @@ namespace RoteSonne {
                 void init(QWidget *widget);
                 void setPlayList();
                 void dropPlayList();
+                void playFirstItem();
               private:
                 static AlbumList_UI * _albumListUI;
 
@@ -88,7 +89,7 @@ namespace RoteSonne {
                 void addHandlers();
 
               private slots:
-                bool setFilter(QListWidgetItem * current, QListWidgetItem * previous);
+                void setFilter(QListWidgetItem * current, QListWidgetItem * previous);
                 void play(QListWidgetItem * item);
             };
           }

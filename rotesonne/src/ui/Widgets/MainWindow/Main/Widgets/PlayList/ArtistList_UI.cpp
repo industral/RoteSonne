@@ -91,6 +91,24 @@ namespace RoteSonne {
               this -> currentArtist = artist;
             }
 
+            void ArtistList_UI::selectArtist(const QString & artist) {
+              // find appropriate element by artist name
+              QList<QListWidgetItem *> list = this -> artistListComponent -> findItems(artist, Qt::MatchExactly);
+
+              // get element
+              QListWidgetItem * widgetItem = list.at(0);
+
+              // emit signal (this will change TrckList widget view)
+              emit
+              setFilter(widgetItem, widgetItem);
+
+              // set focus explicitly on ArtistList widget
+              widgetItem -> setSelected(true);
+
+              // scroll to view
+              this -> artistListComponent -> scrollToItem(widgetItem, QAbstractItemView::PositionAtCenter);
+            }
+
             // --------------------------------------------------------------------
             // Private methods
             // --------------------------------------------------------------------
@@ -104,16 +122,18 @@ namespace RoteSonne {
             }
 
             void ArtistList_UI::addHandlers() {
-              connect(this -> artistListComponent, SIGNAL(currentItemChanged(
-                      QListWidgetItem *, QListWidgetItem * )), this, SLOT(setFilter(
-                      QListWidgetItem *, QListWidgetItem * )));
+              connect(this -> artistListComponent, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem * )),
+                  this, SLOT(setFilter(QListWidgetItem *, QListWidgetItem * )));
+
+              connect(this -> artistListComponent, SIGNAL(itemDoubleClicked(QListWidgetItem * )), this,
+                  SLOT(play(QListWidgetItem *)));
             }
 
             // --------------------------------------------------------------------
             // Private slots
             // --------------------------------------------------------------------
 
-            bool ArtistList_UI::setFilter(QListWidgetItem * current, QListWidgetItem * previous) {
+            void ArtistList_UI::setFilter(QListWidgetItem * current, QListWidgetItem * previous) {
               if (current != NULL && previous != NULL) {
                 QString artist = current -> text();
                 QString filter = ""; // default filter value
@@ -144,9 +164,11 @@ namespace RoteSonne {
 
                 // set album list
                 this -> albumList -> setPlayList();
-
-                return true;
               }
+            }
+
+            void ArtistList_UI::play(QListWidgetItem * item) {
+              this -> albumList -> playFirstItem();
             }
 
           }

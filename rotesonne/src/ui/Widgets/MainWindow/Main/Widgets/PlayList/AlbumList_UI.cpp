@@ -104,6 +104,20 @@ namespace RoteSonne {
               this -> albumListComponent -> clear();
             }
 
+            void AlbumList_UI::playFirstItem() {
+              // select first element
+              QListWidgetItem * item = this -> albumListComponent -> item(0);
+
+              // apply filter
+              setFilter(item, item);
+
+              // select item explicitly
+              item -> setSelected(true);
+
+              // play
+              play(item);
+            }
+
             // --------------------------------------------------------------------
             // Private methods
             // --------------------------------------------------------------------
@@ -152,7 +166,7 @@ namespace RoteSonne {
             // Private slots
             // --------------------------------------------------------------------
 
-            bool AlbumList_UI::setFilter(QListWidgetItem * current, QListWidgetItem * previous) {
+            void AlbumList_UI::setFilter(QListWidgetItem * current, QListWidgetItem * previous) {
               // if focus changes to another window, item will be null
               if (current != NULL) {
                 QString album = current -> text();
@@ -180,13 +194,52 @@ namespace RoteSonne {
 
                 // set track list
                 this -> trackList -> setPlayList();
-
-                return true;
               }
             }
 
             void AlbumList_UI::play(QListWidgetItem * item) {
-              this -> trackList -> playFirstTrack();
+              /* first check if any artist selected in ArtistList widget */
+              QString selectedArtist = this -> artistList -> getCurrentArtist();
+
+              // if Artist is not selected, find it by selected Album
+              if (selectedArtist.isEmpty()) {
+                QString selectedAlbum = item -> text();
+                QString query = QString("SELECT artist FROM collection WHERE album = '%1' GROUP BY artist").arg(
+                    selectedAlbum);
+
+                QSqlQuery q(this -> db);
+                q.exec(query);
+
+                int count = 0;
+
+                QString foundArtist = "";
+                while (q.next()) {
+                  ++count;
+                  foundArtist = q.value(0).toString();
+                }
+
+                if (count == 1) {
+                  this -> artistList -> selectArtist(foundArtist);
+                }
+
+                // find item by selected album
+                QList<QListWidgetItem *> list =
+                    this -> albumListComponent -> findItems(selectedAlbum, Qt::MatchExactly);
+
+                // get first element
+                QListWidgetItem * widgetItem = list.at(0);
+
+                // apply filter
+                setFilter(widgetItem, widgetItem);
+
+                // run this method again
+                play(widgetItem);
+
+                // select explicitly
+                widgetItem -> setSelected(true);
+              } else {
+                this -> trackList -> playFirstTrack();
+              }
             }
 
           }

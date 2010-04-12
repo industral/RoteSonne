@@ -63,9 +63,13 @@ namespace RoteSonne {
                 // get index for 1st track
                 QModelIndex index = this -> model -> index(0, 0);
 
-                this -> trackListComponent -> selectRow(0);
+                emit
+                pressed(index);
 
-                this -> mainWindow -> play(index);
+                emit
+                doubleClicked(index);
+
+                this -> trackListComponent -> selectRow(0);
               }
 
               void TrackList_UI::setPlayList() {
@@ -110,8 +114,6 @@ namespace RoteSonne {
 
               void TrackList_UI::refresh(const QModelIndex & index) {
                 this -> trackListComponent -> update(index);
-                //                this -> dropPlayList();
-                //                this -> setPlayList();
               }
 
               void TrackList_UI::setFilter(const QString &filter) {
@@ -198,58 +200,42 @@ namespace RoteSonne {
               void TrackList_UI::addHandlers() {
                 connect(this -> trackListComponent, SIGNAL (doubleClicked (const QModelIndex & )), this,
                     SLOT (setPlayingIndex(const QModelIndex & )));
+                connect(this, SIGNAL (doubleClicked (const QModelIndex & )), this,
+                    SLOT (setPlayingIndex(const QModelIndex & )));
+
                 connect(this -> trackListComponent, SIGNAL (doubleClicked (const QModelIndex & )), this,
                     SLOT (play(const QModelIndex & )));
+                connect(this, SIGNAL (doubleClicked (const QModelIndex & )), this, SLOT (play(const QModelIndex & )));
+
                 connect(this -> trackListComponent, SIGNAL (pressed(const QModelIndex &)), this,
                     SLOT (initLocation(const QModelIndex &)));
+                connect(this, SIGNAL (pressed(const QModelIndex &)), this, SLOT (initLocation(const QModelIndex &)));
+
                 connect(this -> trackListComponent, SIGNAL (pressed(const QModelIndex &)), this,
                     SLOT (showInfo(const QModelIndex &)));
+                connect(this, SIGNAL (pressed(const QModelIndex &)), this, SLOT (showInfo(const QModelIndex &)));
+
                 connect(this -> trackListComponent, SIGNAL (pressed(const QModelIndex &)), this,
                     SLOT (activateEmelents(const QModelIndex &)));
+                connect(this, SIGNAL (pressed(const QModelIndex &)), this, SLOT (activateEmelents(const QModelIndex &)));
 
                 connect(this -> trackListComponent, SIGNAL (doubleClicked(const QModelIndex &)), this,
                     SLOT (setView(const QModelIndex &)));
               }
-
-              //            QVariant TrackList_UI::data(const QModelIndex &index, int role) const {
-              //              //            QVariant value = QSqlQueryModel::data(index, role);
-              //              //            if (value.isValid() && role == Qt::DisplayRole) {
-              //              //              if (index.column() == 3)
-              //              //              return value.toString().prepend("#");
-              //              //              else if (index.column() == 3)
-              //              //              return value.toString().toUpper();
-              //              //            }
-              //              //            if (role == Qt::TextColorRole && index.column() == 3)
-              //              //            return qVariantFromValue(QColor(Qt::blue));
-              //              //            return value;
-              //              qDebug() << "ads";
-              //            }
 
               // --------------------------------------------------------------------
               // Private slots
               // --------------------------------------------------------------------
 
               void TrackList_UI::setView(const QModelIndex & index) {
-                //                qDebug() << "in view ";
-                //            QFont font = QFont("Arial", 17, QFont::Bold);
-                //            QVariant * v = new QVariant(font);
-                //            //QString s = "asdasd";
-                //            v -> setValue("asd");
-                //            this -> model -> setData(m, &v);
-
-                //                                this -> model->setData(m, qVariantFromValue(QColor(Qt::red)));
-
-                //                qDebug() << this -> model->setData(m, qVariantFromValue(QColor(Qt::red)), Qt::TextColorRole);
-
-                //this -> model->setData(m, QString("ads"), Qt::TextSelectableByMouse);
-                //                QStyleOptionViewItem viewOption;
-                //                viewOption.font.setBold(true);
-                //                QItemDelegate::paint(painter, viewOption, index);
-
               }
 
               void TrackList_UI::play(const QModelIndex &index) {
                 this -> mainWindow -> play(index);
+
+                QTimer * timer = new QTimer(this);
+                connect(timer, SIGNAL(timeout()), this, SLOT(refreshView()));
+                timer -> start(1000);
               }
 
               void TrackList_UI::initLocation(const QModelIndex & index) {
@@ -266,6 +252,16 @@ namespace RoteSonne {
 
               void TrackList_UI::setPlayingIndex(const QModelIndex &index) {
                 this -> playedIndex = index;
+              }
+
+              void TrackList_UI::refreshView() {
+                const int rowCount = this -> getRowCount();
+
+                for (int i = 0; i < rowCount; ++i) {
+                  QModelIndex index = this -> model -> index(i, 3);
+                  this -> refresh(index);
+                }
+
               }
 
             }

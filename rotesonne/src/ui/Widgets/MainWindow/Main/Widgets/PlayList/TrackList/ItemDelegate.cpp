@@ -23,7 +23,7 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           *
  ******************************************************************************/
 
-#include "CustomQSqlTableModel.hpp"
+#include "ItemDelegate.hpp"
 
 namespace RoteSonne {
   namespace UI {
@@ -42,10 +42,11 @@ namespace RoteSonne {
                 QStyleOptionViewItem viewOption(option);
                 QModelIndex curentIndex = this -> trackList -> getPlayedIndex();
 
-                if (index.column() == 3 && curentIndex == index) {
+                if (index.column() == 3 && curentIndex.row() == index.row()) {
                   viewOption.font.setBold(true);
                   QItemDelegate::paint(painter, viewOption, index);
                 } else {
+                  viewOption.font.setBold(false);
                   QItemDelegate::paint(painter, option, index);
                 }
               }

@@ -138,6 +138,7 @@ namespace RoteSonne {
             this -> player -> play(this -> playingFileId, true);
             // change Play status
             this -> player -> setPlayerStatus(Player::Play);
+//            this -> setPlayingStatus("", "Nothing playing yet...");
           } else {
 
             // check if previous song is playing
@@ -160,6 +161,7 @@ namespace RoteSonne {
 
               // begin play
               this -> player -> play(this -> playingFileId);
+              this -> setPlayingStatus(this -> fileId);
               this -> beginUpdateSlider();
             }
           }
@@ -186,6 +188,22 @@ namespace RoteSonne {
           this -> playerSlider -> setEnabled(true);
         }
 
+        void MainWindow_UI::setPlayingStatus(const string fileId, const QString message) {
+          QLabel * currentTrackStatus = this -> widget -> findChild <QLabel *> ("currentTrackStatus");
+
+          if (!message.isEmpty()) {
+            currentTrackStatus -> setText(QString("<i><strong>%1</strong></i>").arg(message));
+          } else {
+            map <string, string> vorbis = this -> player -> getVorbisComments(fileId);
+
+            const QString artist = vorbis["ARTIST"].c_str();
+            const QString album = vorbis["ALBUM"].c_str();
+            const QString track = vorbis["TITLE"].c_str();
+
+            currentTrackStatus -> setText(QString("<i><strong>%1 - %2 (%3)</strong></i>").arg(artist, track, album));
+          }
+        }
+
         // --------------------------------------------------------------------
         // Private methods
         // --------------------------------------------------------------------
@@ -208,34 +226,35 @@ namespace RoteSonne {
 #endif
 
           // tack list component
-          this -> trackListComponent = this -> widget -> findChild<QTableView *> ("trackList");
+          this -> trackListComponent = this -> widget -> findChild <QTableView *> ("trackList");
 
           // player slider
-          this -> playerSlider = this -> widget -> findChild<QSlider *> ("playerSlider");
+          this -> playerSlider = this -> widget -> findChild <QSlider *> ("playerSlider");
 
           // play/pause button
-          this -> playPauseButton = this -> widget -> findChild<QPushButton *> ("playPauseButton");
+          this -> playPauseButton = this -> widget -> findChild <QPushButton *> ("playPauseButton");
 
           // previous track button
-          this -> prevButton = this -> widget -> findChild<QPushButton *> ("prevButton");
+          this -> prevButton = this -> widget -> findChild <QPushButton *> ("prevButton");
 
           // next track button
-          this -> nextButton = this -> widget -> findChild<QPushButton *> ("nextButton");
+          this -> nextButton = this -> widget -> findChild <QPushButton *> ("nextButton");
         }
 
         void MainWindow_UI::addHandlers() {
           // add "About Qt" handler
-          connect(this -> widget -> findChild<QAction *> ("actionAbout_Qt"), SIGNAL(triggered()), this, SLOT(aboutQt()));
+          connect(this -> widget -> findChild <QAction *> ("actionAbout_Qt"), SIGNAL(triggered()), this,
+              SLOT(aboutQt()));
 
           // add "About Player" handler
-          connect(this -> widget -> findChild<QAction *> ("actionAbout"), SIGNAL(triggered()), this, SLOT(about()));
+          connect(this -> widget -> findChild <QAction *> ("actionAbout"), SIGNAL(triggered()), this, SLOT(about()));
 
           // add "Collection" handler
-          connect(this -> widget -> findChild<QAction *> ("actionCollection"), SIGNAL(triggered()), this,
+          connect(this -> widget -> findChild <QAction *> ("actionCollection"), SIGNAL(triggered()), this,
               SLOT(collectionPreferences()));
 
           // add "Preferences" handler
-          connect(this -> widget -> findChild<QAction *> ("actionPreferences"), SIGNAL(triggered()), this,
+          connect(this -> widget -> findChild <QAction *> ("actionPreferences"), SIGNAL(triggered()), this,
               SLOT(preferences()));
 
           // add "Play/Pause" handler
@@ -318,11 +337,13 @@ namespace RoteSonne {
             this -> playPauseButton -> setIcon(QIcon(":/images/media-playback-pause.png"));
             // play
             this -> play(this -> trackList -> getSelectedIndex());
+            this -> setPlayingStatus(this -> fileId);
           } else if ((this -> player -> getPlayerStatus()) == Player::Play) {
             // change icon
             this -> playPauseButton -> setIcon(QIcon(":/images/media-playback-start.png"));
             // pause
             this -> pause(this -> trackList -> getSelectedIndex());
+            this -> setPlayingStatus("", "Nothing playing yet...");
           }
         }
 
