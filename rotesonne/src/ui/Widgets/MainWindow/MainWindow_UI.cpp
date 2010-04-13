@@ -87,7 +87,7 @@ namespace RoteSonne {
           }
 
           // in start player is in STOP status
-          this -> player -> setPlayerStatus(Player::Stop);
+          //          this -> player -> setPlayerStatus(Player::Stop);
 
           // load UI resource file.
           this -> widget = LoadUI::loadUI(":/forms/designer/Main.ui");
@@ -126,57 +126,56 @@ namespace RoteSonne {
           this -> addHandlers();
         }
 
+        //TODO: add resume bool, don't use Pause
         void MainWindow_UI::play(const QModelIndex &index) {
           // change play/pause icon
-          if (((this -> player -> getPlayerStatus()) == Player::Stop) || ((this -> player -> getPlayerStatus())
-              == Player::Pause)) {
-            // change icon
-            this -> playPauseButton -> setIcon(QIcon(":/images/media-playback-pause.png"));
-          }
+          //          if (((this -> player -> getPlayStatus(this -> playingFileId)) == Stop)) {
+          // change icon
+          this -> playPauseButton -> setIcon(QIcon(":/images/media-playback-pause.png"));
+          //          }
+          //
+          //          if (this -> player -> getPlayStatus(this -> playingFileId) == Pause) {
+          //            this -> player -> play(this -> playingFileId, true);
+          //            // change Play status
+          //            //            this -> player -> setPlayerStatus(Player::Play);
+          //            //            this -> setPlayingStatus("", "Nothing playing yet...");
+          //          } else {
+          // check if previous song is playing
+          //            if (this -> player -> getPlayStatus(this -> playingFileId) == Play) {
+          this -> player -> stop(this -> playingFileId);
+          //            }
 
-          if (this -> player -> getPlayerStatus() == Player::Pause) {
-            this -> player -> play(this -> playingFileId, true);
+          // get file name
+          string fileName = index.sibling(index.row(), 1).data().toString().toStdString();
+
+          // generate new fileId
+          string tmpFileId = SilentMedia::Utils::Random::getRandomId(fileName);
+
+          if (this -> player -> open(fileName, tmpFileId)) {
             // change Play status
-            this -> player -> setPlayerStatus(Player::Play);
-//            this -> setPlayingStatus("", "Nothing playing yet...");
-          } else {
+            //              this -> player -> setPlayerStatus(Player::Play);
 
-            // check if previous song is playing
-            if (this -> player -> getPlayerStatus() == Player::Play) {
-              this -> player -> stop(this -> playingFileId);
-            }
+            // set playing fileId
+            this -> playingFileId = tmpFileId;
 
-            // get file name
-            string fileName = index.sibling(index.row(), 1).data().toString().toStdString();
-
-            // generate new fileId
-            this -> fileId = SilentMedia::Utils::Random::getRandomId(fileName);
-
-            if (this -> player -> open(fileName, this -> fileId)) {
-              // change Play status
-              this -> player -> setPlayerStatus(Player::Play);
-
-              // set playing fileId
-              this -> playingFileId = this -> fileId;
-
-              // begin play
-              this -> player -> play(this -> playingFileId);
-              this -> setPlayingStatus(this -> fileId);
-              this -> beginUpdateSlider();
-            }
+            // begin play
+            this -> player -> play(this -> playingFileId);
+            this -> setPlayingStatus(this -> playingFileId);
+            this -> beginUpdateSlider();
           }
+          //          }
         }
 
         void MainWindow_UI::showInfo(const QModelIndex & index) {
           string fileName = index.sibling(index.row(), 1).data().toString().toStdString();
-          this -> fileId = SilentMedia::Utils::Random::getRandomId(fileName);
+          string tmpFileId = SilentMedia::Utils::Random::getRandomId(fileName);
 
           // before doing something we should check if it open success
-          if (this -> player -> open(fileName, this -> fileId)) {
+          if (this -> player -> open(fileName, tmpFileId)) {
             // show information
-            this -> trackinfo -> showInfo(this -> fileId, this -> player);
+            this -> trackinfo -> showInfo(tmpFileId, this -> player);
 
-            this -> player -> close(this -> fileId);
+            this -> player -> close(tmpFileId);
 
             // show cover
             this -> cover -> setCover(fileName);
@@ -316,10 +315,9 @@ namespace RoteSonne {
         }
 
         void MainWindow_UI::pause(const QModelIndex &index) {
-          //      string fileName = index.sibling (index.row(), 1).data().toString().toStdString();
           this -> player -> pause(this -> playingFileId);
           // change play status
-          this -> player -> setPlayerStatus(Player::Pause);
+          this -> player -> setPlayStatus(this -> playingFileId, Pause);
         }
 
         void MainWindow_UI::playPauseToggle() {
@@ -331,14 +329,13 @@ namespace RoteSonne {
            * icon to pause. After clicking one more times, it again toggles play
            * status and changes icon to play.
            */
-          if (((this -> player -> getPlayerStatus()) == Player::Stop) || ((this -> player -> getPlayerStatus())
-              == Player::Pause)) {
+          if (((this -> player -> getPlayStatus(this -> playingFileId)) == Stop)) {
             // change icon
             this -> playPauseButton -> setIcon(QIcon(":/images/media-playback-pause.png"));
             // play
             this -> play(this -> trackList -> getSelectedIndex());
-            this -> setPlayingStatus(this -> fileId);
-          } else if ((this -> player -> getPlayerStatus()) == Player::Play) {
+            this -> setPlayingStatus(this -> playingFileId);
+          } else if ((this -> player -> getPlayStatus(this -> playingFileId)) == Play) {
             // change icon
             this -> playPauseButton -> setIcon(QIcon(":/images/media-playback-start.png"));
             // pause
@@ -353,11 +350,17 @@ namespace RoteSonne {
 
           // set slider position
           this -> setSliderPosition();
+
+          //          cout << this -> player -> getPlayerStatus() << endl;
+          //TODO: check if it ondemand
+          // check if track is end
+          if (this -> player -> getPlayStatus(this -> playingFileId) == Stop) {
+            this -> trackList -> playNextTrack();
+          }
         }
 
         void MainWindow_UI::writeSliderPosition(int position) {
           this -> sliderPosition = position;
-          cout << "Set position to: " << this -> sliderPosition << endl;
         }
 
         void MainWindow_UI::beginUpdateSlider() {

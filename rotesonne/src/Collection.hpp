@@ -62,7 +62,7 @@ namespace RoteSonne {
 
       QString replace(string str) const;
 
-      bool prepareQuery();
+      bool prepareQuery(vector <string> & inputList);
       void updateDb();
       void updatePlayList();
 

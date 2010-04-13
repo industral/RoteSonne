@@ -68,6 +68,7 @@ namespace RoteSonne {
                   QModelIndex & getPlayedIndex();
                   void refresh(const QModelIndex & index);
                   int getRowCount();
+                  void playNextTrack();
 
                 private:
                   static TrackList_UI * _playListUI;

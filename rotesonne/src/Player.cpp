@@ -27,7 +27,6 @@
 
 namespace RoteSonne {
   Player::Player() {
-    this -> playerStatus = Stop;
   }
 
   Player::~Player() {
@@ -35,15 +34,6 @@ namespace RoteSonne {
 
   bool Player::setAudioDriver(const string soundDriver, const string driver) {
     return (init(soundDriver, driver));
-  }
-
-  // Player status
-  Player::PlayerStatus Player::getPlayerStatus() {
-    return this -> playerStatus;
-  }
-
-  void Player::setPlayerStatus(PlayerStatus status) {
-    this -> playerStatus = status;
   }
 
   // Info
@@ -71,9 +61,9 @@ namespace RoteSonne {
 
   string Player::getTotalTime(const string &fileId) {
     ostringstream out;
-    out << (static_cast<int> (Audio::getTotalTime(fileId)) / 60); // min
+    out << (static_cast <int> (Audio::getTotalTime(fileId)) / 60); // min
     out << ":";
-    out << (static_cast<int> (Audio::getTotalTime(fileId)) % 60); // sec
+    out << (static_cast <int> (Audio::getTotalTime(fileId)) % 60); // sec
 
     return out.str();
   }

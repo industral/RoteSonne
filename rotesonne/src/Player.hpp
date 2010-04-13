@@ -34,10 +34,6 @@ namespace RoteSonne {
   class Player: public Audio::Audio {
     public:
 
-      enum PlayerStatus {
-        Stop, Play, Pause
-      };
-
       /**
        * Default constructor.
        */
@@ -50,16 +46,12 @@ namespace RoteSonne {
 
       bool setAudioDriver(const string soundDriver, const string driver);
 
-      PlayerStatus getPlayerStatus();
-      void setPlayerStatus(PlayerStatus status);
-
       // Info
       string getFileSizeString(const string &fileId);
       string getSampleRateInfoString(const string &fileId);
       string getBitRateString(const string &fileId);
       string getTotalTime(const string &fileId);
     private:
-      PlayerStatus playerStatus;
   };
 }
 

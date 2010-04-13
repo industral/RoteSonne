@@ -27,13 +27,6 @@
 
 namespace RoteSonne {
 
-  /**
-   * DB structure:
-   PRAGMA encoding = "UTF-8";
-   CREATE TABLE collection (id INTEGER PRIMARY KEY AUTOINCREMENT, fileName VARCHAR (255),
-   tracknum INTEGER, title VARCHAR (255), artist VARCHAR (255), album VARCHAR (255));
-   */
-
   // --------------------------------------------------------------------
   // Public methods
   // --------------------------------------------------------------------
@@ -91,7 +84,7 @@ namespace RoteSonne {
     { // <--- WTF??
       this -> flush();
       this -> scanFiles(this -> scanPath);
-      this -> prepareQuery();
+      this -> prepareQuery(this -> fileList);
       this -> updateDb();
       this -> updatePlayList();
     }
@@ -126,21 +119,21 @@ namespace RoteSonne {
   }
 
   //TODO: rewrite all with QString instead of sstring
-  bool Collection::prepareQuery() {
+  bool Collection::prepareQuery(vector <string> & inputList) {
     // open file, fetch vorbis comments
-    for (uint i = 0; i < this -> fileList.size(); ++i) {
+    for (uint i = 0; i < inputList.size(); ++i) {
       if (status) {
 
-        this -> process = 100 / (static_cast<double> (this -> fileList.size()) / (i + 1));
+        this -> process = 100 / (static_cast <double> (inputList.size()) / (i + 1));
 
-        string fileId = this -> fileList[i];
-        string fileName = this -> fileList[i];
+        string fileId = inputList[i];
+        string fileName = inputList[i];
 
         // populate list for playlist
         this -> filePath << fileName.c_str();
 
         this -> player -> open(fileName, fileId);
-        map<string, string> vorbisComments = this -> player -> getVorbisComments(fileId);
+        map <string, string> vorbisComments = this -> player -> getVorbisComments(fileId);
 
         QString replacedFileName = this -> replace(fileName);
         QString replacedTrackNum = this -> replace(vorbisComments["TRACKNUMBER"]);
@@ -149,7 +142,7 @@ namespace RoteSonne {
         if (!this -> replace(vorbisComments["TITLE"]).isEmpty()) {
           replacedTitle = this -> replace(vorbisComments["TITLE"]);
         } else {
-          replacedTitle = this -> replace(Path(this -> fileList[i]).filename());
+          replacedTitle = this -> replace(Path(inputList[i]).filename());
         }
 
         QString replacedArtist = this -> replace(vorbisComments["ARTIST"]);
@@ -190,7 +183,7 @@ namespace RoteSonne {
     const QString defaultPlayList = DEFAULT_PLAYLIST + PLAYLIST_EXT;
     const string playList = (playListFolderPath + "/" + defaultPlayList).toStdString();
 
-    list<TrackInfo> playListData;
+    list <TrackInfo> playListData;
     //    vector <TrackInfo> trackInfoData;
 
     for (int i = 0; i < this -> filePath.size(); ++i) {

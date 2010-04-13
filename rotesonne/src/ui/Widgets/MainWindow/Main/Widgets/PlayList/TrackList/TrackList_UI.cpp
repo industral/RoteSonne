@@ -63,10 +63,7 @@ namespace RoteSonne {
                 // get index for 1st track
                 QModelIndex index = this -> model -> index(0, 0);
 
-                emit
                 pressed(index);
-
-                emit
                 doubleClicked(index);
 
                 this -> trackListComponent -> selectRow(0);
@@ -139,6 +136,17 @@ namespace RoteSonne {
                 return this -> model -> rowCount();
               }
 
+              //TODO: doc + bool
+              void TrackList_UI::playNextTrack() {
+                QModelIndex newIndexModel = this -> model -> index(this -> selectedIndex.row() + 1, 0);
+                if (newIndexModel.isValid()) {
+                  pressed(newIndexModel);
+                  doubleClicked(newIndexModel);
+
+                  this -> trackListComponent -> selectRow(newIndexModel.row());
+                }
+              }
+
               // --------------------------------------------------------------------
               // Private methods
               // --------------------------------------------------------------------
@@ -152,7 +160,7 @@ namespace RoteSonne {
 
               void TrackList_UI::findChilds() {
                 // track list
-                this -> trackListComponent = this -> widget -> findChild<QTableView *> ("trackList");
+                this -> trackListComponent = this -> widget -> findChild <QTableView *> ("trackList");
               }
 
               bool TrackList_UI::openDbConnection() {

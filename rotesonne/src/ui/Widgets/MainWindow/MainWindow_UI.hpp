@@ -148,7 +148,7 @@ namespace RoteSonne {
             QTimer * timer;
 
             // selected fileId
-            string fileId;
+//            string fileId;
 
             // playing current fileId
             string playingFileId;
