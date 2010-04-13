@@ -1,10 +1,24 @@
+This project depend on SilentMedia library.
+Please refer to https://code.launchpad.net/~industral/silentmedia/devel
+
+After you install SilentMedia, you should create symbolic links:
+
 sudo ln -s /data/siegerstein/silentmedia/src/libsml /usr/include
 sudo ln -s /data/siegerstein/silentmedia/libsml.so /usr/lib
 sudo ldconfig
 
+You should use your own path, it's just an example.
+
+Build RoteSonne application:
 make clean
 qmake
 make
 
-http://www.hyperrealm.com/libconfig/
+After, you should run application (rotesonne binary file), refer to "Settings" -> "Collection" or just press
+Ctrl + C, enter path to your library and press "Scan".
 
+This will scan your audio library and refresh playlist view.
+
+NOTE: you have to use only: "wav", "ogg", "flac", "wv" file formats.
+
+https://code.launchpad.net/~industral/rotesonne/main
