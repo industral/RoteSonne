@@ -46,7 +46,9 @@ namespace RoteSonne {
             }
 
             class ArtistList_UI: public QWidget, virtual public AbstractPlayList {
+
               Q_OBJECT
+
               public:
                 static ArtistList_UI * Instance();
 
@@ -95,6 +97,11 @@ namespace RoteSonne {
               private slots:
                 void setFilter(QListWidgetItem * current, QListWidgetItem * previous);
                 void play(QListWidgetItem * item);
+
+                /* actions */
+                void contextMenuHandler(const QPoint & pos);
+
+                void addToPlayList();
             };
           }
         }

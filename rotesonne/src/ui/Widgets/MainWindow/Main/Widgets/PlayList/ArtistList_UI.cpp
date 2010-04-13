@@ -93,7 +93,7 @@ namespace RoteSonne {
 
             void ArtistList_UI::selectArtist(const QString & artist) {
               // find appropriate element by artist name
-              QList<QListWidgetItem *> list = this -> artistListComponent -> findItems(artist, Qt::MatchExactly);
+              QList <QListWidgetItem *> list = this -> artistListComponent -> findItems(artist, Qt::MatchExactly);
 
               // get element
               QListWidgetItem * widgetItem = list.at(0);
@@ -117,7 +117,7 @@ namespace RoteSonne {
 
             void ArtistList_UI::findChilds() {
               // track list
-              this -> artistListComponent = this -> widget -> findChild<QListWidget *> ("artistList");
+              this -> artistListComponent = this -> widget -> findChild <QListWidget *> ("artistList");
             }
 
             void ArtistList_UI::addHandlers() {
@@ -126,6 +126,11 @@ namespace RoteSonne {
 
               connect(this -> artistListComponent, SIGNAL(itemDoubleClicked(QListWidgetItem * )), this,
                   SLOT(play(QListWidgetItem *)));
+
+              /* Content menu handler */
+              this -> artistListComponent -> setContextMenuPolicy(Qt::CustomContextMenu);
+              connect(this -> artistListComponent, SIGNAL(customContextMenuRequested(const QPoint & )), this,
+                  SLOT(contextMenuHandler(const QPoint & )));
             }
 
             // --------------------------------------------------------------------
@@ -168,6 +173,19 @@ namespace RoteSonne {
 
             void ArtistList_UI::play(QListWidgetItem * item) {
               this -> albumList -> playFirstItem();
+            }
+
+            void ArtistList_UI::addToPlayList() {
+
+            }
+
+            void ArtistList_UI::contextMenuHandler(const QPoint & pos) {
+              QAction * addToPlayListAct = new QAction(tr("Add artist to playlist"), this);
+              connect(addToPlayListAct, SIGNAL(triggered()), this, SLOT(addToPlayList()));
+
+              QMenu menu(this);
+              menu.addAction(addToPlayListAct);
+              menu.exec(this -> artistListComponent -> mapToGlobal(pos));
             }
 
           }
