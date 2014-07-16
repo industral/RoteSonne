@@ -28,6 +28,9 @@
 
 #include <include.hpp>
 
+#include <QTreeWidgetItem>
+#include <QTableView>
+
 #include "../AbstractPlayList.hpp"
 #include "ItemDelegate.hpp"
 

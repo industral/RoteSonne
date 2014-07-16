@@ -28,6 +28,11 @@
 
 #include <include.hpp>
 
+#include <QMainWindow>
+#include <QTimer>
+#include <QPushButton>
+#include <QLabel>
+
 // include UI loader
 #include <UI/LoadUI.hpp>
 

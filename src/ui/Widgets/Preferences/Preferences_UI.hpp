@@ -28,6 +28,8 @@
 
 #include <include.hpp>
 
+#include <QDialogButtonBox>
+
 // include UI loader
 #include <UI/LoadUI.hpp>
 

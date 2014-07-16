@@ -28,6 +28,9 @@
 
 #include <include.hpp>
 
+#include <QListWidget>
+#include <QListWidgetItem>
+
 #include "AbstractPlayList.hpp"
 #include "TrackList/TrackList_UI.hpp"
 #include "ArtistList_UI.hpp"

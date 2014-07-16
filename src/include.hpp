@@ -31,9 +31,23 @@
 
 // Qt
 #include <QtGui>
+#include <QWidget>
+#include <QtCore/QtCore>
+#include <QMessageBox>
+#include <QLabel>
+#include <QHeaderView>
+
 #include <QtSql>
 #include <QThread>
 #include <QUiLoader>
+#include <QObject>
+#include <QAction>
+#include <QApplication>
+#include <QMenu>
+#include <QLineEdit>
+#include <QFileDialog>
+#include <QFileDialog>
+
 
 // boost filesystem
 #include <boost/filesystem/operations.hpp>

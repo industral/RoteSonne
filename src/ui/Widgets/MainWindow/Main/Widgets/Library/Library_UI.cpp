@@ -90,7 +90,7 @@ namespace RoteSonne {
 
               boost::filesystem::directory_iterator end_itr;
               for (boost::filesystem::directory_iterator itr(path); itr != end_itr; ++itr) {
-                string currentPathExt = boost::filesystem::path(itr->filename()).extension();
+                string currentPathExt = boost::filesystem::path(itr->path().filename()).extension().string();
 
                 if (is_directory(itr->status())) {
                   scanPlayListFiles(itr->path());
@@ -117,12 +117,12 @@ namespace RoteSonne {
                 playListName = playListName.remove(XSPF);
                 playListName = playListName.remove(0, 1); // first slash
 
-                QTreeWidgetItem * i = new QTreeWidgetItem(QStringList(playListName));
+                QTreeWidgetItem * item = new QTreeWidgetItem(QStringList(playListName));
 
-                i -> setData(itemPlayListNumber, Qt::DisplayRole, QVariant(itemPlayListDefinition));
-                i -> setData(itemPlayListFilePathNumber, Qt::DisplayRole, QVariant(playListPath));
+                  item -> setData(itemPlayListNumber, Qt::DisplayRole, QVariant(itemPlayListDefinition));
+                  item -> setData(itemPlayListFilePathNumber, Qt::DisplayRole, QVariant(playListPath));
 
-                items.append(i);
+                items.append(item);
               }
 
               this -> playListQTreeWidgetItem -> addChildren(items);

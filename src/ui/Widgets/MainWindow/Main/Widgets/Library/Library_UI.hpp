@@ -29,6 +29,8 @@
 #include <libsml/all.hpp>
 #include <Configuration.hpp>
 
+#include <QTreeWidget>
+
 namespace RoteSonne {
   namespace UI {
     namespace Widgets {

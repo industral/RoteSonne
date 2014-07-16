@@ -132,7 +132,7 @@ namespace RoteSonne {
                 != end_itr; ++itr) {
 
               string currentPathExt =
-                  boost::filesystem::path(itr->filename()).extension();
+                  boost::filesystem::path(itr->path().filename()).extension().string();
               if (is_directory(itr->status())) {
                 findCover(itr->path());
                 // TODO: Should be fetch extensions from a file

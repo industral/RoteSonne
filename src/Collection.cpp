@@ -103,7 +103,7 @@ namespace RoteSonne {
     boost::filesystem::directory_iterator end_itr;
     for (boost::filesystem::directory_iterator itr(path); itr != end_itr; ++itr) {
       if (status) {
-        string currentPathExt = boost::filesystem::path(itr->filename()).extension();
+        string currentPathExt = boost::filesystem::path(itr->path().filename()).extension().string();
 
         if (is_directory(itr->status())) {
           scanFiles(itr->path());
@@ -142,7 +142,7 @@ namespace RoteSonne {
         if (!this -> replace(vorbisComments["TITLE"]).isEmpty()) {
           replacedTitle = this -> replace(vorbisComments["TITLE"]);
         } else {
-          replacedTitle = this -> replace(Path(inputList[i]).filename());
+          replacedTitle = this -> replace(Path(inputList[i]).filename().string());
         }
 
         QString replacedArtist = this -> replace(vorbisComments["ARTIST"]);

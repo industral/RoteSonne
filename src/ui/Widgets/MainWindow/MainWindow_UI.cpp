@@ -77,7 +77,7 @@ namespace RoteSonne {
 
           this -> player = new Player();
 
-          const QString soundDriver = "ALSA";
+          const QString soundDriver = "AO";
           const QString soundDevice = "";
 
           if (this -> player -> setAudioDriver(soundDriver.toStdString(), soundDevice.toStdString()) == false) {
@@ -242,34 +242,34 @@ namespace RoteSonne {
 
         void MainWindow_UI::addHandlers() {
           // add "About Qt" handler
-          connect(this -> widget -> findChild <QAction *> ("actionAbout_Qt"), SIGNAL(triggered()), this,
-              SLOT(aboutQt()));
+          QObject::connect(this -> widget -> findChild <QAction *> ("actionAbout_Qt"), &QAction::triggered, this,
+                  &MainWindow_UI::aboutQt);
 
           // add "About Player" handler
-          connect(this -> widget -> findChild <QAction *> ("actionAbout"), SIGNAL(triggered()), this, SLOT(about()));
+          QObject::connect(this -> widget -> findChild <QAction *> ("actionAbout"), SIGNAL(triggered()), this, SLOT(about()));
 
           // add "Collection" handler
-          connect(this -> widget -> findChild <QAction *> ("actionCollection"), SIGNAL(triggered()), this,
+            QObject::connect(this -> widget -> findChild <QAction *> ("actionCollection"), SIGNAL(triggered()), this,
               SLOT(collectionPreferences()));
 
           // add "Preferences" handler
-          connect(this -> widget -> findChild <QAction *> ("actionPreferences"), SIGNAL(triggered()), this,
+            QObject::connect(this -> widget -> findChild <QAction *> ("actionPreferences"), SIGNAL(triggered()), this,
               SLOT(preferences()));
 
           // add "Play/Pause" handler
-          connect(this -> playPauseButton, SIGNAL(clicked()), this, SLOT(playPauseToggle()));
+            QObject::connect(this -> playPauseButton, SIGNAL(clicked()), this, SLOT(playPauseToggle()));
 
           // SLIDER
           // Update slider position every n seconds
-          connect(this -> timer, SIGNAL(timeout()), this, SLOT(updateSliderPosition()));
+            QObject::connect(this -> timer, SIGNAL(timeout()), this, SLOT(updateSliderPosition()));
 
           // write slider value
-          connect(this -> playerSlider, SIGNAL (valueChanged (int)), this, SLOT (writeSliderPosition (int)));
+            QObject::connect(this -> playerSlider, SIGNAL (valueChanged (int)), this, SLOT (writeSliderPosition (int)));
           // while move slider, disconnect slider
-          connect(this -> playerSlider, SIGNAL(sliderPressed()), this, SLOT(stopUpdateSlider()));
+            QObject::connect(this -> playerSlider, SIGNAL(sliderPressed()), this, SLOT(stopUpdateSlider()));
           // when slider released, set song on seek position
-          connect(this -> playerSlider, SIGNAL(sliderReleased()), this, SLOT(setSeek()));
-          connect(this -> playerSlider, SIGNAL(sliderReleased()), this, SLOT(beginUpdateSlider()));
+            QObject::connect(this -> playerSlider, SIGNAL(sliderReleased()), this, SLOT(setSeek()));
+            QObject::connect(this -> playerSlider, SIGNAL(sliderReleased()), this, SLOT(beginUpdateSlider()));
         }
 
         void MainWindow_UI::setPlayLists() {

@@ -1,0 +1,3 @@
+[submodule "SilentMedia"]
+	path = SilentMedia
+	url = https://github.com/industral/SilentMedia.git

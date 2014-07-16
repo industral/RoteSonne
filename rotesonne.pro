@@ -1,5 +1,7 @@
-CONFIG      += uitools qt warn_on DEBUG_MODE #RELEASE_MODE
-QT          += sql
+CONFIG      += qt warn_on DEBUG_MODE #RELEASE_MODE
+QT          += uitools sql widgets
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+
 RESOURCES   = rotesonne.qrc
 
 HEADERS     = src/UI/Widgets/MainWindow/MainWindow_UI.hpp \
@@ -40,14 +42,15 @@ SOURCES     = src/UI/LoadUI.cpp \
               src/Collection.cpp \
               src/Configuration.cpp
 
-Libraries = sml vorbisfile FLAC++ wavpack ao asound xspf boost_thread-mt \
-  boost_filesystem-mt config++ uriparser log4cxx
+Libraries = boost_filesystem-mt boost_system-mt sml
 
 StaticLibraries = sml vorbisfile FLAC++ FLAC vorbis ogg wavpack ao asound xspf \
   boost_thread-mt boost_system-mt boost_filesystem-mt config++ uriparser log4cxx
 
+QMAKE_LIBDIR += /usr/lib /usr/local/lib
+
 CONFIG(DEBUG_MODE) {
-  QMAKE_CXXFLAGS += -ggdb -Wall -W
+  QMAKE_CXXFLAGS += -ggdb -Wall -W -I/usr/include -I/usr/local/include
   QMAKE_CFLAGS += -ggdb -Wall -W
 
   for(lib, Libraries) {

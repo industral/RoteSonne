@@ -28,6 +28,9 @@
 
 #include <include.hpp>
 
+#include <QDialogButtonBox>
+#include <QProgressBar>
+
 // include UI loader
 #include <UI/LoadUI.hpp>
 #include <Collection.hpp>
